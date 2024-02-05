@@ -3,7 +3,8 @@ import mqtt from "mqtt";
 
 const App = () => {
   const [messages, setMessages] = useState({});
-  const topics = [];
+  const [topics, setTopics] = useState(["server/00012/data"]);
+  const [deviceId, setDeviceId] = useState("");
 
   useEffect(() => {
     const brokerConfig = {
@@ -55,9 +56,26 @@ const App = () => {
     };
   }, [topics]); // Re-run effect when the topics array changes
 
+  const handleDeviceInput = (event) => {
+    setDeviceId(event.target.value);
+  };
+
+  const handleAddDevice = () => {
+    setTopics((preDevice) => [...preDevice, deviceId]);
+    setDeviceId("");
+  };
+
   return (
     <div>
       <h1>MQTT Component</h1>
+      <div>
+        <input
+          placeholder="enter device's id"
+          value={deviceId}
+          onChange={handleDeviceInput}
+        />
+        <button onClick={handleAddDevice}>ADD DEVICE</button>
+      </div>
       {topics.map((topic) => (
         <p key={topic}>
           Received Message for {topic}: {messages[topic] || "No message"}
