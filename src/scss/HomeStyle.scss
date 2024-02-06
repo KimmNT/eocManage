@@ -1,0 +1,152 @@
+//COLOR
+$primary: #000;
+$backGround: #e9e1db;
+$dark: #000;
+$light: #fff;
+$delete: #d04848;
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+@font-face {
+  font-family: "Rale";
+  src: url(../fonts/Raleway-VariableFont_wght.ttf);
+}
+html {
+  font-size: 62.5%;
+}
+body {
+  scroll-behavior: smooth;
+}
+
+.container {
+  height: 100vh;
+  background-color: $backGround;
+  font-family: Rale;
+  .header {
+    .header__content {
+      max-width: 1440px !important;
+      margin: 0 auto;
+      padding: 2rem 0rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .header__headline {
+        display: flex;
+        align-items: center;
+        gap: 5rem;
+        .headline__title {
+          font-size: 6rem;
+          font-weight: 600;
+        }
+        .headline__create {
+          display: flex;
+          align-items: center;
+          gap: 2rem;
+          input {
+            background-color: #bebebe;
+            outline: none;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 3rem;
+            font-size: 2rem;
+            font-weight: 400;
+          }
+          .create__btn {
+            background-color: $dark;
+            outline: none;
+            border: $light;
+            width: 5rem;
+            height: 5rem;
+            border-radius: 50%;
+            font-size: 4rem;
+            cursor: pointer;
+            color: $light;
+          }
+        }
+      }
+      .header__menu {
+        display: flex;
+        justify-content: center;
+        gap: 5rem;
+        .menu__item {
+          text-decoration: none;
+          color: $dark;
+          font-size: 1.5rem;
+          font-weight: 900;
+          padding: 1rem 2.5rem;
+          background-color: $light;
+          border-radius: 2rem;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+  .content {
+    max-width: 1440px !important;
+    margin: 0 auto;
+    margin-top: 10rem;
+    .device__list {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10rem;
+      .device {
+        position: relative;
+        background-color: $light;
+        padding: 2rem;
+        border-radius: 2rem;
+        height: 35rem;
+        .device__name {
+          background-color: $dark;
+          width: 100%;
+          font-size: 1.5rem;
+          color: $light;
+          text-align: center;
+          padding: 1rem;
+          border-radius: 1rem;
+          font-weight: 600;
+        }
+        .device__info {
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+          margin-top: 2rem;
+          padding: 2rem 2.5rem;
+          .info__version {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            width: 100%;
+            justify-content: space-between;
+            .info__name {
+              font-size: 1.7rem;
+            }
+            .info__value {
+              font-size: 2rem;
+              font-weight: 600;
+            }
+          }
+          .info__group {
+          }
+        }
+        .device_detele {
+          position: absolute;
+          top: -1rem;
+          right: -1rem;
+          width: 3rem;
+          height: 3rem;
+          border-radius: 50%;
+          background-color: $delete;
+          color: $light;
+          border: none;
+          cursor: pointer;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
