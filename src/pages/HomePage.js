@@ -6,8 +6,11 @@ import { Link } from "react-router-dom";
 const HomePage = () => {
   // const [message, setMessages] = useState({});
   const [informationMessages, setInformationMessages] = useState({});
+  const [emergencyMessage, setEmergencyMessage] = useState({});
   const [topics, setTopics] = useState([]);
   const [deviceId, setDeviceId] = useState("");
+  const [emergency, setEmergency] = useState(false);
+  const [test, setTest] = useState(false);
 
   useEffect(() => {
     const brokerConfig = {
@@ -49,6 +52,30 @@ const HomePage = () => {
             ...prevMessages,
             [topic]: receivedMessage,
           }));
+        }
+        //FOR EMERGENCY TYPE
+        if (receivedMessage.type === "emergency") {
+          setEmergencyMessage((prevMessages) => ({
+            ...prevMessages,
+            [topic]: receivedMessage,
+          }));
+          setEmergency(true);
+          const timeoutId = setTimeout(() => {
+            setEmergency(false);
+          }, 5000);
+
+          // Clean up the timeout on component unmount
+          return () => clearTimeout(timeoutId);
+        }
+        //FOR BUTTON TEST TYPE
+        if (receivedMessage.type === "button_test") {
+          setTest(true);
+          const timeoutId = setTimeout(() => {
+            setTest(false);
+          }, 5000);
+
+          // Clean up the timeout on component unmount
+          return () => clearTimeout(timeoutId);
         }
 
         // Add similar conditions for other message types if needed
@@ -95,6 +122,7 @@ const HomePage = () => {
       return newTopics;
     });
   };
+
   return (
     <div className="container">
       <div className="header">
@@ -122,72 +150,203 @@ const HomePage = () => {
             </Link>
           </div>
         </div>
+        {emergency ? <div className="fire">FIRING!!!!!</div> : <></>}
+        {test ? <div className="test">TESTING!!!!!</div> : <></>}
       </div>
       <div className="content">
         <div className="device__list">
           {topics.map((item, index) => (
             <div className="device" key={index}>
-              <p className="device__name">{item}</p>
+              {item === "server/00097/data" ? (
+                <p className="device__name">{item} - Thin</p>
+              ) : item === "server/00003/data" ? (
+                <p className="device__name">{item} - A.Đăng</p>
+              ) : item === "server/00012/data" ? (
+                <p className="device__name">{item} - Tứn Eng</p>
+              ) : item === "server/00108/data" ? (
+                <p className="device__name">{item} - A.Thịn</p>
+              ) : item === "server/00113/data" ? (
+                <p className="device__name">{item} - A.Ruy</p>
+              ) : item === "server/00020/data" ? (
+                <p className="device__name">{item} - Tứn Ang</p>
+              ) : item === "server/050202/data" ? (
+                <p className="device__name">{item} - Tứn Ang</p>
+              ) : (
+                <p className="device__name">{item}</p>
+              )}
               {informationMessages[item] ? (
                 <div className="device__info">
                   {/* VERSION */}
                   <div className="info__version">
-                    <p className="info__name">Version: </p>
+                    <p className="info__name">Version </p>
                     <p className="info__value">
                       {informationMessages[item].data.FWver}
                     </p>
                   </div>
+                  <div className="line"></div>
                   {/* CONNECTION TYPE - PRIORITY */}
-                  <div className="info__group">
-                    {/* WHEN CONNECTION TYPE IS SIM */}
-                    {informationMessages[item].data.CONtyp === 1 ? (
-                      <div className="info__version sim connect">
-                        <p className="info__name">CON Priority: </p>
-                        <p className="info__value">
-                          {informationMessages[item].data.CONtyp}
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="info__version sim not__connect">
-                        <p className="info__name">CON Priority: </p>
-                        <p className="info__value">
-                          {informationMessages[item].data.CONtyp}
-                        </p>
-                      </div>
-                    )}
-                    {/* WHEN CONNECTION TYPE IS LAN */}
-                    {informationMessages[item].data.CONtyp === 2 ? (
-                      <div className="info__version lan connect">
-                        <p className="info__name">CON Priority: </p>
-                        <p className="info__value">
-                          {informationMessages[item].data.CONtyp}
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="info__version lan not__connect">
-                        <p className="info__name">CON Priority: </p>
-                        <p className="info__value">
-                          {informationMessages[item].data.CONtyp}
-                        </p>
-                      </div>
-                    )}
-                    {/* WHEN CONNECTION TYPE IS WiFi */}
-                    {informationMessages[item].data.CONtyp === 3 ? (
-                      <div className="info__version wifi connect">
-                        <p className="info__name">CON Priority: </p>
-                        <p className="info__value">
-                          {informationMessages[item].data.CONtyp}
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="info__version wifi not__connect">
-                        <p className="info__name">CON Priority: </p>
-                        <p className="info__value">
-                          {informationMessages[item].data.CONtyp}
-                        </p>
-                      </div>
-                    )}
+                  <div className="info__connection">
+                    <p className="info__name">Connection type</p>
+                    <div className="info__conpri">
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([1, 2, 3]) ? (
+                        <>
+                          {informationMessages[item].data.CONtyp === 1 ? (
+                            <div className="conpri__list">
+                              <p className="info__value active">SIM</p>
+                              <p className="info__value ">LAN</p>
+                              <p className="info__value ">WiFi</p>
+                            </div>
+                          ) : informationMessages[item].data.CONtyp === 2 ? (
+                            <div className="conpri__list">
+                              <p className="info__value ">SIM</p>
+                              <p className="info__value active">LAN</p>
+                              <p className="info__value ">WiFi</p>
+                            </div>
+                          ) : (
+                            <div className="conpri__list">
+                              <p className="info__value ">SIM</p>
+                              <p className="info__value ">LAN</p>
+                              <p className="info__value active">WiFi</p>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([1, 3, 2]) ? (
+                        <>
+                          {informationMessages[item].data.CONtyp === 1 ? (
+                            <div className="conpri__list">
+                              <p className="info__value active">SIM</p>
+                              <p className="info__value ">WiFi</p>
+                              <p className="info__value ">LAN</p>
+                            </div>
+                          ) : informationMessages[item].data.CONtyp === 2 ? (
+                            <div className="conpri__list">
+                              <p className="info__value ">SIM</p>
+                              <p className="info__value ">WiFi</p>
+                              <p className="info__value active">LAN</p>
+                            </div>
+                          ) : (
+                            <div className="conpri__list">
+                              <p className="info__value ">SIM</p>
+                              <p className="info__value active">WiFi</p>
+                              <p className="info__value ">LAN</p>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([2, 1, 3]) ? (
+                        <>
+                          {informationMessages[item].data.CONtyp === 2 ? (
+                            <div className="conpri__list">
+                              <p className="info__value active">LAN</p>
+                              <p className="info__value ">SIM</p>
+                              <p className="info__value ">WiFi</p>
+                            </div>
+                          ) : informationMessages[item].data.CONtyp === 1 ? (
+                            <div className="conpri__list">
+                              <p className="info__value ">LAN</p>
+                              <p className="info__value active">SIM</p>
+                              <p className="info__value ">WiFi</p>
+                            </div>
+                          ) : (
+                            <div className="conpri__list">
+                              <p className="info__value ">LAN</p>
+                              <p className="info__value ">SIM</p>
+                              <p className="info__value active">WiFi</p>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([2, 3, 1]) ? (
+                        <>
+                          {informationMessages[item].data.CONtyp === 1 ? (
+                            <div className="conpri__list">
+                              <p className="info__value ">LAN</p>
+                              <p className="info__value ">WiFi</p>
+                              <p className="info__value active">SIM</p>
+                            </div>
+                          ) : informationMessages[item].data.CONtyp === 2 ? (
+                            <div className="conpri__list">
+                              <p className="info__value active">LAN</p>
+                              <p className="info__value ">WiFi</p>
+                              <p className="info__value ">SIM</p>
+                            </div>
+                          ) : (
+                            <div className="conpri__list">
+                              <p className="info__value ">LAN</p>
+                              <p className="info__value active">WiFi</p>
+                              <p className="info__value ">SIM</p>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([3, 1, 2]) ? (
+                        <>
+                          {informationMessages[item].data.CONtyp === 1 ? (
+                            <div className="conpri__list">
+                              <p className="info__value ">WiFi</p>
+                              <p className="info__value active">SIM</p>
+                              <p className="info__value ">LAN</p>
+                            </div>
+                          ) : informationMessages[item].data.CONtyp === 2 ? (
+                            <div className="conpri__list">
+                              <p className="info__value ">WiFi</p>
+                              <p className="info__value ">SIM</p>
+                              <p className="info__value active">LAN</p>
+                            </div>
+                          ) : (
+                            <div className="conpri__list">
+                              <p className="info__value active">WiFi</p>
+                              <p className="info__value ">SIM</p>
+                              <p className="info__value ">LAN</p>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([3, 2, 1]) ? (
+                        <>
+                          {informationMessages[item].data.CONtyp === 1 ? (
+                            <div className="conpri__list">
+                              <p className="info__value ">WiFi</p>
+                              <p className="info__value ">LAN</p>
+                              <p className="info__value active">SIM</p>
+                            </div>
+                          ) : informationMessages[item].data.CONtyp === 2 ? (
+                            <div className="conpri__list">
+                              <p className="info__value ">WiFi</p>
+                              <p className="info__value active">LAN</p>
+                              <p className="info__value ">SIM</p>
+                            </div>
+                          ) : (
+                            <div className="conpri__list">
+                              <p className="info__value active">WiFi</p>
+                              <p className="info__value ">LAN</p>
+                              <p className="info__value ">SIM</p>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
                   </div>
+                  <div className="line"></div>
                   {/* WiFi */}
                   <div className="info__group">
                     <div className="info__version">
@@ -203,6 +362,7 @@ const HomePage = () => {
                       </p>
                     </div>
                   </div>
+                  <div className="line"></div>
                   {/* CONNECTION MODE */}
                   <div className="info__version">
                     <p className="info__name">Connection Mode: </p>
@@ -212,9 +372,22 @@ const HomePage = () => {
                       <p className="info__value">BATTERY</p>
                     )}
                   </div>
+                  {emergency &&
+                  emergencyMessage[item] &&
+                  informationMessages[item] &&
+                  emergencyMessage[item].id === informationMessages[item].id ? (
+                    <p>{emergencyMessage[item].id}</p>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               ) : (
-                <></>
+                <div className="welcome">
+                  <div className="welcome__content">
+                    <p className="welcome__text">Connecting to device</p>
+                    <p className="welcome__text">Please wait a moment</p>
+                  </div>
+                </div>
               )}
               <button
                 className="device_detele"

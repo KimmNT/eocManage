@@ -1,9 +1,10 @@
-//COLOR
+//VARIABLES
 $primary: #000;
 $backGround: #e9e1db;
 $dark: #000;
 $light: #fff;
 $delete: #d04848;
+$boxShadow: -7px 10px 5px 1px rgb(168, 168, 168);
 
 * {
   padding: 0;
@@ -22,10 +23,24 @@ body {
 }
 
 .container {
-  height: 100vh;
+  position: relative;
+  min-height: 100vh;
   background-color: $backGround;
   font-family: Rale;
+  padding-bottom: 10rem;
+  z-index: 0;
   .header {
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+    background-color: $backGround;
+    &::after {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 0.5rem;
+      background-color: $dark;
+    }
     .header__content {
       max-width: 1440px !important;
       margin: 0 auto;
@@ -83,23 +98,41 @@ body {
         }
       }
     }
+    .fire {
+      width: 100%;
+      background-color: #d04848;
+      font-size: 7rem;
+      text-align: center;
+      padding: 2rem 0;
+      color: $light;
+    }
+    .test {
+      width: 100%;
+      background-color: #fc6736;
+      font-size: 7rem;
+      text-align: center;
+      padding: 2rem 0;
+      color: $light;
+    }
   }
   .content {
     max-width: 1440px !important;
     margin: 0 auto;
-    margin-top: 10rem;
+    padding-top: 25rem;
     .device__list {
       display: flex;
       justify-content: flex-start;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10rem;
+      gap: 18rem;
       .device {
         position: relative;
+        height: 55rem;
+        width: 25%;
         background-color: $light;
         padding: 2rem;
-        border-radius: 2rem;
-        height: 35rem;
+        border-radius: 1.5rem;
+        box-shadow: $boxShadow;
         .device__name {
           background-color: $dark;
           width: 100%;
@@ -116,6 +149,11 @@ body {
           gap: 2rem;
           margin-top: 2rem;
           padding: 2rem 2.5rem;
+          .line {
+            height: 0.1rem;
+            background-color: #000;
+            width: 100%;
+          }
           .info__version {
             display: flex;
             align-items: center;
@@ -124,19 +162,104 @@ body {
             justify-content: space-between;
             .info__name {
               font-size: 1.7rem;
+              font-weight: 600;
+              width: 30%;
             }
             .info__value {
               font-size: 2rem;
+              font-weight: 900;
+            }
+          }
+          .info__connection {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row;
+            align-items: center;
+            .info__name {
+              font-size: 1.7rem;
               font-weight: 600;
+              width: 30%;
+            }
+            .info__conpri {
+              .conpri__list {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+                .info__value {
+                  font-size: 1.5rem;
+                  font-weight: 600;
+                  padding: 0.5rem 2rem;
+                  border-radius: 0.5rem;
+                  font-weight: 900;
+                  color: $dark;
+                }
+                .active {
+                  background-color: #fc9e70;
+                  color: $light;
+                }
+              }
             }
           }
           .info__group {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            gap: 3rem;
+            .info__name {
+              font-size: 1.7rem;
+              font-weight: 600;
+              width: 30%;
+            }
+            .info__conpri {
+              display: flex;
+              align-items: center;
+              gap: 2rem;
+              width: 100%;
+              justify-content: space-between;
+              .info__name {
+                font-size: 1.7rem;
+                font-weight: 600;
+                width: 30%;
+              }
+              .conpri__list {
+                display: flex;
+                .info__value {
+                  font-size: 1.5rem;
+                  font-weight: 600;
+                  padding: 0.5rem 2rem;
+                  border-radius: 0.5rem;
+                  font-weight: 600;
+                  color: $dark;
+                }
+                .active {
+                  background-color: #fc9e70;
+                  color: $light;
+                }
+              }
+            }
+          }
+        }
+        .welcome {
+          height: 100%;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .welcome__content {
+            .welcome__text {
+              text-align: center;
+              font-size: 1.5rem;
+              font-style: italic;
+              font-weight: 600;
+              margin-bottom: 2rem;
+              color: #7e7e7e;
+            }
           }
         }
         .device_detele {
           position: absolute;
-          top: -1rem;
-          right: -1rem;
+          top: -1.2rem;
+          right: -1.2rem;
           width: 3rem;
           height: 3rem;
           border-radius: 50%;
@@ -145,6 +268,12 @@ body {
           border: none;
           cursor: pointer;
           font-weight: 600;
+        }
+      }
+      .emergency__container {
+        width: 100%;
+        background-color: #d04848;
+        .emergency__text {
         }
       }
     }
