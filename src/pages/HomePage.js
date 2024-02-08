@@ -391,7 +391,8 @@ const HomePage = () => {
               )}
               <button
                 className="device_detele"
-                onClick={() => handleDeleteDevice(index)}>
+                onClick={() => handleDeleteDevice(index)}
+              >
                 X
               </button>
             </div>
