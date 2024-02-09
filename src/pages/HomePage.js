@@ -7,7 +7,15 @@ const HomePage = () => {
   // const [message, setMessages] = useState({});
   const [informationMessages, setInformationMessages] = useState({});
   const [emergencyMessage, setEmergencyMessage] = useState({});
-  const [topics, setTopics] = useState([]);
+  const [topics, setTopics] = useState([
+    "server/00097/data",
+    "server/00003/data",
+    "server/00012/data",
+    "server/00108/data",
+    "server/00113/data",
+    "server/00020/data",
+    // "server/050202/data",
+  ]);
   const [deviceId, setDeviceId] = useState("");
   const [emergency, setEmergency] = useState(false);
   const [test, setTest] = useState(false);
@@ -16,7 +24,7 @@ const HomePage = () => {
     const brokerConfig = {
       host: "103.151.238.68",
       port: 8087,
-      protocol: "mqtt",
+      protocol: "websockets",
       username: "guest",
       password: "123456a@",
     };
@@ -106,15 +114,18 @@ const HomePage = () => {
     };
   }, [topics]); // Re-run effect when the topics array changes
 
+  //HANDLE TAKE DEVICE'ID INPUT
   const handleDeviceInput = (event) => {
     setDeviceId(event.target.value);
   };
 
+  //HANDLE CREATE DEVICE
   const handleAddDevice = () => {
     setTopics((preDevice) => [...preDevice, deviceId]);
     setDeviceId("");
   };
 
+  //HANDLE DELETE DEIVCE
   const handleDeleteDevice = (index) => {
     setTopics((prevTopics) => {
       const newTopics = [...prevTopics];
@@ -142,10 +153,10 @@ const HomePage = () => {
             </div>
           </div>
           <div className="header__menu">
-            <Link className="menu__item" to={"/wifiCongif"} target="_blank">
+            <Link className="menu__item" to={"/configWifi"} target="_blank">
               Config WiFi
             </Link>
-            <Link className="menu__item" to={"/priorityConfig"} target="_blank">
+            <Link className="menu__item" to={"/configPri"} target="_blank">
               Config Priority
             </Link>
           </div>
@@ -153,6 +164,7 @@ const HomePage = () => {
         {emergency ? <div className="fire">FIRING!!!!!</div> : <></>}
         {test ? <div className="test">TESTING!!!!!</div> : <></>}
       </div>
+      {emergency || test ? <div className="alert__box"></div> : <></>}
       <div className="content">
         <div className="device__list">
           {topics.map((item, index) => (

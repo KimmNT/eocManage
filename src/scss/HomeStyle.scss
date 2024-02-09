@@ -6,6 +6,16 @@ $light: #fff;
 $delete: #d04848;
 $boxShadow: -7px 10px 5px 1px rgb(168, 168, 168);
 
+//RES
+$large: 1290px;
+$desktopMax: 1289.98px;
+$desktopMin: 992px;
+$tabletMax: 991.98px;
+$tabletMin: 768px;
+$mobileMax: 767.98px;
+$mobileMin: 576px;
+$tiny: 575.98px;
+
 * {
   padding: 0;
   margin: 0;
@@ -42,13 +52,53 @@ body {
       background-color: $dark;
     }
     .header__content {
-      max-width: 1440px !important;
-      margin: 0 auto;
+      @media (min-width:$large){
+        max-width: 1290px !important;
+        margin: 0 auto;
+      }
+      @media (min-width: $desktopMin) and (max-width: $desktopMax)
+      {
+        max-width: 950px !important;
+        margin: 0 auto;
+      }
+      @media (min-width: $tabletMin) and (max-width: $tabletMax){
+        max-width: 750px !important;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        gap: 3rem;
+      }
+      @media (min-width: $mobileMin) and (max-width: $mobileMax){
+        max-width: 550px !important;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        gap: 3rem;
+      }
+      @media (max-width: $tiny){
+        max-width: 550px !important;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        gap: 3rem;
+      }
       padding: 2rem 0rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       .header__headline {
+        @media (max-width: $tiny){
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          justify-self: center;
+        }
         display: flex;
         align-items: center;
         gap: 5rem;
@@ -116,16 +166,76 @@ body {
     }
   }
   .content {
-    max-width: 1440px !important;
-    margin: 0 auto;
-    padding-top: 25rem;
+    @media (min-width:$large){
+      max-width: 1290px !important;
+      margin: 0 auto;
+    }
+    @media (min-width: $desktopMin) and (max-width: $desktopMax)
+    {
+      max-width: 950px !important;
+      margin: 0 auto;
+    }
+    @media (min-width: $tabletMin) and (max-width: $tabletMax){
+      max-width: 750px !important;
+      margin: 0 auto;
+      padding-top: 25rem;
+
+    }
+    @media (min-width: $mobileMin) and (max-width: $mobileMax){
+      max-width: 550px !important;
+      margin: 0 auto;
+      padding-top: 25rem;
+
+    }
+    @media (max-width: $tiny){
+      max-width: 550px !important;
+      margin: 0 auto;
+      padding-top: 35rem;
+    }
+    padding-top: 20rem;
     .device__list {
+      @media (min-width:$large){
+
+      }
+      @media (min-width: $desktopMin) and (max-width: $desktopMax)
+      {
+      }
+      @media (min-width: $tabletMin) and (max-width: $tabletMax){
+        justify-content: center;
+        gap: 10rem;
+      }
+      @media (min-width: $mobileMin) and (max-width: $mobileMax){
+        justify-content: center;
+        gap: 10rem;
+      }
+      @media (max-width: $tiny){
+        justify-content: center;
+        gap: 10rem;
+      }
       display: flex;
       justify-content: flex-start;
       align-items: center;
       flex-wrap: wrap;
-      gap: 18rem;
+      gap: 14rem;
       .device {
+        @media (min-width:$large){
+          width: 26%;
+        }
+        @media (min-width: $desktopMin) and (max-width: $desktopMax)
+        {
+          width: 40%;
+        }
+        @media (min-width: $tabletMin) and (max-width: $tabletMax){
+          width: 60%;
+
+        }
+        @media (min-width: $mobileMin) and (max-width: $mobileMax){
+          width: 80%;
+        }
+        @media (max-width: $tiny){
+          width: 80%;
+
+        }
         position: relative;
         height: 55rem;
         width: 25%;
@@ -273,9 +383,12 @@ body {
       .emergency__container {
         width: 100%;
         background-color: #d04848;
-        .emergency__text {
-        }
       }
     }
+  }
+  .alert__box{
+    width: 100%;
+    padding-top: 10rem;
+    background-color: transparent;
   }
 }
