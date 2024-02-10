@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import mqtt from "mqtt";
 import "../scss/HomeStyle.scss";
-import { Link } from "react-router-dom";
 
 const HomePage = () => {
   // const [message, setMessages] = useState({});
@@ -16,21 +15,34 @@ const HomePage = () => {
     "server/00020/data",
     // "server/050202/data",
   ]);
-  const [deviceId, setDeviceId] = useState("");
   const [emergency, setEmergency] = useState(false);
   const [test, setTest] = useState(false);
+  const [deviceId, setDeviceId] = useState("");
+  const [wifiDeviceId, setWifiDeviceId] = useState("");
+  const [ssid, setSSID] = useState("");
+  const [password, setPassword] = useState("");
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [priDeviceId, setPriDeviceId] = useState("");
+
+  const priArray = [
+    { priName: "SIM-LAN-WiFi", pri: [1, 2, 3] },
+    { priName: "SIM-WiFi-LAN", pri: [1, 3, 2] },
+    { priName: "LAN-WiFi-SIM", pri: [2, 3, 1] },
+    { priName: "LAN-SIM-WiFi", pri: [2, 1, 3] },
+    { priName: "WiFi-LAN-SIM", pri: [3, 2, 1] },
+    { priName: "WiFi-SIM-LAN", pri: [3, 1, 2] },
+  ];
+  const brokerConfig = {
+    host: "103.151.238.68",
+    port: 8087,
+    protocol: "websockets",
+    username: "guest",
+    password: "123456a@",
+  };
+
+  const brokerUrl = `${brokerConfig.protocol}://${brokerConfig.host}:${brokerConfig.port}`;
 
   useEffect(() => {
-    const brokerConfig = {
-      host: "103.151.238.68",
-      port: 8087,
-      protocol: "websockets",
-      username: "guest",
-      password: "123456a@",
-    };
-
-    const brokerUrl = `${brokerConfig.protocol}://${brokerConfig.host}:${brokerConfig.port}`;
-
     const client = mqtt.connect(brokerUrl, brokerConfig);
 
     client.on("connect", () => {
@@ -119,6 +131,26 @@ const HomePage = () => {
     setDeviceId(event.target.value);
   };
 
+  //HANDLE TAKE CONFIG WIFI INFORMATION
+  const handleWifiDevice = (event) => {
+    setWifiDeviceId(event.target.value);
+  };
+  const handleSSID = (event) => {
+    setSSID(event.target.value);
+  };
+  const handlePassword = (event) => {
+    setPassword(event.target.value);
+  };
+
+  //HANDLE TAKE PRIORITY CONFIG INFORMATION
+  const handlePriDevice = (event) => {
+    setPriDeviceId(event.target.value);
+  };
+
+  const handleRadioChange = (value) => {
+    setSelectedOption(value);
+  };
+
   //HANDLE CREATE DEVICE
   const handleAddDevice = () => {
     setTopics((preDevice) => [...preDevice, deviceId]);
@@ -132,6 +164,72 @@ const HomePage = () => {
       newTopics.splice(index, 1);
       return newTopics;
     });
+  };
+
+  //HANDLE WIFI CONFIGURATION
+  const handleConfigWifi = () => {
+    const client = mqtt.connect(brokerUrl, brokerConfig);
+
+    client.on("connect", () => {
+      console.log("Connected to MQTT broker");
+
+      const topic = wifiDeviceId;
+      const payload = ` {
+        type: wifi,
+        deviceId: n_123456,
+        data: { ssidName: ${ssid} , password: ${password} },
+      }`;
+
+      // Publish the message
+      client.publish(topic, payload, (err) => {
+        // Handling the result of the publish
+        if (err) {
+          console.error(`Error publishing message to topic ${topic}:`, err);
+        } else {
+          console.log(
+            `Published message to topic: ${topic} ${JSON.stringify(payload)}`
+          );
+        }
+
+        // Disconnect from the MQTT broker
+        client.end();
+      });
+      setWifiDeviceId("");
+      setSSID("");
+      setPassword("");
+    });
+  };
+
+  //HANDLE PRIORITY CONFIGURATION
+  const handleConfigPri = () => {
+    const client = mqtt.connect(brokerUrl, brokerConfig);
+
+    client.on("connect", () => {
+      console.log("Connected to MQTT broker");
+
+      const topic = priDeviceId;
+      const payload = ` {
+        type: priority,
+        deviceId: n_123456,
+        data: { value: [${selectedOption}]},
+      }`;
+
+      // Publish the message
+      client.publish(topic, payload, (err) => {
+        // Handling the result of the publish
+        if (err) {
+          console.error(`Error publishing message to topic ${topic}:`, err);
+        } else {
+          console.log(
+            `Published message to topic: ${topic} ${JSON.stringify(payload)}`
+          );
+        }
+
+        // Disconnect from the MQTT broker
+        client.end();
+      });
+    });
+    setPriDeviceId("");
   };
 
   return (
@@ -153,12 +251,76 @@ const HomePage = () => {
             </div>
           </div>
           <div className="header__menu">
-            <Link className="menu__item" to={"/configWifi"} target="_blank">
-              Config WiFi
-            </Link>
-            <Link className="menu__item" to={"/configPri"} target="_blank">
-              Config Priority
-            </Link>
+            {/* CONFIG WIFI */}
+            <div className="config__wifi_box">
+              <p className="menu__item">WiFi configuration</p>
+              <div className="item__wifi">
+                <div className="item__wifi_content">
+                  <input
+                    placeholder="device/{id}/cmd"
+                    value={wifiDeviceId}
+                    onChange={handleWifiDevice}
+                    className="item__wifi_input"
+                  />
+                  <input
+                    placeholder="enter wifi name"
+                    value={ssid}
+                    onChange={handleSSID}
+                    className="item__wifi_input"
+                  />
+                  <input
+                    placeholder="enter wifi password"
+                    value={password}
+                    onChange={handlePassword}
+                    className="item__wifi_input"
+                  />
+                  <button
+                    className="item__config_btn"
+                    onClick={handleConfigWifi}
+                  >
+                    CONFIG NOW
+                  </button>
+                </div>
+              </div>
+            </div>
+            {/* CONFIG PRIORITY */}
+            <div className="config__pri_box">
+              <p className="menu__item">Priority configuration</p>
+              <div className="item__pri">
+                <div className="item__pri_content">
+                  <div className="item__pri_input_container">
+                    <input
+                      placeholder="device/{id}/cmd"
+                      value={priDeviceId}
+                      onChange={handlePriDevice}
+                      className="item__pri_input"
+                    />
+                  </div>
+                  <div className="item__pri_list">
+                    {priArray.map((item, index) => (
+                      <div key={index} className="pri__item">
+                        <input
+                          type="radio"
+                          id={item.pri}
+                          name="priorityGroup"
+                          className="pri__item_checkbox"
+                          onChange={() => handleRadioChange(item.pri)}
+                        />
+                        <label className="pri__item_title">
+                          {item.priName}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    className="item__config_btn"
+                    onClick={handleConfigPri}
+                  >
+                    CONFIG NOW
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         {emergency ? <div className="fire">FIRING!!!!!</div> : <></>}
@@ -369,7 +531,7 @@ const HomePage = () => {
                     </div>
                     <div className="info__version">
                       <p className="info__name">Password: </p>
-                      <p className="info__value">
+                      <p className="info__value  small__text">
                         {informationMessages[item].data.WIF.password}
                       </p>
                     </div>

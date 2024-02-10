@@ -19,14 +19,14 @@ const ConfigWifi = () => {
       console.log("Connected to MQTT broker");
 
       const topic = "device/00097/cmd";
-      const payload = {
-        type: "wifi",
-        deviceId: "n_123456",
-        data: { ssidName: "DOREMON", password: "kimtrang1357" },
-      };
+      const payload = ` {
+        type: priority,
+        deviceId: n_123456,
+        data: { value: [2,3,1]},
+      }`;
 
       // Publish the message
-      client.publish(topic, JSON.stringify(payload), (err) => {
+      client.publish(topic, payload, (err) => {
         // Handling the result of the publish
         if (err) {
           console.error(`Error publishing message to topic ${topic}:`, err);
