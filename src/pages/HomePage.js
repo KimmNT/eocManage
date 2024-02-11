@@ -42,89 +42,89 @@ const HomePage = () => {
 
   const brokerUrl = `${brokerConfig.protocol}://${brokerConfig.host}:${brokerConfig.port}`;
 
-  useEffect(() => {
-    // const client = mqtt.connect(brokerUrl, brokerConfig);
+  // useEffect(() => {
+  //   const client = mqtt.connect(brokerUrl, brokerConfig);
 
-    client.on("connect", () => {
-      console.log("Connected to MQTT broker");
+  //   client.on("connect", () => {
+  //     console.log("Connected to MQTT broker");
 
-      // Subscribe to each topic in the state
-      topics.forEach((topic) => {
-        client.subscribe(topic, (err) => {
-          if (err) {
-            console.error(`Error subscribing to topic ${topic}:`, err);
-          } else {
-            console.log(`Subscribed to topic: ${topic}`);
-          }
-        });
-      });
-    });
+  //     // Subscribe to each topic in the state
+  //     topics.forEach((topic) => {
+  //       client.subscribe(topic, (err) => {
+  //         if (err) {
+  //           console.error(`Error subscribing to topic ${topic}:`, err);
+  //         } else {
+  //           console.log(`Subscribed to topic: ${topic}`);
+  //         }
+  //       });
+  //     });
+  //   });
 
-    client.on("message", (topic, payload) => {
-      try {
-        const receivedMessage = JSON.parse(payload.toString());
+  //   client.on("message", (topic, payload) => {
+  //     try {
+  //       const receivedMessage = JSON.parse(payload.toString());
 
-        console.log(`Received message on topic ${topic}:`, receivedMessage);
+  //       console.log(`Received message on topic ${topic}:`, receivedMessage);
 
-        // Check the type and update the state accordingly
-        if (receivedMessage.type === "information") {
-          setInformationMessages((prevMessages) => ({
-            ...prevMessages,
-            [topic]: receivedMessage,
-          }));
-        }
-        //FOR EMERGENCY TYPE
-        if (receivedMessage.type === "emergency") {
-          setEmergencyMessage((prevMessages) => ({
-            ...prevMessages,
-            [topic]: receivedMessage,
-          }));
-          setEmergency(true);
-          const timeoutId = setTimeout(() => {
-            setEmergency(false);
-          }, 5000);
+  //       // Check the type and update the state accordingly
+  //       if (receivedMessage.type === "information") {
+  //         setInformationMessages((prevMessages) => ({
+  //           ...prevMessages,
+  //           [topic]: receivedMessage,
+  //         }));
+  //       }
+  //       //FOR EMERGENCY TYPE
+  //       if (receivedMessage.type === "emergency") {
+  //         setEmergencyMessage((prevMessages) => ({
+  //           ...prevMessages,
+  //           [topic]: receivedMessage,
+  //         }));
+  //         setEmergency(true);
+  //         const timeoutId = setTimeout(() => {
+  //           setEmergency(false);
+  //         }, 5000);
 
-          // Clean up the timeout on component unmount
-          return () => clearTimeout(timeoutId);
-        }
-        //FOR BUTTON TEST TYPE
-        if (receivedMessage.type === "button_test") {
-          setTest(true);
-          const timeoutId = setTimeout(() => {
-            setTest(false);
-          }, 5000);
+  //         // Clean up the timeout on component unmount
+  //         return () => clearTimeout(timeoutId);
+  //       }
+  //       //FOR BUTTON TEST TYPE
+  //       if (receivedMessage.type === "button_test") {
+  //         setTest(true);
+  //         const timeoutId = setTimeout(() => {
+  //           setTest(false);
+  //         }, 5000);
 
-          // Clean up the timeout on component unmount
-          return () => clearTimeout(timeoutId);
-        }
+  //         // Clean up the timeout on component unmount
+  //         return () => clearTimeout(timeoutId);
+  //       }
 
-        // Add similar conditions for other message types if needed
-      } catch (error) {
-        console.error(`Error parsing JSON message on topic ${topic}:`, error);
-      }
-    });
+  //       // Add similar conditions for other message types if needed
+  //     } catch (error) {
+  //       console.error(`Error parsing JSON message on topic ${topic}:`, error);
+  //     }
+  //   });
 
-    client.on("error", (error) => {
-      console.error("MQTT Error:", error);
-    });
+  //   client.on("error", (error) => {
+  //     console.error("MQTT Error:", error);
+  //   });
 
-    client.on("close", () => {
-      console.log("Connection to MQTT broker closed");
-    });
+  //   client.on("close", () => {
+  //     console.log("Connection to MQTT broker closed");
+  //   });
 
-    client.on("offline", () => {
-      console.log("MQTT client is offline");
-    });
+  //   client.on("offline", () => {
+  //     console.log("MQTT client is offline");
+  //   });
 
-    // Clean up on component unmount
-    return () => {
-      topics.forEach((topic) => {
-        client.unsubscribe(topic);
-        console.log(`Unsubscribed from topic: ${topic}`);
-      });
-      client.end(); // Disconnect from the MQTT broker
-    };
-  }, [topics]); // Re-run effect when the topics array changes
+  //   // Clean up on component unmount
+  //   return () => {
+  //     topics.forEach((topic) => {
+  //       client.unsubscribe(topic);
+  //       console.log(`Unsubscribed from topic: ${topic}`);
+  //     });
+  //     client.end(); // Disconnect from the MQTT broker
+  //   };
+  // }, [topics]); // Re-run effect when the topics array changes
 
   //HANDLE TAKE DEVICE'ID INPUT
   const handleDeviceInput = (event) => {
