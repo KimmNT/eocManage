@@ -43,7 +43,7 @@ const HomePage = () => {
   const brokerUrl = `${brokerConfig.protocol}://${brokerConfig.host}:${brokerConfig.port}`;
 
   useEffect(() => {
-    const client = mqtt.connect(brokerUrl, brokerConfig);
+    // const client = mqtt.connect(brokerUrl, brokerConfig);
 
     client.on("connect", () => {
       console.log("Connected to MQTT broker");
