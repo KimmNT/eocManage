@@ -15,6 +15,7 @@ const HomePage = () => {
     "server/00020/data",
     // "server/050202/data",
   ]);
+  const [ismqtt, setIsMqtt] = useState(false);
   const [emergency, setEmergency] = useState(false);
   const [test, setTest] = useState(false);
   const [deviceId, setDeviceId] = useState("");
@@ -42,89 +43,97 @@ const HomePage = () => {
 
   const brokerUrl = `${brokerConfig.protocol}://${brokerConfig.host}:${brokerConfig.port}`;
 
-  // useEffect(() => {
-  //   const client = mqtt.connect(brokerUrl, brokerConfig);
+  const connectToMqtt = () => {
+    const client = mqtt.connect(brokerUrl, brokerConfig);
+    client.on("connect", () => {
+      console.log("Connected to MQTT broker");
+      // Subscribe to each topic in the state
+      topics.forEach((topic) => {
+        client.subscribe(topic, (err) => {
+          if (err) {
+            console.error(`Error subscribing to topic ${topic}:`, err);
+          } else {
+            console.log(`Subscribed to topic: ${topic}`);
+          }
+        });
+      });
+    });
 
-  //   client.on("connect", () => {
-  //     console.log("Connected to MQTT broker");
+    client.on("message", (topic, payload) => {
+      try {
+        const receivedMessage = JSON.parse(payload.toString());
 
-  //     // Subscribe to each topic in the state
-  //     topics.forEach((topic) => {
-  //       client.subscribe(topic, (err) => {
-  //         if (err) {
-  //           console.error(`Error subscribing to topic ${topic}:`, err);
-  //         } else {
-  //           console.log(`Subscribed to topic: ${topic}`);
-  //         }
-  //       });
-  //     });
-  //   });
+        console.log(`Received message on topic ${topic}:`, receivedMessage);
 
-  //   client.on("message", (topic, payload) => {
-  //     try {
-  //       const receivedMessage = JSON.parse(payload.toString());
+        // Check the type and update the state accordingly
+        if (receivedMessage.type === "information") {
+          setInformationMessages((prevMessages) => ({
+            ...prevMessages,
+            [topic]: receivedMessage,
+          }));
+        }
+        //FOR EMERGENCY TYPE
+        if (receivedMessage.type === "emergency") {
+          setEmergencyMessage((prevMessages) => ({
+            ...prevMessages,
+            [topic]: receivedMessage,
+          }));
+          setEmergency(true);
+          const timeoutId = setTimeout(() => {
+            setEmergency(false);
+          }, 5000);
 
-  //       console.log(`Received message on topic ${topic}:`, receivedMessage);
+          // Clean up the timeout on component unmount
+          return () => clearTimeout(timeoutId);
+        }
+        //FOR BUTTON TEST TYPE
+        if (receivedMessage.type === "button_test") {
+          setTest(true);
+          const timeoutId = setTimeout(() => {
+            setTest(false);
+          }, 5000);
 
-  //       // Check the type and update the state accordingly
-  //       if (receivedMessage.type === "information") {
-  //         setInformationMessages((prevMessages) => ({
-  //           ...prevMessages,
-  //           [topic]: receivedMessage,
-  //         }));
-  //       }
-  //       //FOR EMERGENCY TYPE
-  //       if (receivedMessage.type === "emergency") {
-  //         setEmergencyMessage((prevMessages) => ({
-  //           ...prevMessages,
-  //           [topic]: receivedMessage,
-  //         }));
-  //         setEmergency(true);
-  //         const timeoutId = setTimeout(() => {
-  //           setEmergency(false);
-  //         }, 5000);
+          // Clean up the timeout on component unmount
+          return () => clearTimeout(timeoutId);
+        }
 
-  //         // Clean up the timeout on component unmount
-  //         return () => clearTimeout(timeoutId);
-  //       }
-  //       //FOR BUTTON TEST TYPE
-  //       if (receivedMessage.type === "button_test") {
-  //         setTest(true);
-  //         const timeoutId = setTimeout(() => {
-  //           setTest(false);
-  //         }, 5000);
+        // Add similar conditions for other message types if needed
+      } catch (error) {
+        console.error(`Error parsing JSON message on topic ${topic}:`, error);
+      }
+    });
 
-  //         // Clean up the timeout on component unmount
-  //         return () => clearTimeout(timeoutId);
-  //       }
+    client.on("error", (error) => {
+      console.error("MQTT Error:", error);
+    });
 
-  //       // Add similar conditions for other message types if needed
-  //     } catch (error) {
-  //       console.error(`Error parsing JSON message on topic ${topic}:`, error);
-  //     }
-  //   });
+    client.on("close", () => {
+      console.log("Connection to MQTT broker closed");
+    });
 
-  //   client.on("error", (error) => {
-  //     console.error("MQTT Error:", error);
-  //   });
+    client.on("offline", () => {
+      console.log("MQTT client is offline");
+    });
 
-  //   client.on("close", () => {
-  //     console.log("Connection to MQTT broker closed");
-  //   });
+    // Clean up on component unmount
+    return () => {
+      topics.forEach((topic) => {
+        client.unsubscribe(topic);
+        console.log(`Unsubscribed from topic: ${topic}`);
+      });
+      client.end(); // Disconnect from the MQTT broker
+    };
+  };
+  const handleButtonClick = () => {
+    setIsMqtt(true);
+  };
 
-  //   client.on("offline", () => {
-  //     console.log("MQTT client is offline");
-  //   });
-
-  //   // Clean up on component unmount
-  //   return () => {
-  //     topics.forEach((topic) => {
-  //       client.unsubscribe(topic);
-  //       console.log(`Unsubscribed from topic: ${topic}`);
-  //     });
-  //     client.end(); // Disconnect from the MQTT broker
-  //   };
-  // }, [topics]); // Re-run effect when the topics array changes
+  useEffect(() => {
+    if (ismqtt) {
+      const cleanup = connectToMqtt();
+      return cleanup; // This cleanup function will be called when ismqtt becomes false or on component unmount
+    }
+  }, [ismqtt, topics]);
 
   //HANDLE TAKE DEVICE'ID INPUT
   const handleDeviceInput = (event) => {
@@ -155,6 +164,10 @@ const HomePage = () => {
   const handleAddDevice = () => {
     setTopics((preDevice) => [...preDevice, deviceId]);
     setDeviceId("");
+  };
+  const handleConnectMQTT = () => {
+    setIsMqtt(true);
+    console.log(ismqtt);
   };
 
   //HANDLE DELETE DEIVCE
@@ -247,6 +260,9 @@ const HomePage = () => {
               />
               <button className="create__btn" onClick={handleAddDevice}>
                 +
+              </button>
+              <button className="create__btn" onClick={handleButtonClick}>
+                *
               </button>
             </div>
           </div>
