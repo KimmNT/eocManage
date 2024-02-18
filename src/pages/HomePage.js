@@ -13,9 +13,8 @@ const HomePage = () => {
     "server/00108/data",
     "server/00113/data",
     "server/00020/data",
-    // "server/050202/data",
+    "server/050202/data",
   ]);
-  const [ismqtt, setIsMqtt] = useState(false);
   const [emergency, setEmergency] = useState(false);
   const [test, setTest] = useState(false);
   const [deviceId, setDeviceId] = useState("");
@@ -43,7 +42,7 @@ const HomePage = () => {
 
   const brokerUrl = `${brokerConfig.protocol}://${brokerConfig.host}:${brokerConfig.port}`;
 
-  const connectToMqtt = () => {
+  useEffect(() => {
     const client = mqtt.connect(brokerUrl, brokerConfig);
     client.on("connect", () => {
       console.log("Connected to MQTT broker");
@@ -123,17 +122,7 @@ const HomePage = () => {
       });
       client.end(); // Disconnect from the MQTT broker
     };
-  };
-  const handleButtonClick = () => {
-    setIsMqtt(true);
-  };
-
-  useEffect(() => {
-    if (ismqtt) {
-      const cleanup = connectToMqtt();
-      return cleanup; // This cleanup function will be called when ismqtt becomes false or on component unmount
-    }
-  }, [ismqtt, topics]);
+  }, [topics]); // Re-run effect when the topics array changes
 
   //HANDLE TAKE DEVICE'ID INPUT
   const handleDeviceInput = (event) => {
@@ -164,10 +153,6 @@ const HomePage = () => {
   const handleAddDevice = () => {
     setTopics((preDevice) => [...preDevice, deviceId]);
     setDeviceId("");
-  };
-  const handleConnectMQTT = () => {
-    setIsMqtt(true);
-    console.log(ismqtt);
   };
 
   //HANDLE DELETE DEIVCE
@@ -260,9 +245,6 @@ const HomePage = () => {
               />
               <button className="create__btn" onClick={handleAddDevice}>
                 +
-              </button>
-              <button className="create__btn" onClick={handleButtonClick}>
-                *
               </button>
             </div>
           </div>
