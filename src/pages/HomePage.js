@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import mqtt from "mqtt";
 import "../scss/HomeStyle.scss";
+import { FaWifi } from "react-icons/fa";
+import { FaThList } from "react-icons/fa";
 
 const HomePage = () => {
   // const [message, setMessages] = useState({});
@@ -279,7 +281,10 @@ const HomePage = () => {
           <div className="header__menu">
             {/* CONFIG WIFI */}
             <div className="config__wifi_box">
-              <p className="menu__item">WiFi configuration</p>
+              {/* <p className="menu__item">WiFi configuration</p> */}
+              <div className="config__icon_container">
+                <FaWifi className="config__icon" />
+              </div>
               <div className="item__wifi">
                 <div className="item__wifi_content">
                   <input
@@ -310,7 +315,10 @@ const HomePage = () => {
             </div>
             {/* CONFIG PRIORITY */}
             <div className="config__pri_box">
-              <p className="menu__item">Priority configuration</p>
+              {/* <p className="menu__item">Priority configuration</p> */}
+              <div className="config__icon_container">
+                <FaThList className="config__icon" />
+              </div>
               <div className="item__pri">
                 <div className="item__pri_content">
                   <div className="item__pri_input_container">
@@ -347,9 +355,14 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-        {emergency ? <div className="fire">FIRING!!!!!</div> : <></>}
-        {test ? <div className="test">TESTING!!!!!</div> : <></>}
-        {config ? <div className="config">successfully!!!!!</div> : <></>}
+        {emergency ? <div className="fire">FIRING!!</div> : <></>}
+        {test ? <div className="test">TESTING!!</div> : <></>}
+        {config ? <div className="config">successfully!!</div> : <></>}
+        {emergency || test || config ? (
+          <></>
+        ) : (
+          <div className="header__bottom_width"></div>
+        )}
       </div>
       {emergency || test || config ? <div className="alert__box"></div> : <></>}
       <div className="content">
