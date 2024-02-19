@@ -17,6 +17,7 @@ const HomePage = () => {
   ]);
   const [emergency, setEmergency] = useState(false);
   const [test, setTest] = useState(false);
+  const [config, setConfig] = useState(false);
   const [deviceId, setDeviceId] = useState("");
   const [wifiDeviceId, setWifiDeviceId] = useState("");
   const [ssid, setSSID] = useState("");
@@ -41,6 +42,21 @@ const HomePage = () => {
   };
 
   const brokerUrl = `${brokerConfig.protocol}://${brokerConfig.host}:${brokerConfig.port}`;
+
+  useEffect(() => {
+    let configTimeout;
+
+    if (config) {
+      configTimeout = setTimeout(() => {
+        setConfig(false);
+      }, 3000);
+    }
+
+    // Cleanup function for useEffect
+    return () => {
+      clearTimeout(configTimeout);
+    };
+  }, [config]); // Dependency array to re-run effect when 'config' changes
 
   useEffect(() => {
     const client = mqtt.connect(brokerUrl, brokerConfig);
@@ -122,7 +138,7 @@ const HomePage = () => {
       });
       client.end(); // Disconnect from the MQTT broker
     };
-  }, [topics]); // Re-run effect when the topics array changes
+  }, [topics, brokerUrl]); // Re-run effect when the topics array changes
 
   //HANDLE TAKE DEVICE'ID INPUT
   const handleDeviceInput = (event) => {
@@ -172,10 +188,15 @@ const HomePage = () => {
       console.log("Connected to MQTT broker");
 
       const topic = wifiDeviceId;
-      const payload = ` {
+      // const payload = `{
+      //   "type": "wifi",
+      //   "deviceId": "n_123456",
+      //   "data": { "ssidName": "${ssid}", "password": "${password}" },
+      // }`;
+      const payload = `{
         type: wifi,
         deviceId: n_123456,
-        data: { ssidName: ${ssid} , password: ${password} },
+        data: { ssidName: ${ssid}, password: ${password} },
       }`;
 
       // Publish the message
@@ -192,10 +213,11 @@ const HomePage = () => {
         // Disconnect from the MQTT broker
         client.end();
       });
-      setWifiDeviceId("");
-      setSSID("");
-      setPassword("");
     });
+    setWifiDeviceId("");
+    setSSID("");
+    setPassword("");
+    setConfig(true);
   };
 
   //HANDLE PRIORITY CONFIGURATION
@@ -207,10 +229,15 @@ const HomePage = () => {
 
       const topic = priDeviceId;
       const payload = ` {
-        type: priority,
-        deviceId: n_123456,
-        data: { value: [${selectedOption}]},
+        "type": "priority",
+        "deviceId": "n_123456",
+        "data": { "value": "[${selectedOption}]"},
       }`;
+      // const payload = ` {
+      //   type: priority,
+      //   deviceId: n_123456,
+      //   data: { value: [${selectedOption}]},
+      // }`;
 
       // Publish the message
       client.publish(topic, payload, (err) => {
@@ -228,6 +255,7 @@ const HomePage = () => {
       });
     });
     setPriDeviceId("");
+    setConfig(true);
   };
 
   return (
@@ -274,8 +302,7 @@ const HomePage = () => {
                   />
                   <button
                     className="item__config_btn"
-                    onClick={handleConfigWifi}
-                  >
+                    onClick={handleConfigWifi}>
                     CONFIG NOW
                   </button>
                 </div>
@@ -312,8 +339,7 @@ const HomePage = () => {
                   </div>
                   <button
                     className="item__config_btn"
-                    onClick={handleConfigPri}
-                  >
+                    onClick={handleConfigPri}>
                     CONFIG NOW
                   </button>
                 </div>
@@ -323,8 +349,9 @@ const HomePage = () => {
         </div>
         {emergency ? <div className="fire">FIRING!!!!!</div> : <></>}
         {test ? <div className="test">TESTING!!!!!</div> : <></>}
+        {config ? <div className="config">successfully!!!!!</div> : <></>}
       </div>
-      {emergency || test ? <div className="alert__box"></div> : <></>}
+      {emergency || test || config ? <div className="alert__box"></div> : <></>}
       <div className="content">
         <div className="device__list">
           {topics.map((item, index) => (
@@ -548,7 +575,7 @@ const HomePage = () => {
                   emergencyMessage[item] &&
                   informationMessages[item] &&
                   emergencyMessage[item].id === informationMessages[item].id ? (
-                    <p>{emergencyMessage[item].id}</p>
+                    <p>Ở ĐÂY ĐANG CHÁY TO VCL</p>
                   ) : (
                     <></>
                   )}
@@ -563,8 +590,7 @@ const HomePage = () => {
               )}
               <button
                 className="device_detele"
-                onClick={() => handleDeleteDevice(index)}
-              >
+                onClick={() => handleDeleteDevice(index)}>
                 X
               </button>
             </div>

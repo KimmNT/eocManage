@@ -52,16 +52,20 @@ body {
       background-color: $dark;
     }
     .header__content {
-      @media (min-width:$large){
+      @media (min-width: $large) {
         max-width: 1290px !important;
         margin: 0 auto;
       }
-      @media (min-width: $desktopMin) and (max-width: $desktopMax)
-      {
+      @media (min-width: $desktopMin) and (max-width: $desktopMax) {
         max-width: 950px !important;
         margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        gap: 3rem;
       }
-      @media (min-width: $tabletMin) and (max-width: $tabletMax){
+      @media (min-width: $tabletMin) and (max-width: $tabletMax) {
         max-width: 750px !important;
         margin: 0 auto;
         display: flex;
@@ -70,34 +74,35 @@ body {
         flex-direction: column;
         gap: 3rem;
       }
-      @media (min-width: $mobileMin) and (max-width: $mobileMax){
+      @media (min-width: $mobileMin) and (max-width: $mobileMax) {
         max-width: 550px !important;
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-direction: column;
-        gap: 3rem;
+        gap: 5rem;
       }
-      @media (max-width: $tiny){
+      @media (max-width: $tiny) {
         max-width: 550px !important;
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-direction: column;
-        gap: 3rem;
+        gap: 2rem;
       }
       padding: 2rem 0rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       .header__headline {
-        @media (max-width: $tiny){
+        @media (max-width: $tiny) {
           display: flex;
           align-items: center;
           flex-direction: column;
           justify-self: center;
+          gap: 1rem;
         }
         display: flex;
         align-items: center;
@@ -136,21 +141,24 @@ body {
         display: flex;
         justify-content: center;
         gap: 5rem;
-        .config__wifi_box{
+        @media (max-width: $tiny) {
+          gap: 2rem;
+          flex-direction: column;
+        }
+        .config__wifi_box {
           position: relative;
-          &:hover{
-            transition: all ease-in-out .3s;
+          &:hover {
+            transition: all ease-in-out 0.3s;
             cursor: pointer;
             .menu__item {
               color: $light;
               background-color: $dark;
-
             }
-            .item__wifi{
+            .item__wifi {
               display: block;
               position: absolute;
               top: 4rem;
-              transition: all ease-in-out .3s;
+              transition: all ease-in-out 0.3s;
               // opacity: 1;
             }
           }
@@ -163,9 +171,8 @@ body {
             background-color: $light;
             border-radius: 2rem;
             text-transform: uppercase;
-
           }
-          .item__wifi{
+          .item__wifi {
             position: absolute;
             display: none;
             top: 6rem;
@@ -173,8 +180,8 @@ body {
             // opacity: 0;
             padding: 1rem 0;
             z-index: 99;
-            transition: all ease-in-out .3s;
-            .item__wifi_content{
+            transition: all ease-in-out 0.3s;
+            .item__wifi_content {
               background-color: $light;
               padding: 2rem;
               display: flex;
@@ -191,7 +198,7 @@ body {
                 font-size: 1.5rem;
                 font-weight: 600;
               }
-              .item__config_btn{
+              .item__config_btn {
                 background-color: $dark;
                 padding: 1rem 0rem;
                 border-radius: 3rem;
@@ -203,18 +210,18 @@ body {
             }
           }
         }
-        .config__pri_box{
+        .config__pri_box {
           position: relative;
-          &:hover{
-            transition: all ease-in-out .3s;
-            .item__pri{
+          &:hover {
+            transition: all ease-in-out 0.3s;
+            .item__pri {
               display: block;
               position: absolute;
               top: 4rem;
-              transition: all ease-in-out .3s;
+              transition: all ease-in-out 0.3s;
               opacity: 1;
             }
-            .menu__item{
+            .menu__item {
               background-color: $dark;
               color: $light;
             }
@@ -230,7 +237,7 @@ body {
             text-transform: uppercase;
             cursor: pointer;
           }
-          .item__pri{
+          .item__pri {
             position: absolute;
             top: 6rem;
             right: 0;
@@ -239,9 +246,13 @@ body {
             // display: block;
             padding: 1rem 0;
             z-index: 99;
-            transition: all ease-in-out .3s;
+            transition: all ease-in-out 0.3s;
             width: 48rem;
-            .item__pri_content{
+            @media (max-width: $tiny) {
+              right: -3rem;
+              width: 30rem;
+            }
+            .item__pri_content {
               background-color: $light;
               padding: 2rem;
               display: flex;
@@ -249,7 +260,7 @@ body {
               gap: 1rem;
               border-radius: 2rem;
               border: 2px solid $dark;
-              .item__pri_input_container{
+              .item__pri_input_container {
                 input {
                   background-color: #cccccc;
                   outline: none;
@@ -261,50 +272,56 @@ body {
                   width: 100%;
                 }
               }
-              .item__pri_list{
+              .item__pri_list {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 flex-wrap: wrap;
                 gap: 2rem;
                 padding: 2rem 0;
-                .pri__item{
+                @media (max-width: $tiny) {
+                  flex-direction: column;
+                }
+                .pri__item {
                   width: 45%;
                   display: flex;
                   align-items: center;
                   gap: 1rem;
-                  background-color: #EDEDED;
+                  background-color: #ededed;
                   padding: 1.5rem 3rem;
                   border-radius: 2rem;
-                  transition: all ease-in-out .2s;
-                  &:hover{
-                  transition: all ease-in-out .2s;
+                  transition: all ease-in-out 0.2s;
+                  @media (max-width: $tiny) {
+                    width: 100%;
+                  }
+                  &:hover {
+                    transition: all ease-in-out 0.2s;
                     background-color: $dark;
-                    .pri__item_title{
+                    .pri__item_title {
                       color: $light;
-                  transition: all ease-in-out .2s;
-
+                      transition: all ease-in-out 0.2s;
                     }
                   }
-                  input{
+                  input {
                     cursor: pointer;
                   }
-                  .pri__item_title{
+                  .pri__item_title {
                     font-size: 1.5rem;
                     font-weight: 900;
                     color: $dark;
-                  transition: all ease-in-out .3s;
-
+                    transition: all ease-in-out 0.3s;
                   }
                 }
               }
-              .item__config_btn{
+              .item__config_btn {
                 background-color: $dark;
                 padding: 1.5rem 0rem;
                 border-radius: 3rem;
                 color: $light;
                 font-weight: 600;
                 cursor: pointer;
+                @media (max-width: $tiny) {
+                }
               }
             }
           }
@@ -331,51 +348,57 @@ body {
       padding: 2rem 0;
       color: $light;
     }
+    .config {
+      position: relative;
+      // z-index: 99;
+      width: 100%;
+      background-color: #0d9276;
+      font-size: 7rem;
+      text-align: center;
+      padding: 2rem 0;
+      color: $light;
+      text-transform: uppercase;
+    }
   }
   .content {
-    @media (min-width:$large){
+    @media (min-width: $large) {
       max-width: 1290px !important;
       margin: 0 auto;
     }
-    @media (min-width: $desktopMin) and (max-width: $desktopMax)
-    {
+    @media (min-width: $desktopMin) and (max-width: $desktopMax) {
       max-width: 950px !important;
       margin: 0 auto;
     }
-    @media (min-width: $tabletMin) and (max-width: $tabletMax){
+    @media (min-width: $tabletMin) and (max-width: $tabletMax) {
       max-width: 750px !important;
       margin: 0 auto;
       padding-top: 25rem;
-
     }
-    @media (min-width: $mobileMin) and (max-width: $mobileMax){
+    @media (min-width: $mobileMin) and (max-width: $mobileMax) {
       max-width: 550px !important;
       margin: 0 auto;
       padding-top: 25rem;
-
     }
-    @media (max-width: $tiny){
+    @media (max-width: $tiny) {
       max-width: 550px !important;
       margin: 0 auto;
       padding-top: 35rem;
     }
     padding-top: 20rem;
     .device__list {
-      @media (min-width:$large){
-
+      @media (min-width: $large) {
       }
-      @media (min-width: $desktopMin) and (max-width: $desktopMax)
-      {
+      @media (min-width: $desktopMin) and (max-width: $desktopMax) {
       }
-      @media (min-width: $tabletMin) and (max-width: $tabletMax){
+      @media (min-width: $tabletMin) and (max-width: $tabletMax) {
         justify-content: center;
         gap: 10rem;
       }
-      @media (min-width: $mobileMin) and (max-width: $mobileMax){
+      @media (min-width: $mobileMin) and (max-width: $mobileMax) {
         justify-content: center;
         gap: 10rem;
       }
-      @media (max-width: $tiny){
+      @media (max-width: $tiny) {
         justify-content: center;
         gap: 10rem;
       }
@@ -385,26 +408,23 @@ body {
       flex-wrap: wrap;
       gap: 14rem;
       .device {
-        @media (min-width:$large){
+        @media (min-width: $large) {
           width: 26%;
         }
-        @media (min-width: $desktopMin) and (max-width: $desktopMax)
-        {
+        @media (min-width: $desktopMin) and (max-width: $desktopMax) {
           width: 40%;
         }
-        @media (min-width: $tabletMin) and (max-width: $tabletMax){
+        @media (min-width: $tabletMin) and (max-width: $tabletMax) {
           width: 60%;
-
         }
-        @media (min-width: $mobileMin) and (max-width: $mobileMax){
+        @media (min-width: $mobileMin) and (max-width: $mobileMax) {
           width: 80%;
         }
-        @media (max-width: $tiny){
+        @media (max-width: $tiny) {
           width: 80%;
-
         }
         position: relative;
-        height: 53rem;
+        height: 54rem;
         width: 25%;
         background-color: $light;
         padding: 2rem;
@@ -552,7 +572,7 @@ body {
       }
     }
   }
-  .alert__box{
+  .alert__box {
     width: 100%;
     padding-top: 10rem;
     background-color: transparent;
