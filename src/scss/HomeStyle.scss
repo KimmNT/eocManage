@@ -4,6 +4,7 @@ $backGround: #e9e1db;
 $dark: #000;
 $light: #fff;
 $delete: #d04848;
+$configIconColor: #f8f4ec;
 $boxShadow: -7px 10px 5px 1px rgb(168, 168, 168);
 
 //RES
@@ -145,11 +146,10 @@ body {
             transition: all ease-in-out 0.3s;
             cursor: pointer;
             .config__icon_container {
-              background-color: $light;
-              border: 0.2rem solid $dark;
+              background-color: $dark;
               transition: all ease-in-out 0.3s;
               .config__icon {
-                color: $dark;
+                color: $light;
               }
             }
             .item__wifi {
@@ -160,9 +160,9 @@ body {
             }
           }
           .config__icon_container {
-            background-color: $dark;
+            background-color: $configIconColor;
             outline: none;
-            border: $light;
+            border: 0.2rem solid $dark;
             width: 5rem;
             height: 5rem;
             border-radius: 50%;
@@ -173,7 +173,7 @@ body {
             transition: all ease-in-out 0.3s;
             .config__icon {
               font-size: 2rem;
-              color: $light;
+              color: $dark;
             }
           }
           .item__wifi {
@@ -229,18 +229,17 @@ body {
               opacity: 1;
             }
             .config__icon_container {
-              background-color: $light;
-              border: 0.2rem solid $dark;
+              background-color: $dark;
               transition: all ease-in-out 0.3s;
               .config__icon {
-                color: $dark;
+                color: $light;
               }
             }
           }
           .config__icon_container {
-            background-color: $dark;
+            background-color: $configIconColor;
             outline: none;
-            border: $light;
+            border: 0.2rem solid $dark;
             width: 5rem;
             height: 5rem;
             border-radius: 50%;
@@ -251,7 +250,7 @@ body {
             transition: all ease-in-out 0.3s;
             .config__icon {
               font-size: 2rem;
-              color: $light;
+              color: $dark;
             }
           }
           .item__pri {
@@ -396,6 +395,7 @@ body {
     @media (min-width: $desktopMin) and (max-width: $desktopMax) {
       max-width: 950px !important;
       margin: 0 auto;
+      padding-top: 25rem;
     }
     @media (min-width: $tabletMin) and (max-width: $tabletMax) {
       max-width: 750px !important;

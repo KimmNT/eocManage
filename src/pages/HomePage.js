@@ -3,20 +3,16 @@ import mqtt from "mqtt";
 import "../scss/HomeStyle.scss";
 import { FaWifi } from "react-icons/fa";
 import { FaThList } from "react-icons/fa";
+import { FaFireAlt } from "react-icons/fa";
+import { FaInfo } from "react-icons/fa";
+import { FaRegCheckCircle } from "react-icons/fa";
 
 const HomePage = () => {
   // const [message, setMessages] = useState({});
   const [informationMessages, setInformationMessages] = useState({});
   const [emergencyMessage, setEmergencyMessage] = useState({});
-  const [topics, setTopics] = useState([
-    "server/00097/data",
-    "server/00003/data",
-    "server/00012/data",
-    "server/00108/data",
-    "server/00113/data",
-    "server/00020/data",
-    "server/050202/data",
-  ]);
+  const [startMessage, setStartMessage] = useState({});
+  const [topics, setTopics] = useState([]);
   const [emergency, setEmergency] = useState(false);
   const [test, setTest] = useState(false);
   const [config, setConfig] = useState(false);
@@ -26,6 +22,8 @@ const HomePage = () => {
   const [password, setPassword] = useState("");
   const [selectedOption, setSelectedOption] = useState(null);
   const [priDeviceId, setPriDeviceId] = useState("");
+
+  const [countReset, setCountReset] = useState(0);
 
   const priArray = [
     { priName: "SIM-LAN-WiFi", pri: [1, 2, 3] },
@@ -113,6 +111,10 @@ const HomePage = () => {
           // Clean up the timeout on component unmount
           return () => clearTimeout(timeoutId);
         }
+        //FOR CHECKING RESTART
+        if (receivedMessage.type === "start_program") {
+          setCountReset((prevCountReset) => prevCountReset + 1);
+        }
 
         // Add similar conditions for other message types if needed
       } catch (error) {
@@ -162,14 +164,13 @@ const HomePage = () => {
   const handlePriDevice = (event) => {
     setPriDeviceId(event.target.value);
   };
-
   const handleRadioChange = (value) => {
     setSelectedOption(value);
   };
 
   //HANDLE CREATE DEVICE
   const handleAddDevice = () => {
-    setTopics((preDevice) => [...preDevice, deviceId]);
+    setTopics((preDevice) => [...preDevice, `server/${deviceId}/data`]);
     setDeviceId("");
   };
 
@@ -189,17 +190,17 @@ const HomePage = () => {
     client.on("connect", () => {
       console.log("Connected to MQTT broker");
 
-      const topic = wifiDeviceId;
-      // const payload = `{
-      //   "type": "wifi",
-      //   "deviceId": "n_123456",
-      //   "data": { "ssidName": "${ssid}", "password": "${password}" },
-      // }`;
+      const topic = `device/${wifiDeviceId}/cmd`;
       const payload = `{
-        type: wifi,
-        deviceId: n_123456,
-        data: { ssidName: ${ssid}, password: ${password} },
+        "type": "wifi",
+        "deviceId": "n_123456",
+        "data": { "ssidName": "${ssid}", "password": "${password}" },
       }`;
+      // const payload = `{
+      //   type: wifi,
+      //   deviceId: n_123456,
+      //   data: { ssidName: ${ssid}, password: ${password} },
+      // }`;
 
       // Publish the message
       client.publish(topic, payload, (err) => {
@@ -220,6 +221,7 @@ const HomePage = () => {
     setSSID("");
     setPassword("");
     setConfig(true);
+    topics.map((item) => console.log(item));
   };
 
   //HANDLE PRIORITY CONFIGURATION
@@ -229,7 +231,7 @@ const HomePage = () => {
     client.on("connect", () => {
       console.log("Connected to MQTT broker");
 
-      const topic = priDeviceId;
+      const topic = `device/${priDeviceId}/cmd`;
       const payload = ` {
         "type": "priority",
         "deviceId": "n_123456",
@@ -288,7 +290,7 @@ const HomePage = () => {
               <div className="item__wifi">
                 <div className="item__wifi_content">
                   <input
-                    placeholder="device/{id}/cmd"
+                    placeholder="enter device's id"
                     value={wifiDeviceId}
                     onChange={handleWifiDevice}
                     className="item__wifi_input"
@@ -323,7 +325,7 @@ const HomePage = () => {
                 <div className="item__pri_content">
                   <div className="item__pri_input_container">
                     <input
-                      placeholder="device/{id}/cmd"
+                      placeholder="enter device's id"
                       value={priDeviceId}
                       onChange={handlePriDevice}
                       className="item__pri_input"
@@ -355,9 +357,27 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-        {emergency ? <div className="fire">FIRING!!</div> : <></>}
-        {test ? <div className="test">TESTING!!</div> : <></>}
-        {config ? <div className="config">successfully!!</div> : <></>}
+        {emergency ? (
+          <div className="fire">
+            <FaFireAlt />
+          </div>
+        ) : (
+          <></>
+        )}
+        {test ? (
+          <div className="test">
+            <FaInfo />
+          </div>
+        ) : (
+          <></>
+        )}
+        {config ? (
+          <div className="config">
+            <FaRegCheckCircle />
+          </div>
+        ) : (
+          <></>
+        )}
         {emergency || test || config ? (
           <></>
         ) : (
@@ -369,23 +389,9 @@ const HomePage = () => {
         <div className="device__list">
           {topics.map((item, index) => (
             <div className="device" key={index}>
-              {item === "server/00097/data" ? (
-                <p className="device__name">{item} - Thin</p>
-              ) : item === "server/00003/data" ? (
-                <p className="device__name">{item} - A.Đăng</p>
-              ) : item === "server/00012/data" ? (
-                <p className="device__name">{item} - Tứn Eng</p>
-              ) : item === "server/00108/data" ? (
-                <p className="device__name">{item} - A.Thịn</p>
-              ) : item === "server/00113/data" ? (
-                <p className="device__name">{item} - A.Ruy</p>
-              ) : item === "server/00020/data" ? (
-                <p className="device__name">{item} - Tứn Ang</p>
-              ) : item === "server/050202/data" ? (
-                <p className="device__name">{item} - Tứn Ang</p>
-              ) : (
-                <p className="device__name">{item}</p>
-              )}
+              <p className="device__name">
+                {item} - {countReset}
+              </p>
               {informationMessages[item] ? (
                 <div className="device__info">
                   {/* VERSION */}
@@ -584,14 +590,6 @@ const HomePage = () => {
                       <p className="info__value">BATTERY</p>
                     )}
                   </div>
-                  {emergency &&
-                  emergencyMessage[item] &&
-                  informationMessages[item] &&
-                  emergencyMessage[item].id === informationMessages[item].id ? (
-                    <p>Ở ĐÂY ĐANG CHÁY TO VCL</p>
-                  ) : (
-                    <></>
-                  )}
                 </div>
               ) : (
                 <div className="welcome">
