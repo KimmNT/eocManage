@@ -1,11 +1,15 @@
 //VARIABLES
-$primary: #000;
+$primary: #f73718;
+$secondary: #12674a;
 $backGround: #e9e1db;
-$dark: #000;
+$dark: #281713;
 $light: #fff;
 $delete: #d04848;
 $configIconColor: #f8f4ec;
 $boxShadow: -7px 10px 5px 1px rgb(168, 168, 168);
+$emergencyAlertColor: #d04848;
+$testAlertColor: #fc6736;
+$buttonBgc: #f0f0f0;
 
 //RES
 $large: 1290px;
@@ -47,7 +51,7 @@ body {
     background-color: $backGround;
     .header__bottom_width {
       width: 100%;
-      height: 0.5rem;
+      height: 0.3rem;
       background-color: $dark;
     }
     .header__content {
@@ -91,7 +95,7 @@ body {
         flex-direction: column;
         gap: 2rem;
       }
-      padding: 2rem 0rem;
+      padding: 5rem 0rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -107,32 +111,42 @@ body {
         align-items: center;
         gap: 5rem;
         .headline__title {
-          font-size: 6rem;
-          font-weight: 600;
+          font-size: 5rem;
+          font-weight: 900;
+          color: $light;
+          text-transform: uppercase;
+          padding: 1rem;
+          background-color: $primary;
+          border-radius: 1rem;
         }
         .headline__create {
           display: flex;
           align-items: center;
           gap: 2rem;
           input {
-            background-color: #bebebe;
+            background-color: transparent;
             outline: none;
             border: none;
             padding: 1rem 2rem;
-            border-radius: 3rem;
             font-size: 2rem;
-            font-weight: 400;
+            font-weight: 900;
+            border-bottom: 0.2rem solid $dark;
           }
           .create__btn {
-            background-color: $dark;
+            background-color: $secondary;
             outline: none;
             border: $light;
             width: 5rem;
             height: 5rem;
             border-radius: 50%;
-            font-size: 4rem;
             cursor: pointer;
-            color: $light;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .create__btn_icon {
+              font-size: 4rem;
+              color: $light;
+            }
           }
         }
       }
@@ -146,7 +160,7 @@ body {
             transition: all ease-in-out 0.3s;
             cursor: pointer;
             .config__icon_container {
-              background-color: $dark;
+              background-color: $secondary;
               transition: all ease-in-out 0.3s;
               .config__icon {
                 color: $light;
@@ -162,7 +176,7 @@ body {
           .config__icon_container {
             background-color: $configIconColor;
             outline: none;
-            border: 0.2rem solid $dark;
+            border: 0.2rem solid $secondary;
             width: 5rem;
             height: 5rem;
             border-radius: 50%;
@@ -173,7 +187,7 @@ body {
             transition: all ease-in-out 0.3s;
             .config__icon {
               font-size: 2rem;
-              color: $dark;
+              color: $secondary;
             }
           }
           .item__wifi {
@@ -190,29 +204,31 @@ body {
             }
             .item__wifi_content {
               background-color: $light;
-              padding: 2rem;
+              padding: 2rem 3rem;
               display: flex;
               flex-direction: column;
               gap: 1rem;
               border-radius: 2rem;
               border: 2px solid $dark;
               input {
-                background-color: #cccccc;
+                background-color: transparent;
                 outline: none;
                 border: none;
                 padding: 1.5rem;
-                border-radius: 3rem;
                 font-size: 1.5rem;
                 font-weight: 600;
+                border-bottom: 0.2rem solid $dark;
               }
               .item__config_btn {
-                background-color: $dark;
+                background-color: $secondary;
                 padding: 1rem 0rem;
                 border-radius: 3rem;
                 color: $light;
                 font-weight: 600;
-                margin-top: 2rem;
+                border: 0.2rem solid $secondary;
+                font-size: 1.5rem;
                 cursor: pointer;
+                margin-top: 2.5rem;
               }
             }
           }
@@ -229,7 +245,7 @@ body {
               opacity: 1;
             }
             .config__icon_container {
-              background-color: $dark;
+              background-color: $secondary;
               transition: all ease-in-out 0.3s;
               .config__icon {
                 color: $light;
@@ -239,7 +255,7 @@ body {
           .config__icon_container {
             background-color: $configIconColor;
             outline: none;
-            border: 0.2rem solid $dark;
+            border: 0.2rem solid $secondary;
             width: 5rem;
             height: 5rem;
             border-radius: 50%;
@@ -250,7 +266,7 @@ body {
             transition: all ease-in-out 0.3s;
             .config__icon {
               font-size: 2rem;
-              color: $dark;
+              color: $secondary;
             }
           }
           .item__pri {
@@ -281,14 +297,14 @@ body {
               border: 2px solid $dark;
               .item__pri_input_container {
                 input {
-                  background-color: #cccccc;
+                  background-color: transparent;
                   outline: none;
                   border: none;
                   padding: 1.5rem;
-                  border-radius: 3rem;
                   font-size: 1.5rem;
                   font-weight: 600;
                   width: 100%;
+                  border-bottom: 0.2rem solid $dark;
                 }
               }
               .item__pri_list {
@@ -308,7 +324,7 @@ body {
                   gap: 1rem;
                   background-color: #ededed;
                   padding: 1.5rem 3rem;
-                  border-radius: 2rem;
+                  border-radius: 1rem;
                   transition: all ease-in-out 0.2s;
                   @media (max-width: $tiny) {
                     width: 48%;
@@ -338,11 +354,13 @@ body {
                 }
               }
               .item__config_btn {
-                background-color: $dark;
-                padding: 1.5rem 0rem;
+                background-color: $secondary;
+                padding: 1rem 0rem;
                 border-radius: 3rem;
                 color: $light;
                 font-weight: 600;
+                border: 0.2rem solid $secondary;
+                font-size: 2rem;
                 cursor: pointer;
                 @media (max-width: $tiny) {
                 }
@@ -361,6 +379,13 @@ body {
       text-align: center;
       padding: 2rem 0;
       color: $light;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .alert__id {
+        font-size: 4rem;
+        margin-left: 2rem;
+      }
     }
     .test {
       position: relative;
@@ -371,6 +396,13 @@ body {
       text-align: center;
       padding: 2rem 0;
       color: $light;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .alert__id {
+        font-size: 4rem;
+        margin-left: 2rem;
+      }
     }
     .config {
       position: relative;
@@ -413,6 +445,74 @@ body {
       padding-top: 35rem;
     }
     padding-top: 20rem;
+    .find__container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      align-items: center;
+      padding: 3rem 0rem 8rem 0rem;
+      @media (max-width: $mobileMin) {
+        flex-direction: column;
+        gap: 4rem;
+        padding: 2rem 0rem 6rem 0rem;
+      }
+      .find__count {
+        font-size: 2rem;
+        color: $dark;
+        font-weight: 600;
+        display: flex;
+        align-items: flex-end;
+        .count__number {
+          font-size: 3rem;
+          margin-right: 1rem;
+        }
+      }
+      .search_container {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+        justify-content: flex-end;
+        input {
+          padding: 1rem;
+          font-size: 1.5rem;
+          font-weight: 600;
+          background-color: transparent;
+          outline: none;
+          border: none;
+          border-bottom: 0.2rem solid $dark;
+        }
+        .search__btn {
+          width: 4rem;
+          height: 4rem;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          background-color: $secondary;
+          border: none;
+          .search__btn_icon {
+            font-size: 1.5rem;
+            color: $light;
+          }
+        }
+        .clear__btn {
+          width: 4rem;
+          height: 4rem;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border: none;
+          cursor: pointer;
+          background-color: $light;
+          .clear__btn_icon {
+            font-size: 1.5rem;
+            color: $secondary;
+          }
+        }
+      }
+    }
     .device__list {
       @media (min-width: $large) {
       }
@@ -459,7 +559,7 @@ body {
         border-radius: 1.5rem;
         box-shadow: $boxShadow;
         .device__name {
-          background-color: $dark;
+          background-color: $secondary;
           width: 100%;
           font-size: 1.5rem;
           color: $light;
@@ -514,12 +614,14 @@ body {
                   font-weight: 600;
                   padding: 0.5rem 2rem;
                   border-radius: 0.5rem;
-                  font-weight: 900;
+                  font-weight: 600;
                   color: $dark;
                 }
                 .active {
-                  background-color: #fc9e70;
+                  background-color: $secondary;
                   color: $light;
+                  font-weight: 900;
+                  // border: 0.3rem solid $secondary;
                 }
               }
             }
@@ -582,8 +684,8 @@ body {
         }
         .device_detele {
           position: absolute;
-          top: -1.2rem;
-          right: -1.2rem;
+          top: -1.3rem;
+          right: -1.3rem;
           width: 3rem;
           height: 3rem;
           border-radius: 50%;
@@ -592,11 +694,14 @@ body {
           border: none;
           cursor: pointer;
           font-weight: 600;
+          text-transform: uppercase;
         }
       }
-      .emergency__container {
-        width: 100%;
-        background-color: #d04848;
+      .emergency__alert {
+        background-color: $emergencyAlertColor;
+      }
+      .test__alert {
+        background-color: $testAlertColor;
       }
     }
   }
@@ -604,5 +709,9 @@ body {
     width: 100%;
     padding-top: 10rem;
     background-color: transparent;
+  }
+  .alert__box_unactive {
+    height: 10rem;
+    width: 100%;
   }
 }
