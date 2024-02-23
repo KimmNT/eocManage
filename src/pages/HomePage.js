@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import mqtt from "mqtt";
+import * as XLSX from "xlsx";
 import "../scss/HomeStyle.scss";
 
 //ICONS
@@ -10,6 +11,7 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { FaBell } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
+import { FaFileImport } from "react-icons/fa";
 
 const HomePage = () => {
   //Message State
@@ -288,9 +290,48 @@ const HomePage = () => {
   //HANDLE FIND DEVICE BY ID
   const handleSearch = () => {
     // Find the device based on the entered ID
-    const fixedSearchQuery = `server/${searchQuery}/data`;
-    const found = topics.find((topic) => topic === fixedSearchQuery);
+    const fixedSearchQuery = `"server/${searchQuery}/data"`;
+    const found = topics.find(
+      (topic) => JSON.stringify(topic[0]) === fixedSearchQuery
+    );
     setFoundDevice(found);
+  };
+  //HANDLE IMPORT EXCEL
+  const fileInputRef = React.createRef();
+
+  const transformData = (originalData) => {
+    return originalData.map((row) => {
+      const serverPath = `server/${row[0]}/data`;
+      return [serverPath, ...row.slice(1)];
+    });
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+
+        let dataArray = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        dataArray = transformData(dataArray);
+
+        setTopics(dataArray);
+      } catch (error) {
+        console.error("Error reading Excel file:", error);
+      }
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
+
+  const handleButtonClick = () => {
+    fileInputRef.current.click();
   };
 
   return (
@@ -314,7 +355,6 @@ const HomePage = () => {
           <div className="header__menu">
             {/* CONFIG WIFI */}
             <div className="config__wifi_box">
-              {/* <p className="menu__item">WiFi configuration</p> */}
               <div className="config__icon_container">
                 <FaWifi className="config__icon" />
               </div>
@@ -348,7 +388,6 @@ const HomePage = () => {
             </div>
             {/* CONFIG PRIORITY */}
             <div className="config__pri_box">
-              {/* <p className="menu__item">Priority configuration</p> */}
               <div className="config__icon_container">
                 <FaThList className="config__icon" />
               </div>
@@ -385,6 +424,19 @@ const HomePage = () => {
                   </button>
                 </div>
               </div>
+            </div>
+            {/* IMPORT EXCEL */}
+            <div className="import__container">
+              <div className="import__btn" onClick={handleButtonClick}>
+                <FaFileImport className="import__icon" />
+              </div>
+              <input
+                type="file"
+                accept=".xlsx, .xls"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                onChange={handleFileChange}
+              />
             </div>
           </div>
         </div>

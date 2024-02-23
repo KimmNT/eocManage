@@ -368,6 +368,37 @@ body {
             }
           }
         }
+        .import__container {
+          &:hover {
+            transition: all ease-in-out 0.3s;
+            .import__btn {
+              background-color: $secondary;
+              transition: all ease-in-out 0.3s;
+              .import__icon {
+                color: $light;
+                transition: all ease-in-out 0.3s;
+              }
+            }
+          }
+          .import__btn {
+            background-color: $configIconColor;
+            outline: none;
+            border: 0.2rem solid $secondary;
+            width: 5rem;
+            height: 5rem;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all ease-in-out 0.3s;
+            .import__icon {
+              font-size: 2rem;
+              color: $secondary;
+              transition: all ease-in-out 0.3s;
+            }
+          }
+        }
       }
     }
     .fire {

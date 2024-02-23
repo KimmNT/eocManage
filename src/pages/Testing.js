@@ -1,53 +1,50 @@
-import React from "react";
-import mqtt from "mqtt";
+import React, { useState } from "react";
+import * as XLSX from "xlsx";
 
-const ConfigWifi = () => {
-  const handlePublish = () => {
-    const brokerConfig = {
-      host: "103.151.238.68",
-      port: 8087,
-      protocol: "websockets",
-      username: "guest",
-      password: "123456a@",
+const Testing = () => {
+  const [excelData, setExcelData] = useState([]);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+
+        // Assuming you have a single sheet in the Excel file
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+
+        // Convert the sheet to an array of objects
+        const dataArray = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+        setExcelData(dataArray);
+      } catch (error) {
+        console.error("Error reading Excel file:", error);
+      }
     };
 
-    const brokerUrl = `${brokerConfig.protocol}://${brokerConfig.host}:${brokerConfig.port}`;
-
-    const client = mqtt.connect(brokerUrl, brokerConfig);
-
-    client.on("connect", () => {
-      console.log("Connected to MQTT broker");
-
-      const topic = "device/00097/cmd";
-      const payload = ` {
-        type: priority,
-        deviceId: n_123456,
-        data: { value: [2,3,1]},
-      }`;
-
-      // Publish the message
-      client.publish(topic, payload, (err) => {
-        // Handling the result of the publish
-        if (err) {
-          console.error(`Error publishing message to topic ${topic}:`, err);
-        } else {
-          console.log(
-            `Published message to topic: ${topic} ${JSON.stringify(payload)}`
-          );
-        }
-
-        // Disconnect from the MQTT broker
-        client.end();
-      });
-    });
+    reader.readAsArrayBuffer(file);
   };
 
   return (
     <div>
-      <h2>Config wifi</h2>
-      <button onClick={handlePublish}>CONFIG WIFI</button>
+      <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
+
+      {excelData.length > 0 && (
+        <div>
+          <h2>Excel Data:</h2>
+          <ul>
+            {excelData.map((row, index) => (
+              <li key={index}>{row}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
 
-export default ConfigWifi;
+export default Testing;
