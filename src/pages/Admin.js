@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import mqtt from "mqtt";
 import * as XLSX from "xlsx";
-import "../scss/HomeStyle.scss";
+import "../scss/AdminStyle.scss";
 
 //ICONS
 import { FaWifi } from "react-icons/fa";
@@ -13,7 +13,7 @@ import { FaSearch } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
 import { FaFileImport } from "react-icons/fa";
 
-const HomePage = () => {
+const Admin = () => {
   //Message State
   const [informationMessages, setInformationMessages] = useState({});
   const [emergencyMessage, setEmergencyMessage] = useState({});
@@ -34,7 +34,10 @@ const HomePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [foundDevice, setFoundDevice] = useState(null);
   //Reset Count State
-  // const [countReset, setCountReset] = useState(0);
+  const [countReset, setCountReset] = useState(0);
+  const [countLAN, setCountLAN] = useState(0);
+  const [countWifi, setCountWifi] = useState(0);
+  const [countSIM, setCountSIM] = useState(0);
 
   const priArray = [
     { priName: "SIM-LAN-WiFi", pri: [1, 2, 3] },
@@ -103,7 +106,7 @@ const HomePage = () => {
         console.log(`Received message on topic ${topic}:`, receivedMessage);
 
         // Check the type and update the state accordingly
-        if (receivedMessage.type === "information") {
+        if (receivedMessage.type === "info") {
           setInformationMessages((prevMessages) => ({
             ...prevMessages,
             [topic]: receivedMessage,
@@ -121,20 +124,66 @@ const HomePage = () => {
           return () => clearTimeout(timeoutId);
         }
         //FOR BUTTON TEST TYPE
-        if (receivedMessage.type === "button_test") {
+        if (receivedMessage.type === "test") {
           setTestMessage(receivedMessage.id);
           setTest(true);
           const timeoutId = setTimeout(() => {
             setTest(false);
-          }, 3000);
+          }, 2000);
 
           // Clean up the timeout on component unmount
           return () => clearTimeout(timeoutId);
         }
         //FOR CHECKING RESTART
-        // if (receivedMessage.type === "start_program") {
-        //   setCountReset((prevCountReset) => prevCountReset + 1);
-        // }
+        if (receivedMessage.type === "start_program") {
+          setCountReset((prevCountReset) => prevCountReset + 1);
+          const date = new Date();
+          const day = date.getDate();
+          const month = date.getUTCMonth();
+          const second = date.getSeconds();
+          const minute = date.getMinutes();
+          const hour = date.getHours();
+          const fullDay = `${hour}:${minute}:${second} - ${day}/${month + 1}`;
+          console.log(fullDay);
+        }
+        //FOR CHECKING RESTART
+        if (receivedMessage.type === "keepalive") {
+          const date = new Date();
+          const day = date.getDate();
+          const month = date.getUTCMonth();
+          const second = date.getSeconds();
+          const minute = date.getMinutes();
+          const hour = date.getHours();
+          const fullDay = `${hour}:${minute}:${second} - ${day}/${month + 1}`;
+          console.log(fullDay);
+        }
+        //FOR ERROR TYPE
+        if (receivedMessage.type === "error") {
+          const date = new Date();
+          const day = date.getDate();
+          const month = date.getUTCMonth();
+          const second = date.getSeconds();
+          const minute = date.getMinutes();
+          const hour = date.getHours();
+          const fullDay = `${hour}:${minute}:${second} - ${day}/${month + 1}`;
+          console.log(fullDay);
+          if (
+            receivedMessage.data.type === "conn_type" &&
+            receivedMessage.data.value === "LAN"
+          ) {
+            setCountLAN((preCountLAN) => preCountLAN + 1);
+          } else if (
+            receivedMessage.data.type === "conn_type" &&
+            receivedMessage.data.value === "WIFI"
+          ) {
+            setCountWifi((preCountWifi) => preCountWifi + 1);
+          } else if (
+            receivedMessage.data.type === "conn_type" &&
+            receivedMessage.data.value === "SIM"
+          ) {
+            setCountSIM((preCountSIM) => preCountSIM + 1);
+          }
+        }
 
         // Add similar conditions for other message types if needed
       } catch (error) {
@@ -337,13 +386,12 @@ const HomePage = () => {
   const handleButtonClick = () => {
     fileInputRef.current.click();
   };
-
   return (
-    <div className="container">
+    <div className="admin_container">
       <div className="header">
         <div className="header__content">
           <div className="header__headline">
-            <p className="headline__title">eoc</p>
+            <p className="headline__title">admin</p>
             <div className="headline__create">
               <input
                 placeholder="add new device"
@@ -519,6 +567,13 @@ const HomePage = () => {
                   : "device"
               }>
               <p className="device__name">{foundDevice}</p>
+              <div
+                style={{ display: "flex", margin: "1rem 0rem", gap: ".5rem" }}>
+                <p className="device__name">Count Restart: {countReset}</p>
+                <p className="device__name">Count LAN:{countLAN}</p>
+                <p className="device__name">count WIFI:{countWifi}</p>
+                <p className="device__name">count SIM:{countSIM}</p>
+              </div>
               {informationMessages[foundDevice] ? (
                 <div className="device__info">
                   {/* VERSION */}
@@ -772,6 +827,19 @@ const HomePage = () => {
                 }
                 key={index}>
                 <p className="device__name">{item}</p>
+                <p className="device__name" style={{ marginTop: ".5rem" }}>
+                  Count Restart: {countReset}
+                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    margin: ".5rem 0rem",
+                    gap: ".5rem",
+                  }}>
+                  <p className="device__name">Count LAN:{countLAN}</p>
+                  <p className="device__name">count WIFI:{countWifi}</p>
+                  <p className="device__name">count SIM:{countSIM}</p>
+                </div>
                 {informationMessages[item] ? (
                   <div className="device__info">
                     {/* VERSION */}
@@ -1003,4 +1071,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Admin;
