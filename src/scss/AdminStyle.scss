@@ -561,29 +561,14 @@ body {
         gap: 10rem;
       }
       display: flex;
-      justify-content: flex-start;
+      justify-content: center;
       align-items: center;
       flex-wrap: wrap;
       gap: 14rem;
       .device {
-        @media (min-width: $large) {
-          width: 26%;
-        }
-        @media (min-width: $desktopMin) and (max-width: $desktopMax) {
-          width: 40%;
-        }
-        @media (min-width: $tabletMin) and (max-width: $tabletMax) {
-          width: 60%;
-        }
-        @media (min-width: $mobileMin) and (max-width: $mobileMax) {
-          width: 80%;
-        }
-        @media (max-width: $tiny) {
-          width: 80%;
-        }
         position: relative;
         height: 63rem;
-        width: 25%;
+        width: 70%;
         background-color: $light;
         padding: 2rem;
         border-radius: 1.5rem;

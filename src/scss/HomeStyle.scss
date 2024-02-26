@@ -94,18 +94,34 @@ body {
         align-items: center;
         flex-direction: column;
         gap: 2rem;
+        padding: 2rem 0rem 4rem 0rem;
       }
       padding: 5rem 0rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       .header__headline {
+        @media (min-width: $tabletMin) and (max-width: $tabletMax) {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          justify-self: center;
+          gap: 3rem;
+        }
+        @media (min-width: $mobileMin) and (max-width: $mobileMax) {
+          max-width: 550px !important;
+          margin: 0 auto;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 5rem;
+        }
         @media (max-width: $tiny) {
           display: flex;
           align-items: center;
           flex-direction: column;
           justify-self: center;
-          gap: 1rem;
+          gap: 2rem;
         }
         display: flex;
         align-items: center;
@@ -123,14 +139,44 @@ body {
           display: flex;
           align-items: center;
           gap: 2rem;
-          input {
-            background-color: transparent;
-            outline: none;
-            border: none;
-            padding: 1rem 2rem;
-            font-size: 2rem;
-            font-weight: 900;
-            border-bottom: 0.2rem solid $dark;
+          width: 100%;
+          background-color: $light;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1.5rem 2rem;
+          border-radius: 1rem;
+          box-shadow: $boxShadow;
+          @media (max-width: $mobileMax) {
+            flex-direction: column;
+            justify-content: center;
+          }
+          .create__input_container {
+            width: 60%;
+            display: flex;
+            gap: 3rem;
+            @media (max-width: $mobileMax) {
+              flex-direction: column;
+              justify-content: center;
+              width: 100%;
+            }
+            .create__device {
+              width: 13rem;
+              @media (max-width: $mobileMax) {
+                width: 25rem;
+              }
+            }
+            .create__owner {
+              width: 25rem;
+            }
+            input {
+              background-color: transparent;
+              outline: none;
+              border: none;
+              padding: 1rem 2rem;
+              font-size: 2rem;
+              font-weight: 900;
+              border-bottom: 0.2rem solid $dark;
+            }
           }
           .create__btn {
             background-color: $secondary;
@@ -143,6 +189,13 @@ body {
             display: flex;
             justify-content: center;
             align-items: center;
+            margin-left: 1rem;
+            @media (max-width: $mobileMax) {
+              width: 100%;
+              border-radius: 1rem;
+              margin-left: 0;
+              margin-top: 2rem;
+            }
             .create__btn_icon {
               font-size: 4rem;
               color: $light;
@@ -463,17 +516,17 @@ body {
     @media (min-width: $tabletMin) and (max-width: $tabletMax) {
       max-width: 750px !important;
       margin: 0 auto;
-      padding-top: 25rem;
+      padding-top: 36rem;
     }
     @media (min-width: $mobileMin) and (max-width: $mobileMax) {
       max-width: 550px !important;
       margin: 0 auto;
-      padding-top: 25rem;
+      padding-top: 45rem;
     }
     @media (max-width: $tiny) {
       max-width: 550px !important;
       margin: 0 auto;
-      padding-top: 35rem;
+      padding-top: 55rem;
     }
     padding-top: 20rem;
     .find__container {

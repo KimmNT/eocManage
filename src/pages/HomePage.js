@@ -25,6 +25,8 @@ const HomePage = () => {
   const [config, setConfig] = useState(false);
   //Config State
   const [deviceId, setDeviceId] = useState("");
+  const [owner, setOwner] = useState("");
+  const [deviceInfo, setDeviceInfo] = useState([]);
   const [wifiDeviceId, setWifiDeviceId] = useState("");
   const [ssid, setSSID] = useState("");
   const [password, setPassword] = useState("");
@@ -85,8 +87,9 @@ const HomePage = () => {
     client.on("connect", () => {
       console.log("Connected to MQTT broker");
       // Subscribe to each topic in the state
-      topics.forEach((topic) => {
-        client.subscribe(topic, (err) => {
+      console.log(deviceInfo);
+      deviceInfo.forEach((topic) => {
+        client.subscribe(topic.deviceInfoId, (err) => {
           if (err) {
             console.error(`Error subscribing to topic ${topic}:`, err);
           } else {
@@ -162,7 +165,7 @@ const HomePage = () => {
       });
       client.end(); // Disconnect from the MQTT broker
     };
-  }, [topics, brokerUrl]); // Re-run effect when the topics array changes
+  }, [deviceInfo, brokerUrl]); // Re-run effect when the topics array changes
 
   //HANDLE TAKE DEVICE'ID INPUT
   const handleDeviceInput = (event) => {
@@ -192,19 +195,33 @@ const HomePage = () => {
   const handleAddDevice = () => {
     setTopics((preDevice) => [...preDevice, `server/${deviceId}/data`]);
     setDeviceId("");
+    setOwner((preOwner) => [...preOwner, owner]);
+    setOwner("");
+    const combineDeviceInfo = {
+      deviceInfoId: `server/${deviceId}/data`,
+      deviceInfoOwner: owner === "" ? "no owner" : owner,
+    };
+    setDeviceInfo([...deviceInfo, combineDeviceInfo]);
   };
 
   //HANDLE DELETE DEIVCE
   const handleDeleteDevice = (index) => {
-    setTopics((prevTopics) => {
-      const newTopics = [...prevTopics];
-      newTopics.splice(index, 1);
-      return newTopics;
+    setDeviceInfo((preDeviceInfo) => {
+      const newDeviceInfo = [...preDeviceInfo];
+      newDeviceInfo.splice(index, 1);
+      return newDeviceInfo;
+    });
+    setTopics((preTopic) => {
+      const newTopic = [...preTopic];
+      newTopic.splice(index, 1);
+      return newTopic;
     });
   };
   //HANDLE DELETE DEVICE WHEN FOUND
   const handleDeteleFindDevice = (deviceId) => {
-    setTopics((prevTopic) => prevTopic.filter((topic) => topic !== deviceId));
+    setDeviceInfo((preDevice) =>
+      preDevice.filter((device) => device.deviceInfoId !== deviceId)
+    );
     setSearchQuery("");
   };
 
@@ -291,11 +308,14 @@ const HomePage = () => {
   const handleSearch = () => {
     // Find the device based on the entered ID
     const fixedSearchQuery = `server/${searchQuery}/data`;
-    // const found = topics.find(
-    //   (topic) => JSON.stringify(topic[0]) === fixedSearchQuery
-    // );
-    const found = topics.find((topic) => topic === fixedSearchQuery);
-    setFoundDevice(found);
+    const found = deviceInfo.find(
+      (device) => device.deviceInfoId === fixedSearchQuery
+    );
+    if (found) {
+      setFoundDevice(found.deviceInfoId);
+    } else {
+      alert("Device not found!");
+    }
   };
 
   //HANDLE IMPORT EXCEL
@@ -303,10 +323,12 @@ const HomePage = () => {
 
   const transformData = (originalData) => {
     return originalData.map((row) => {
-      const serverPath = `server/${row[0]}/data`;
-      // Join the values of the row into a single string
-      const rowDataAsString = row.slice(1).join(", ");
-      return `${serverPath}${rowDataAsString}`;
+      // Assuming row[0] and row[1] are the values from the two columns
+      const rowDataObject = {
+        deviceInfoId: `server/${row[0]}/data`,
+        deviceInfoOwner: row[1] === "" ? "no owner" : row[1], // Ensure the value is converted to a string
+      };
+      return rowDataObject;
     });
   };
 
@@ -325,7 +347,7 @@ const HomePage = () => {
         let dataArray = XLSX.utils.sheet_to_json(sheet, { header: 1 });
         dataArray = transformData(dataArray);
 
-        setTopics(dataArray);
+        setDeviceInfo(dataArray);
       } catch (error) {
         console.error("Error reading Excel file:", error);
       }
@@ -345,12 +367,20 @@ const HomePage = () => {
           <div className="header__headline">
             <p className="headline__title">eoc</p>
             <div className="headline__create">
-              <input
-                placeholder="add new device"
-                value={deviceId}
-                onChange={handleDeviceInput}
-                className="create__input"
-              />
+              <div className="create__input_container">
+                <input
+                  placeholder="device"
+                  value={deviceId}
+                  onChange={handleDeviceInput}
+                  className="create__device"
+                />
+                <input
+                  placeholder="device's owner"
+                  value={owner}
+                  onChange={(e) => setOwner(e.target.value)}
+                  className="create__owner"
+                />
+              </div>
               <button className="create__btn" onClick={handleAddDevice}>
                 <p className="create__btn_icon">+</p>
               </button>
@@ -479,9 +509,9 @@ const HomePage = () => {
       <div className="content">
         <div className="find__container">
           <p className="find__count">
-            <span className="count__number">{topics.length}</span> devices
+            <span className="count__number">{deviceInfo.length}</span> devices
           </p>
-          {topics.length > 2 ? (
+          {deviceInfo.length > 2 ? (
             <div className="search_container">
               <input
                 type="text"
@@ -757,28 +787,31 @@ const HomePage = () => {
           </div>
         ) : (
           <div className="device__list">
-            {topics.map((item, index) => (
+            {deviceInfo.map((item, index) => (
               <div
                 className={
                   emergency &&
-                  informationMessages[item] &&
-                  emergencyMessage === informationMessages[item].id
+                  informationMessages[item.deviceInfoId] &&
+                  emergencyMessage === informationMessages[item.deviceInfoId].id
                     ? "device emergency__alert"
                     : test &&
-                      informationMessages[item] &&
-                      testMessage === informationMessages[item].id
+                      informationMessages[item.deviceInfoId] &&
+                      testMessage === informationMessages[item.deviceInfoId].id
                     ? "device test__alert"
                     : "device"
                 }
                 key={index}>
-                <p className="device__name">{item}</p>
-                {informationMessages[item] ? (
+                <p className="device__name">
+                  {item.deviceInfoOwner} <br />
+                  {item.deviceInfoId.substring(7, 12)}
+                </p>
+                {informationMessages[item.deviceInfoId] ? (
                   <div className="device__info">
                     {/* VERSION */}
                     <div className="info__version">
                       <p className="info__name">Version </p>
                       <p className="info__value">
-                        {informationMessages[item].data.FWver}
+                        {informationMessages[item.deviceInfoId].data.FWver}
                       </p>
                     </div>
                     <div className="line"></div>
@@ -787,16 +820,18 @@ const HomePage = () => {
                       <p className="info__name">Connection type</p>
                       <div className="info__conpri">
                         {JSON.stringify(
-                          informationMessages[item].data.CONpri
+                          informationMessages[item.deviceInfoId].data.CONpri
                         ) === JSON.stringify([1, 2, 3]) ? (
                           <>
-                            {informationMessages[item].data.CONtyp === 1 ? (
+                            {informationMessages[item.deviceInfoId].data
+                              .CONtyp === 1 ? (
                               <div className="conpri__list">
                                 <p className="info__value active">SIM</p>
                                 <p className="info__value ">LAN</p>
                                 <p className="info__value ">WiFi</p>
                               </div>
-                            ) : informationMessages[item].data.CONtyp === 2 ? (
+                            ) : informationMessages[item.deviceInfoId].data
+                                .CONtyp === 2 ? (
                               <div className="conpri__list">
                                 <p className="info__value ">SIM</p>
                                 <p className="info__value active">LAN</p>
@@ -814,16 +849,18 @@ const HomePage = () => {
                           <></>
                         )}
                         {JSON.stringify(
-                          informationMessages[item].data.CONpri
+                          informationMessages[item.deviceInfoId].data.CONpri
                         ) === JSON.stringify([1, 3, 2]) ? (
                           <>
-                            {informationMessages[item].data.CONtyp === 1 ? (
+                            {informationMessages[item.deviceInfoId].data
+                              .CONtyp === 1 ? (
                               <div className="conpri__list">
                                 <p className="info__value active">SIM</p>
                                 <p className="info__value ">WiFi</p>
                                 <p className="info__value ">LAN</p>
                               </div>
-                            ) : informationMessages[item].data.CONtyp === 2 ? (
+                            ) : informationMessages[item.deviceInfoId].data
+                                .CONtyp === 2 ? (
                               <div className="conpri__list">
                                 <p className="info__value ">SIM</p>
                                 <p className="info__value ">WiFi</p>
@@ -841,16 +878,18 @@ const HomePage = () => {
                           <></>
                         )}
                         {JSON.stringify(
-                          informationMessages[item].data.CONpri
+                          informationMessages[item.deviceInfoId].data.CONpri
                         ) === JSON.stringify([2, 1, 3]) ? (
                           <>
-                            {informationMessages[item].data.CONtyp === 2 ? (
+                            {informationMessages[item.deviceInfoId].data
+                              .CONtyp === 2 ? (
                               <div className="conpri__list">
                                 <p className="info__value active">LAN</p>
                                 <p className="info__value ">SIM</p>
                                 <p className="info__value ">WiFi</p>
                               </div>
-                            ) : informationMessages[item].data.CONtyp === 1 ? (
+                            ) : informationMessages[item.deviceInfoId].data
+                                .CONtyp === 1 ? (
                               <div className="conpri__list">
                                 <p className="info__value ">LAN</p>
                                 <p className="info__value active">SIM</p>
@@ -868,16 +907,18 @@ const HomePage = () => {
                           <></>
                         )}
                         {JSON.stringify(
-                          informationMessages[item].data.CONpri
+                          informationMessages[item.deviceInfoId].data.CONpri
                         ) === JSON.stringify([2, 3, 1]) ? (
                           <>
-                            {informationMessages[item].data.CONtyp === 1 ? (
+                            {informationMessages[item.deviceInfoId].data
+                              .CONtyp === 1 ? (
                               <div className="conpri__list">
                                 <p className="info__value ">LAN</p>
                                 <p className="info__value ">WiFi</p>
                                 <p className="info__value active">SIM</p>
                               </div>
-                            ) : informationMessages[item].data.CONtyp === 2 ? (
+                            ) : informationMessages[item.deviceInfoId].data
+                                .CONtyp === 2 ? (
                               <div className="conpri__list">
                                 <p className="info__value active">LAN</p>
                                 <p className="info__value ">WiFi</p>
@@ -895,16 +936,18 @@ const HomePage = () => {
                           <></>
                         )}
                         {JSON.stringify(
-                          informationMessages[item].data.CONpri
+                          informationMessages[item.deviceInfoId].data.CONpri
                         ) === JSON.stringify([3, 1, 2]) ? (
                           <>
-                            {informationMessages[item].data.CONtyp === 1 ? (
+                            {informationMessages[item.deviceInfoId].data
+                              .CONtyp === 1 ? (
                               <div className="conpri__list">
                                 <p className="info__value ">WiFi</p>
                                 <p className="info__value active">SIM</p>
                                 <p className="info__value ">LAN</p>
                               </div>
-                            ) : informationMessages[item].data.CONtyp === 2 ? (
+                            ) : informationMessages[item.deviceInfoId].data
+                                .CONtyp === 2 ? (
                               <div className="conpri__list">
                                 <p className="info__value ">WiFi</p>
                                 <p className="info__value ">SIM</p>
@@ -922,16 +965,18 @@ const HomePage = () => {
                           <></>
                         )}
                         {JSON.stringify(
-                          informationMessages[item].data.CONpri
+                          informationMessages[item.deviceInfoId].data.CONpri
                         ) === JSON.stringify([3, 2, 1]) ? (
                           <>
-                            {informationMessages[item].data.CONtyp === 1 ? (
+                            {informationMessages[item.deviceInfoId].data
+                              .CONtyp === 1 ? (
                               <div className="conpri__list">
                                 <p className="info__value ">WiFi</p>
                                 <p className="info__value ">LAN</p>
                                 <p className="info__value active">SIM</p>
                               </div>
-                            ) : informationMessages[item].data.CONtyp === 2 ? (
+                            ) : informationMessages[item.deviceInfoId].data
+                                .CONtyp === 2 ? (
                               <div className="conpri__list">
                                 <p className="info__value ">WiFi</p>
                                 <p className="info__value active">LAN</p>
@@ -956,13 +1001,16 @@ const HomePage = () => {
                       <div className="info__version">
                         <p className="info__name">WiFi name: </p>
                         <p className="info__value">
-                          {informationMessages[item].data.WIF.ssid}
+                          {informationMessages[item.deviceInfoId].data.WIF.ssid}
                         </p>
                       </div>
                       <div className="info__version">
                         <p className="info__name">Password: </p>
                         <p className="info__value  small__text">
-                          {informationMessages[item].data.WIF.password}
+                          {
+                            informationMessages[item.deviceInfoId].data.WIF
+                              .password
+                          }
                         </p>
                       </div>
                     </div>
@@ -970,7 +1018,8 @@ const HomePage = () => {
                     {/* CONNECTION MODE */}
                     <div className="info__version">
                       <p className="info__name">Connection Mode: </p>
-                      {informationMessages[item].data.CHANGEtyp === 0 ? (
+                      {informationMessages[item.deviceInfoId].data.CHANGEtyp ===
+                      0 ? (
                         <p className="info__value">AC</p>
                       ) : (
                         <p className="info__value">BATTERY</p>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import mqtt from "mqtt";
-import * as XLSX from "xlsx";
 import "../scss/AdminStyle.scss";
 
 //ICONS
@@ -9,9 +8,6 @@ import { FaThList } from "react-icons/fa";
 import { FaFireAlt } from "react-icons/fa";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { FaBell } from "react-icons/fa";
-import { FaSearch } from "react-icons/fa";
-import { FaChevronLeft } from "react-icons/fa";
-import { FaFileImport } from "react-icons/fa";
 
 const Admin = () => {
   //Message State
@@ -251,11 +247,6 @@ const Admin = () => {
       return newTopics;
     });
   };
-  //HANDLE DELETE DEVICE WHEN FOUND
-  const handleDeteleFindDevice = (deviceId) => {
-    setTopics((prevTopic) => prevTopic.filter((topic) => topic !== deviceId));
-    setSearchQuery("");
-  };
 
   //HANDLE WIFI CONFIGURATION
   const handleConfigWifi = () => {
@@ -336,56 +327,6 @@ const Admin = () => {
     setConfig(true);
   };
 
-  //HANDLE FIND DEVICE BY ID
-  const handleSearch = () => {
-    // Find the device based on the entered ID
-    const fixedSearchQuery = `server/${searchQuery}/data`;
-    // const found = topics.find(
-    //   (topic) => JSON.stringify(topic[0]) === fixedSearchQuery
-    // );
-    const found = topics.find((topic) => topic === fixedSearchQuery);
-    setFoundDevice(found);
-  };
-
-  //HANDLE IMPORT EXCEL
-  const fileInputRef = React.createRef();
-
-  const transformData = (originalData) => {
-    return originalData.map((row) => {
-      const serverPath = `server/${row[0]}/data`;
-      // Join the values of the row into a single string
-      const rowDataAsString = row.slice(1).join(", ");
-      return `${serverPath}${rowDataAsString}`;
-    });
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      try {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
-
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-
-        let dataArray = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-        dataArray = transformData(dataArray);
-
-        setTopics(dataArray);
-      } catch (error) {
-        console.error("Error reading Excel file:", error);
-      }
-    };
-
-    reader.readAsArrayBuffer(file);
-  };
-
-  const handleButtonClick = () => {
-    fileInputRef.current.click();
-  };
   return (
     <div className="admin_container">
       <div className="header">
@@ -477,19 +418,6 @@ const Admin = () => {
                 </div>
               </div>
             </div>
-            {/* IMPORT EXCEL */}
-            <div className="import__container">
-              <div className="import__btn" onClick={handleButtonClick}>
-                <FaFileImport className="import__icon" />
-              </div>
-              <input
-                type="file"
-                accept=".xlsx, .xls"
-                ref={fileInputRef}
-                style={{ display: "none" }}
-                onChange={handleFileChange}
-              />
-            </div>
           </div>
         </div>
         {emergency ? (
@@ -525,62 +453,42 @@ const Admin = () => {
         <div className="alert__box_unactive"></div>
       )}
       <div className="content">
-        <div className="find__container">
-          <p className="find__count">
-            <span className="count__number">{topics.length}</span> devices
-          </p>
-          {topics.length > 2 ? (
-            <div className="search_container">
-              <input
-                type="text"
-                placeholder="search for device"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <button className="search__btn" onClick={handleSearch}>
-                <p className="search__btn_icon">
-                  <FaSearch />
-                </p>
-              </button>
-              <button className="clear__btn" onClick={() => setSearchQuery("")}>
-                <p className="clear__btn_icon">
-                  <FaChevronLeft />
-                </p>
-              </button>
-            </div>
-          ) : (
-            <></>
-          )}
-        </div>
-        {foundDevice ? (
-          <div className="device__list">
+        <div className="device__list">
+          {topics.map((item, index) => (
             <div
               className={
                 emergency &&
-                informationMessages[foundDevice] &&
-                emergencyMessage === informationMessages[foundDevice].id
+                informationMessages[item] &&
+                emergencyMessage === informationMessages[item].id
                   ? "device emergency__alert"
                   : test &&
-                    informationMessages[foundDevice] &&
-                    testMessage === informationMessages[foundDevice].id
+                    informationMessages[item] &&
+                    testMessage === informationMessages[item].id
                   ? "device test__alert"
                   : "device"
-              }>
-              <p className="device__name">{foundDevice}</p>
+              }
+              key={index}>
+              <p className="device__name">{item}</p>
+              <p className="device__name" style={{ marginTop: ".5rem" }}>
+                Count Restart: {countReset}
+              </p>
               <div
-                style={{ display: "flex", margin: "1rem 0rem", gap: ".5rem" }}>
-                <p className="device__name">Count Restart: {countReset}</p>
+                style={{
+                  display: "flex",
+                  margin: ".5rem 0rem",
+                  gap: ".5rem",
+                }}>
                 <p className="device__name">Count LAN:{countLAN}</p>
                 <p className="device__name">count WIFI:{countWifi}</p>
                 <p className="device__name">count SIM:{countSIM}</p>
               </div>
-              {informationMessages[foundDevice] ? (
+              {informationMessages[item] ? (
                 <div className="device__info">
                   {/* VERSION */}
                   <div className="info__version">
                     <p className="info__name">Version </p>
                     <p className="info__value">
-                      {informationMessages[foundDevice].data.FWver}
+                      {informationMessages[item].data.FWver}
                     </p>
                   </div>
                   <div className="line"></div>
@@ -588,19 +496,16 @@ const Admin = () => {
                   <div className="info__connection">
                     <p className="info__name">Connection type</p>
                     <div className="info__conpri">
-                      {JSON.stringify(
-                        informationMessages[foundDevice].data.CONpri
-                      ) === JSON.stringify([1, 2, 3]) ? (
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([1, 2, 3]) ? (
                         <>
-                          {informationMessages[foundDevice].data.CONtyp ===
-                          1 ? (
+                          {informationMessages[item].data.CONtyp === 1 ? (
                             <div className="conpri__list">
                               <p className="info__value active">SIM</p>
                               <p className="info__value ">LAN</p>
                               <p className="info__value ">WiFi</p>
                             </div>
-                          ) : informationMessages[foundDevice].data.CONtyp ===
-                            2 ? (
+                          ) : informationMessages[item].data.CONtyp === 2 ? (
                             <div className="conpri__list">
                               <p className="info__value ">SIM</p>
                               <p className="info__value active">LAN</p>
@@ -617,19 +522,16 @@ const Admin = () => {
                       ) : (
                         <></>
                       )}
-                      {JSON.stringify(
-                        informationMessages[foundDevice].data.CONpri
-                      ) === JSON.stringify([1, 3, 2]) ? (
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([1, 3, 2]) ? (
                         <>
-                          {informationMessages[foundDevice].data.CONtyp ===
-                          1 ? (
+                          {informationMessages[item].data.CONtyp === 1 ? (
                             <div className="conpri__list">
                               <p className="info__value active">SIM</p>
                               <p className="info__value ">WiFi</p>
                               <p className="info__value ">LAN</p>
                             </div>
-                          ) : informationMessages[foundDevice].data.CONtyp ===
-                            2 ? (
+                          ) : informationMessages[item].data.CONtyp === 2 ? (
                             <div className="conpri__list">
                               <p className="info__value ">SIM</p>
                               <p className="info__value ">WiFi</p>
@@ -646,19 +548,16 @@ const Admin = () => {
                       ) : (
                         <></>
                       )}
-                      {JSON.stringify(
-                        informationMessages[foundDevice].data.CONpri
-                      ) === JSON.stringify([2, 1, 3]) ? (
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([2, 1, 3]) ? (
                         <>
-                          {informationMessages[foundDevice].data.CONtyp ===
-                          2 ? (
+                          {informationMessages[item].data.CONtyp === 2 ? (
                             <div className="conpri__list">
                               <p className="info__value active">LAN</p>
                               <p className="info__value ">SIM</p>
                               <p className="info__value ">WiFi</p>
                             </div>
-                          ) : informationMessages[foundDevice].data.CONtyp ===
-                            1 ? (
+                          ) : informationMessages[item].data.CONtyp === 1 ? (
                             <div className="conpri__list">
                               <p className="info__value ">LAN</p>
                               <p className="info__value active">SIM</p>
@@ -675,19 +574,16 @@ const Admin = () => {
                       ) : (
                         <></>
                       )}
-                      {JSON.stringify(
-                        informationMessages[foundDevice].data.CONpri
-                      ) === JSON.stringify([2, 3, 1]) ? (
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([2, 3, 1]) ? (
                         <>
-                          {informationMessages[foundDevice].data.CONtyp ===
-                          1 ? (
+                          {informationMessages[item].data.CONtyp === 1 ? (
                             <div className="conpri__list">
                               <p className="info__value ">LAN</p>
                               <p className="info__value ">WiFi</p>
                               <p className="info__value active">SIM</p>
                             </div>
-                          ) : informationMessages[foundDevice].data.CONtyp ===
-                            2 ? (
+                          ) : informationMessages[item].data.CONtyp === 2 ? (
                             <div className="conpri__list">
                               <p className="info__value active">LAN</p>
                               <p className="info__value ">WiFi</p>
@@ -704,19 +600,16 @@ const Admin = () => {
                       ) : (
                         <></>
                       )}
-                      {JSON.stringify(
-                        informationMessages[foundDevice].data.CONpri
-                      ) === JSON.stringify([3, 1, 2]) ? (
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([3, 1, 2]) ? (
                         <>
-                          {informationMessages[foundDevice].data.CONtyp ===
-                          1 ? (
+                          {informationMessages[item].data.CONtyp === 1 ? (
                             <div className="conpri__list">
                               <p className="info__value ">WiFi</p>
                               <p className="info__value active">SIM</p>
                               <p className="info__value ">LAN</p>
                             </div>
-                          ) : informationMessages[foundDevice].data.CONtyp ===
-                            2 ? (
+                          ) : informationMessages[item].data.CONtyp === 2 ? (
                             <div className="conpri__list">
                               <p className="info__value ">WiFi</p>
                               <p className="info__value ">SIM</p>
@@ -733,19 +626,16 @@ const Admin = () => {
                       ) : (
                         <></>
                       )}
-                      {JSON.stringify(
-                        informationMessages[foundDevice].data.CONpri
-                      ) === JSON.stringify([3, 2, 1]) ? (
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([3, 2, 1]) ? (
                         <>
-                          {informationMessages[foundDevice].data.CONtyp ===
-                          1 ? (
+                          {informationMessages[item].data.CONtyp === 1 ? (
                             <div className="conpri__list">
                               <p className="info__value ">WiFi</p>
                               <p className="info__value ">LAN</p>
                               <p className="info__value active">SIM</p>
                             </div>
-                          ) : informationMessages[foundDevice].data.CONtyp ===
-                            2 ? (
+                          ) : informationMessages[item].data.CONtyp === 2 ? (
                             <div className="conpri__list">
                               <p className="info__value ">WiFi</p>
                               <p className="info__value active">LAN</p>
@@ -770,13 +660,13 @@ const Admin = () => {
                     <div className="info__version">
                       <p className="info__name">WiFi name: </p>
                       <p className="info__value">
-                        {informationMessages[foundDevice].data.WIF.ssid}
+                        {informationMessages[item].data.WIF.ssid}
                       </p>
                     </div>
                     <div className="info__version">
                       <p className="info__name">Password: </p>
                       <p className="info__value  small__text">
-                        {informationMessages[foundDevice].data.WIF.password}
+                        {informationMessages[item].data.WIF.password}
                       </p>
                     </div>
                   </div>
@@ -784,7 +674,7 @@ const Admin = () => {
                   {/* CONNECTION MODE */}
                   <div className="info__version">
                     <p className="info__name">Connection Mode: </p>
-                    {informationMessages[foundDevice].data.CHANGEtyp === 0 ? (
+                    {informationMessages[item].data.CHANGEtyp === 0 ? (
                       <p className="info__value">AC</p>
                     ) : (
                       <p className="info__value">BATTERY</p>
@@ -804,268 +694,13 @@ const Admin = () => {
               ) : (
                 <button
                   className="device_detele"
-                  onClick={() => handleDeteleFindDevice(foundDevice)}>
+                  onClick={() => handleDeleteDevice(index)}>
                   x
                 </button>
               )}
             </div>
-          </div>
-        ) : (
-          <div className="device__list">
-            {topics.map((item, index) => (
-              <div
-                className={
-                  emergency &&
-                  informationMessages[item] &&
-                  emergencyMessage === informationMessages[item].id
-                    ? "device emergency__alert"
-                    : test &&
-                      informationMessages[item] &&
-                      testMessage === informationMessages[item].id
-                    ? "device test__alert"
-                    : "device"
-                }
-                key={index}>
-                <p className="device__name">{item}</p>
-                <p className="device__name" style={{ marginTop: ".5rem" }}>
-                  Count Restart: {countReset}
-                </p>
-                <div
-                  style={{
-                    display: "flex",
-                    margin: ".5rem 0rem",
-                    gap: ".5rem",
-                  }}>
-                  <p className="device__name">Count LAN:{countLAN}</p>
-                  <p className="device__name">count WIFI:{countWifi}</p>
-                  <p className="device__name">count SIM:{countSIM}</p>
-                </div>
-                {informationMessages[item] ? (
-                  <div className="device__info">
-                    {/* VERSION */}
-                    <div className="info__version">
-                      <p className="info__name">Version </p>
-                      <p className="info__value">
-                        {informationMessages[item].data.FWver}
-                      </p>
-                    </div>
-                    <div className="line"></div>
-                    {/* CONNECTION TYPE - PRIORITY */}
-                    <div className="info__connection">
-                      <p className="info__name">Connection type</p>
-                      <div className="info__conpri">
-                        {JSON.stringify(
-                          informationMessages[item].data.CONpri
-                        ) === JSON.stringify([1, 2, 3]) ? (
-                          <>
-                            {informationMessages[item].data.CONtyp === 1 ? (
-                              <div className="conpri__list">
-                                <p className="info__value active">SIM</p>
-                                <p className="info__value ">LAN</p>
-                                <p className="info__value ">WiFi</p>
-                              </div>
-                            ) : informationMessages[item].data.CONtyp === 2 ? (
-                              <div className="conpri__list">
-                                <p className="info__value ">SIM</p>
-                                <p className="info__value active">LAN</p>
-                                <p className="info__value ">WiFi</p>
-                              </div>
-                            ) : (
-                              <div className="conpri__list">
-                                <p className="info__value ">SIM</p>
-                                <p className="info__value ">LAN</p>
-                                <p className="info__value active">WiFi</p>
-                              </div>
-                            )}
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                        {JSON.stringify(
-                          informationMessages[item].data.CONpri
-                        ) === JSON.stringify([1, 3, 2]) ? (
-                          <>
-                            {informationMessages[item].data.CONtyp === 1 ? (
-                              <div className="conpri__list">
-                                <p className="info__value active">SIM</p>
-                                <p className="info__value ">WiFi</p>
-                                <p className="info__value ">LAN</p>
-                              </div>
-                            ) : informationMessages[item].data.CONtyp === 2 ? (
-                              <div className="conpri__list">
-                                <p className="info__value ">SIM</p>
-                                <p className="info__value ">WiFi</p>
-                                <p className="info__value active">LAN</p>
-                              </div>
-                            ) : (
-                              <div className="conpri__list">
-                                <p className="info__value ">SIM</p>
-                                <p className="info__value active">WiFi</p>
-                                <p className="info__value ">LAN</p>
-                              </div>
-                            )}
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                        {JSON.stringify(
-                          informationMessages[item].data.CONpri
-                        ) === JSON.stringify([2, 1, 3]) ? (
-                          <>
-                            {informationMessages[item].data.CONtyp === 2 ? (
-                              <div className="conpri__list">
-                                <p className="info__value active">LAN</p>
-                                <p className="info__value ">SIM</p>
-                                <p className="info__value ">WiFi</p>
-                              </div>
-                            ) : informationMessages[item].data.CONtyp === 1 ? (
-                              <div className="conpri__list">
-                                <p className="info__value ">LAN</p>
-                                <p className="info__value active">SIM</p>
-                                <p className="info__value ">WiFi</p>
-                              </div>
-                            ) : (
-                              <div className="conpri__list">
-                                <p className="info__value ">LAN</p>
-                                <p className="info__value ">SIM</p>
-                                <p className="info__value active">WiFi</p>
-                              </div>
-                            )}
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                        {JSON.stringify(
-                          informationMessages[item].data.CONpri
-                        ) === JSON.stringify([2, 3, 1]) ? (
-                          <>
-                            {informationMessages[item].data.CONtyp === 1 ? (
-                              <div className="conpri__list">
-                                <p className="info__value ">LAN</p>
-                                <p className="info__value ">WiFi</p>
-                                <p className="info__value active">SIM</p>
-                              </div>
-                            ) : informationMessages[item].data.CONtyp === 2 ? (
-                              <div className="conpri__list">
-                                <p className="info__value active">LAN</p>
-                                <p className="info__value ">WiFi</p>
-                                <p className="info__value ">SIM</p>
-                              </div>
-                            ) : (
-                              <div className="conpri__list">
-                                <p className="info__value ">LAN</p>
-                                <p className="info__value active">WiFi</p>
-                                <p className="info__value ">SIM</p>
-                              </div>
-                            )}
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                        {JSON.stringify(
-                          informationMessages[item].data.CONpri
-                        ) === JSON.stringify([3, 1, 2]) ? (
-                          <>
-                            {informationMessages[item].data.CONtyp === 1 ? (
-                              <div className="conpri__list">
-                                <p className="info__value ">WiFi</p>
-                                <p className="info__value active">SIM</p>
-                                <p className="info__value ">LAN</p>
-                              </div>
-                            ) : informationMessages[item].data.CONtyp === 2 ? (
-                              <div className="conpri__list">
-                                <p className="info__value ">WiFi</p>
-                                <p className="info__value ">SIM</p>
-                                <p className="info__value active">LAN</p>
-                              </div>
-                            ) : (
-                              <div className="conpri__list">
-                                <p className="info__value active">WiFi</p>
-                                <p className="info__value ">SIM</p>
-                                <p className="info__value ">LAN</p>
-                              </div>
-                            )}
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                        {JSON.stringify(
-                          informationMessages[item].data.CONpri
-                        ) === JSON.stringify([3, 2, 1]) ? (
-                          <>
-                            {informationMessages[item].data.CONtyp === 1 ? (
-                              <div className="conpri__list">
-                                <p className="info__value ">WiFi</p>
-                                <p className="info__value ">LAN</p>
-                                <p className="info__value active">SIM</p>
-                              </div>
-                            ) : informationMessages[item].data.CONtyp === 2 ? (
-                              <div className="conpri__list">
-                                <p className="info__value ">WiFi</p>
-                                <p className="info__value active">LAN</p>
-                                <p className="info__value ">SIM</p>
-                              </div>
-                            ) : (
-                              <div className="conpri__list">
-                                <p className="info__value active">WiFi</p>
-                                <p className="info__value ">LAN</p>
-                                <p className="info__value ">SIM</p>
-                              </div>
-                            )}
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                      </div>
-                    </div>
-                    <div className="line"></div>
-                    {/* WiFi */}
-                    <div className="info__group">
-                      <div className="info__version">
-                        <p className="info__name">WiFi name: </p>
-                        <p className="info__value">
-                          {informationMessages[item].data.WIF.ssid}
-                        </p>
-                      </div>
-                      <div className="info__version">
-                        <p className="info__name">Password: </p>
-                        <p className="info__value  small__text">
-                          {informationMessages[item].data.WIF.password}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="line"></div>
-                    {/* CONNECTION MODE */}
-                    <div className="info__version">
-                      <p className="info__name">Connection Mode: </p>
-                      {informationMessages[item].data.CHANGEtyp === 0 ? (
-                        <p className="info__value">AC</p>
-                      ) : (
-                        <p className="info__value">BATTERY</p>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="welcome">
-                    <div className="welcome__content">
-                      <p className="welcome__text">Connecting to device</p>
-                      <p className="welcome__text">Please wait a moment</p>
-                    </div>
-                  </div>
-                )}
-                {emergency || test ? (
-                  <></>
-                ) : (
-                  <button
-                    className="device_detele"
-                    onClick={() => handleDeleteDevice(index)}>
-                    x
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+          ))}
+        </div>
       </div>
     </div>
   );
