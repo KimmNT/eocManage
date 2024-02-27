@@ -12,6 +12,10 @@ import { FaBell } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
 import { FaFileImport } from "react-icons/fa";
+import { FaBatteryFull } from "react-icons/fa";
+import { FaBatteryThreeQuarters } from "react-icons/fa";
+import { FaBatteryHalf } from "react-icons/fa";
+import { FaBatteryQuarter } from "react-icons/fa";
 
 const HomePage = () => {
   //Message State
@@ -37,6 +41,8 @@ const HomePage = () => {
   const [foundDevice, setFoundDevice] = useState(null);
   //Reset Count State
   // const [countReset, setCountReset] = useState(0);
+  //Bat Count State
+  const [batteryCount, setBatteryCount] = useState(0);
 
   const priArray = [
     { priName: "SIM-LAN-WiFi", pri: [1, 2, 3] },
@@ -111,6 +117,7 @@ const HomePage = () => {
             ...prevMessages,
             [topic]: receivedMessage,
           }));
+          setBatteryCount(receivedMessage.data.BAT.percent);
         }
         //FOR EMERGENCY TYPE
         if (receivedMessage.type === "emergency") {
@@ -759,10 +766,52 @@ const HomePage = () => {
                   {/* CONNECTION MODE */}
                   <div className="info__version">
                     <p className="info__name">Connection Mode: </p>
-                    {informationMessages[foundDevice].data.CHANGEtyp === 0 ? (
-                      <p className="info__value">AC</p>
+                    {informationMessages[foundDevice].data.BAT.percent > 0 &&
+                    informationMessages[foundDevice].data.BAT.percent < 25 ? (
+                      <div className="info__value">
+                        <p className="bat low">
+                          <FaBatteryQuarter />
+                        </p>
+                        <span className="bat__per">
+                          {informationMessages[foundDevice].data.BAT.percent}%
+                        </span>
+                      </div>
+                    ) : informationMessages[foundDevice].data.BAT.percent >
+                        25 &&
+                      informationMessages[foundDevice].data.BAT.percent < 50 ? (
+                      <div className="info__value">
+                        <p className="bat half__full">
+                          <FaBatteryHalf />
+                        </p>
+                        <span className="bat__per">
+                          {informationMessages[foundDevice].data.BAT.percent}%
+                        </span>
+                      </div>
+                    ) : informationMessages[foundDevice].data.BAT.percent >
+                        50 &&
+                      informationMessages[foundDevice].data.BAT.percent < 75 ? (
+                      <div className="info__value">
+                        <p className="bat quar__full">
+                          <FaBatteryThreeQuarters />
+                        </p>
+                        <span className="bat__per">
+                          {informationMessages[foundDevice].data.BAT.percent}%
+                        </span>
+                      </div>
+                    ) : informationMessages[foundDevice].data.BAT.percent >
+                        75 &&
+                      informationMessages[foundDevice].data.BAT.percent <
+                        100 ? (
+                      <div className="info__value">
+                        <p className="bat full">
+                          <FaBatteryFull />
+                        </p>
+                        <span className="bat__per">
+                          {informationMessages[foundDevice].data.BAT.percent}%
+                        </span>
+                      </div>
                     ) : (
-                      <p className="info__value">BATTERY</p>
+                      <p className="info__value">AC</p>
                     )}
                   </div>
                 </div>
@@ -1018,11 +1067,48 @@ const HomePage = () => {
                     {/* CONNECTION MODE */}
                     <div className="info__version">
                       <p className="info__name">Connection Mode: </p>
-                      {informationMessages[item.deviceInfoId].data.CHANGEtyp ===
-                      0 ? (
-                        <p className="info__value">AC</p>
+                      {informationMessages[item].data.BAT.percent > 0 &&
+                      informationMessages[item].data.BAT.percent < 25 ? (
+                        <div className="info__value">
+                          <p className="bat low">
+                            <FaBatteryQuarter />
+                          </p>
+                          <span className="bat__per">
+                            {informationMessages[item].data.BAT.percent}%
+                          </span>
+                        </div>
+                      ) : informationMessages[item].data.BAT.percent > 25 &&
+                        informationMessages[item].data.BAT.percent < 50 ? (
+                        <div className="info__value">
+                          <p className="bat half__full">
+                            <FaBatteryHalf />
+                          </p>
+                          <span className="bat__per">
+                            {informationMessages[item].data.BAT.percent}%
+                          </span>
+                        </div>
+                      ) : informationMessages[item].data.BAT.percent > 50 &&
+                        informationMessages[item].data.BAT.percent < 75 ? (
+                        <div className="info__value">
+                          <p className="bat quar__full">
+                            <FaBatteryThreeQuarters />
+                          </p>
+                          <span className="bat__per">
+                            {informationMessages[item].data.BAT.percent}%
+                          </span>
+                        </div>
+                      ) : informationMessages[item].data.BAT.percent > 75 &&
+                        informationMessages[item].data.BAT.percent < 100 ? (
+                        <div className="info__value">
+                          <p className="bat full">
+                            <FaBatteryFull />
+                          </p>
+                          <span className="bat__per">
+                            {informationMessages[item].data.BAT.percent}%
+                          </span>
+                        </div>
                       ) : (
-                        <p className="info__value">BATTERY</p>
+                        <p className="info__value">AC</p>
                       )}
                     </div>
                   </div>

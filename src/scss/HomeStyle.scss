@@ -676,6 +676,26 @@ body {
             .info__value {
               font-size: 2rem;
               font-weight: 900;
+              display: flex;
+              align-items: center;
+              .bat {
+                transform: rotate(270deg);
+              }
+              .low {
+                color: $delete;
+              }
+              .half__full {
+                color: #faa300;
+              }
+              .quar__full {
+                color: #337357;
+              }
+              .full {
+                color: #337357;
+              }
+              .bat__per {
+                font-size: 1.5rem;
+              }
             }
           }
           .info__connection {

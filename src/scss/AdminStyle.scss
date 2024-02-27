@@ -561,18 +561,18 @@ body {
         gap: 10rem;
       }
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 14rem;
       .device {
         position: relative;
         height: 63rem;
-        width: 70%;
+        width: 45%;
         background-color: $light;
         padding: 2rem;
         border-radius: 1.5rem;
         box-shadow: $boxShadow;
+        margin-top: 10rem;
         .device__name {
           background-color: $secondary;
           width: 100%;
@@ -607,6 +607,26 @@ body {
             .info__value {
               font-size: 2rem;
               font-weight: 900;
+              display: flex;
+              align-items: center;
+              .bat {
+                transform: rotate(270deg);
+              }
+              .low {
+                color: $delete;
+              }
+              .half__full {
+                color: #faa300;
+              }
+              .quar__full {
+                color: #337357;
+              }
+              .full {
+                color: #337357;
+              }
+              .bat__per {
+                font-size: 1.5rem;
+              }
             }
           }
           .info__connection {
