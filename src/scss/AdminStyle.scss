@@ -342,7 +342,7 @@ body {
                   }
                   .pri__item_title {
                     font-size: 1.5rem;
-                    font-weight: 900;
+                    font-weight: 600;
                     color: $dark;
                     transition: all ease-in-out 0.3s;
                     @media (max-width: $tiny) {
@@ -398,6 +398,16 @@ body {
             }
           }
         }
+      }
+    }
+    .purpose {
+      width: 100%;
+      background-color: $primary;
+      .purpose__text {
+        text-align: center;
+        padding: 1rem 0;
+        color: $light;
+        font-size: 2rem;
       }
     }
     .fire {
@@ -472,93 +482,14 @@ body {
     @media (max-width: $tiny) {
       max-width: 550px !important;
       margin: 0 auto;
-      padding-top: 35rem;
+      padding-top: 25rem;
     }
     padding-top: 20rem;
-    .find__container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      align-items: center;
-      padding: 3rem 0rem 8rem 0rem;
-      @media (max-width: $mobileMin) {
-        flex-direction: column;
-        gap: 4rem;
-        padding: 2rem 0rem 6rem 0rem;
-      }
-      .find__count {
-        font-size: 2rem;
-        color: $dark;
-        font-weight: 600;
-        display: flex;
-        align-items: flex-end;
-        .count__number {
-          font-size: 3rem;
-          margin-right: 1rem;
-        }
-      }
-      .search_container {
-        display: flex;
-        gap: 2rem;
-        align-items: center;
-        justify-content: flex-end;
-        input {
-          padding: 1rem;
-          font-size: 1.5rem;
-          font-weight: 600;
-          background-color: transparent;
-          outline: none;
-          border: none;
-          border-bottom: 0.2rem solid $dark;
-        }
-        .search__btn {
-          width: 4rem;
-          height: 4rem;
-          border-radius: 50%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          cursor: pointer;
-          background-color: $secondary;
-          border: none;
-          .search__btn_icon {
-            font-size: 1.5rem;
-            color: $light;
-          }
-        }
-        .clear__btn {
-          width: 4rem;
-          height: 4rem;
-          border-radius: 50%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          border: none;
-          cursor: pointer;
-          background-color: $light;
-          .clear__btn_icon {
-            font-size: 1.5rem;
-            color: $secondary;
-          }
-        }
-      }
-    }
     .device__list {
-      @media (min-width: $large) {
-      }
-      @media (min-width: $desktopMin) and (max-width: $desktopMax) {
-      }
-      @media (min-width: $tabletMin) and (max-width: $tabletMax) {
+      @media (max-width: $desktopMax) {
         justify-content: center;
-        gap: 10rem;
-      }
-      @media (min-width: $mobileMin) and (max-width: $mobileMax) {
-        justify-content: center;
-        gap: 10rem;
-      }
-      @media (max-width: $tiny) {
-        justify-content: center;
-        gap: 10rem;
+        align-items: center;
+        gap: 5rem;
       }
       display: flex;
       justify-content: space-between;
@@ -573,6 +504,9 @@ body {
         border-radius: 1.5rem;
         box-shadow: $boxShadow;
         margin-top: 10rem;
+        @media (max-width: $tabletMax) {
+          width: 80%;
+        }
         .device__name {
           background-color: $secondary;
           width: 100%;
@@ -731,6 +665,9 @@ body {
           font-weight: 600;
           text-transform: uppercase;
         }
+      }
+      .offline {
+        background-color: #0d9276;
       }
       .emergency__alert {
         background-color: $emergencyAlertColor;

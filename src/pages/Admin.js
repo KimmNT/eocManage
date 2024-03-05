@@ -12,6 +12,8 @@ import { FaBatteryFull } from "react-icons/fa";
 import { FaBatteryThreeQuarters } from "react-icons/fa";
 import { FaBatteryHalf } from "react-icons/fa";
 import { FaBatteryQuarter } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 
 const Admin = () => {
   //Message State
@@ -19,6 +21,8 @@ const Admin = () => {
   const [emergencyMessage, setEmergencyMessage] = useState({});
   const [testMessage, setTestMessage] = useState({});
   const [topics, setTopics] = useState([]);
+  const [keepAliveMessage, setKeeepAliveMesssage] = useState({});
+  const [isSD, setIsSD] = useState({});
   //Alert State
   const [emergency, setEmergency] = useState(false);
   const [test, setTest] = useState(false);
@@ -38,8 +42,8 @@ const Admin = () => {
   const [countLAN, setCountLAN] = useState(0);
   const [countWifi, setCountWifi] = useState(0);
   const [countSIM, setCountSIM] = useState(0);
-  //Battery Count State
-  const [batteryCount, setBatteryCount] = useState(0);
+  //Keepalive State
+  const [isOnline, setIsOnline] = useState(false);
 
   const priArray = [
     { priName: "SIM-LAN-WiFi", pri: [1, 2, 3] },
@@ -113,22 +117,20 @@ const Admin = () => {
             ...prevMessages,
             [topic]: receivedMessage,
           }));
-          // setBatteryCount(receivedMessage.data.BAT.percent);
         }
         //FOR EMERGENCY TYPE
         if (receivedMessage.type === "emergency") {
-          setEmergencyMessage(receivedMessage.id);
+          setEmergencyMessage(receivedMessage.deviceId);
           setEmergency(true);
           const timeoutId = setTimeout(() => {
             setEmergency(false);
           }, 3000);
-
           // Clean up the timeout on component unmount
           return () => clearTimeout(timeoutId);
         }
         //FOR BUTTON TEST TYPE
         if (receivedMessage.type === "test") {
-          setTestMessage(receivedMessage.id);
+          setTestMessage(receivedMessage.deviceId);
           setTest(true);
           const timeoutId = setTimeout(() => {
             setTest(false);
@@ -148,6 +150,7 @@ const Admin = () => {
           const hour = date.getHours();
           const fullDay = `${hour}:${minute}:${second} - ${day}/${month + 1}`;
           console.log(fullDay);
+          receivedMessage.SDCard === 1 ? setIsSD(true) : setIsSD(false);
         }
         //FOR CHECKING RESTART
         if (receivedMessage.type === "keepalive") {
@@ -159,6 +162,15 @@ const Admin = () => {
           const hour = date.getHours();
           const fullDay = `${hour}:${minute}:${second} - ${day}/${month + 1}`;
           console.log(fullDay);
+
+          setKeeepAliveMesssage(receivedMessage.deviceId);
+          setIsOnline(true);
+          const timeoutKeepAlive = setTimeout(() => {
+            setTest(false);
+          }, 40000);
+
+          // Clean up the timeout on component unmount
+          return () => clearTimeout(timeoutKeepAlive);
         }
         //FOR ERROR TYPE
         if (receivedMessage.type === "error") {
@@ -427,6 +439,11 @@ const Admin = () => {
             </div>
           </div>
         </div>
+        <div className="purpose">
+          <p className="purpose__text">
+            ONLY FOR EACH DEVICE: count reset / count reconnect SIM-LAN-WiFi
+          </p>
+        </div>
         {emergency ? (
           <div className="fire">
             <FaFireAlt /> <p className="alert__id">{emergencyMessage}</p>
@@ -466,13 +483,13 @@ const Admin = () => {
               className={
                 emergency &&
                 informationMessages[item] &&
-                emergencyMessage === informationMessages[item].id
+                emergencyMessage === informationMessages[item].deviceId
                   ? "device emergency__alert"
                   : test &&
                     informationMessages[item] &&
-                    testMessage === informationMessages[item].id
+                    testMessage === informationMessages[item].deviceId
                   ? "device test__alert"
-                  : "device"
+                  : "device "
               }
               key={index}>
               <p className="device__name">{item}</p>
@@ -682,7 +699,7 @@ const Admin = () => {
                   <div className="info__version">
                     <p className="info__name">Connection Mode: </p>
                     {informationMessages[item].data.BAT.percent > 0 &&
-                    informationMessages[item].data.BAT.percent < 25 ? (
+                    informationMessages[item].data.BAT.percent <= 25 ? (
                       <div className="info__value">
                         <p className="bat low">
                           <FaBatteryQuarter />
@@ -692,7 +709,7 @@ const Admin = () => {
                         </span>
                       </div>
                     ) : informationMessages[item].data.BAT.percent > 25 &&
-                      informationMessages[item].data.BAT.percent < 50 ? (
+                      informationMessages[item].data.BAT.percent <= 50 ? (
                       <div className="info__value">
                         <p className="bat half__full">
                           <FaBatteryHalf />
@@ -702,7 +719,7 @@ const Admin = () => {
                         </span>
                       </div>
                     ) : informationMessages[item].data.BAT.percent > 50 &&
-                      informationMessages[item].data.BAT.percent < 75 ? (
+                      informationMessages[item].data.BAT.percent <= 75 ? (
                       <div className="info__value">
                         <p className="bat quar__full">
                           <FaBatteryThreeQuarters />
@@ -723,6 +740,15 @@ const Admin = () => {
                       </div>
                     ) : (
                       <p className="info__value">AC</p>
+                    )}
+                  </div>
+                  {/* SD CARD */}
+                  <div className="info__version">
+                    <p className="info__name">SD Card </p>
+                    {isSD ? (
+                      <FaCheck className="info__value checked" />
+                    ) : (
+                      <FaTimes className="info__value not__checked" />
                     )}
                   </div>
                 </div>
