@@ -33,6 +33,7 @@ const HomePage = () => {
   const [config, setConfig] = useState(false);
   //Config State
   const [deviceId, setDeviceId] = useState("");
+  const [devicePreID, setDevicePreId] = useState("");
   const [owner, setOwner] = useState("");
   const [deviceInfo, setDeviceInfo] = useState([]);
   const [wifiDeviceId, setWifiDeviceId] = useState("");
@@ -219,12 +220,15 @@ const HomePage = () => {
   //HANDLE CREATE DEVICE
   const handleAddDevice = () => {
     if (deviceId !== "") {
-      setTopics((preDevice) => [...preDevice, `server/${deviceId}/data`]);
+      setTopics((preDevice) => [
+        ...preDevice,
+        `server/${devicePreID + deviceId}/data`,
+      ]);
       setDeviceId("");
       setOwner((preOwner) => [...preOwner, owner]);
       setOwner("");
       const combineDeviceInfo = {
-        deviceInfoId: `server/${deviceId}/data`,
+        deviceInfoId: `server/${devicePreID + deviceId}/data`,
         deviceInfoOwner: owner === "" ? "no owner" : owner,
         deviceAlive: false,
       };
@@ -287,8 +291,8 @@ const HomePage = () => {
         });
       });
       setWifiDeviceId("");
-      setSSID("");
-      setPassword("");
+      // setSSID("");
+      // setPassword("");
       setConfig(true);
     } else {
       alert("Haven't enter device's id");
@@ -416,6 +420,12 @@ const HomePage = () => {
               <div className="headline__create mobile__res">
                 <div className="create__input_container">
                   <input
+                    placeholder="pre id"
+                    value={devicePreID}
+                    onChange={(e) => setDevicePreId(e.target.value)}
+                    className="create__device"
+                  />
+                  <input
                     placeholder="device"
                     value={deviceId}
                     onChange={handleDeviceInput}
@@ -438,6 +448,12 @@ const HomePage = () => {
             {/* WHEN SCREEN BIGGER THAN MOBEIL SIZE */}
             <div className="headline__create more__than_mobile">
               <div className="create__input_container">
+                <input
+                  placeholder="pre id"
+                  value={devicePreID}
+                  onChange={(e) => setDevicePreId(e.target.value)}
+                  className="create__device"
+                />
                 <input
                   placeholder="device"
                   value={deviceId}
@@ -484,7 +500,8 @@ const HomePage = () => {
                   />
                   <button
                     className="item__config_btn"
-                    onClick={handleConfigWifi}>
+                    onClick={handleConfigWifi}
+                  >
                     CONFIG NOW
                   </button>
                 </div>
@@ -523,7 +540,8 @@ const HomePage = () => {
                   </div>
                   <button
                     className="item__config_btn"
-                    onClick={handleConfigPri}>
+                    onClick={handleConfigPri}
+                  >
                     CONFIG NOW
                   </button>
                 </div>
@@ -617,7 +635,8 @@ const HomePage = () => {
                     testMessage === informationMessages[foundDevice].id
                   ? "device test__alert"
                   : "device"
-              }>
+              }
+            >
               <p className="device__name">{foundDevice}</p>
               {informationMessages[foundDevice] ? (
                 <div className="device__info">
@@ -1241,7 +1260,8 @@ const HomePage = () => {
               ) : (
                 <button
                   className="device_detele"
-                  onClick={() => handleDeteleFindDevice(foundDevice)}>
+                  onClick={() => handleDeteleFindDevice(foundDevice)}
+                >
                   x
                 </button>
               )}
@@ -1264,7 +1284,8 @@ const HomePage = () => {
                     ? "device test__alert"
                     : "device"
                 }
-                key={index}>
+                key={index}
+              >
                 <p className="device__name">
                   {item.deviceInfoOwner} <br />
                   {item.deviceInfoId.substring(7, 12)}
@@ -1996,7 +2017,8 @@ const HomePage = () => {
                 ) : (
                   <button
                     className="device_detele"
-                    onClick={() => handleDeleteDevice(index)}>
+                    onClick={() => handleDeleteDevice(index)}
+                  >
                     x
                   </button>
                 )}

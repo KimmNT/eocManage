@@ -96,7 +96,7 @@ body {
         gap: 2rem;
         padding: 2rem 0rem 4rem 0rem;
       }
-      padding: 5rem 0rem;
+      padding: 3rem 0rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -129,7 +129,7 @@ body {
         .headline__logo {
           position: relative;
           .headline__title {
-            font-size: 5rem;
+            font-size: 3rem;
             font-weight: 900;
             color: $light;
             text-transform: uppercase;
@@ -144,7 +144,7 @@ body {
           .plus__icon_mobile {
             position: absolute;
             right: -7px;
-            bottom: 0;
+            bottom: -5px;
             background-color: $secondary;
             padding: 0.5rem;
             border-radius: 50%;
@@ -162,7 +162,7 @@ body {
           background-color: $light;
           justify-content: space-between;
           align-items: center;
-          padding: 1.5rem 2rem;
+          padding: 1rem 2rem;
           border-radius: 1rem;
           box-shadow: $boxShadow;
           @media (max-width: $mobileMax) {
@@ -191,7 +191,7 @@ body {
               background-color: transparent;
               outline: none;
               border: none;
-              padding: 1rem 2rem;
+              padding: .5rem 2rem;
               font-size: 2rem;
               font-weight: 900;
               border-bottom: 0.2rem solid $dark;
@@ -201,8 +201,8 @@ body {
             background-color: $secondary;
             outline: none;
             border: $light;
-            width: 5rem;
-            height: 5rem;
+            width: 4rem;
+            height: 4rem;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
