@@ -11,6 +11,10 @@ $emergencyAlertColor: #d04848;
 $testAlertColor: #fc6736;
 $buttonBgc: #f0f0f0;
 
+//ATTRIBUTE
+$transition: all ease-in-out 0.3s;
+$boxShadow: -7px 10px 5px 1px rgb(168, 168, 168);
+
 //RES
 $large: 1290px;
 $desktopMax: 1289.98px;
@@ -41,22 +45,187 @@ body {
   position: relative;
   min-height: 100vh;
   background-color: $backGround;
-  font-family: Rale;
   padding-bottom: 10rem;
   z-index: 0;
+  width: 100%;
+  .count__deivce {
+    position: fixed;
+    bottom: 5rem;
+    right: 8rem;
+    font-weight: 600;
+    font-size: 2rem;
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    background-color: $secondary;
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    color: $light;
+    z-index: 3;
+    .count__number {
+      font-size: 3rem;
+    }
+  }
+  .setting__container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 5;
+    .setting__content {
+      position: fixed;
+      right: 0;
+      height: 100%;
+      cursor: pointer;
+      &:hover {
+        transition: $transition;
+        .setting__config {
+          right: 0;
+          transition: $transition;
+        }
+      }
+      .setting__icon {
+        position: absolute;
+        bottom: 13rem;
+        right: 8rem;
+        z-index: -1;
+        background-color: $secondary;
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: $transition;
+        .icon {
+          font-size: 2rem;
+          color: $light;
+        }
+      }
+      .setting__config {
+        position: fixed;
+        right: -100rem;
+        // right: 0rem;
+        height: 100%;
+        background-color: $light;
+        transition: $transition;
+        box-shadow: $boxShadow;
+        padding: 3rem 4rem;
+        display: flex;
+        flex-direction: column;
+        gap: 6rem;
+        .config {
+          width: 100%;
+          font-size: 5rem;
+          text-align: center;
+          padding: 1rem 0;
+          color: $light;
+          text-transform: uppercase;
+          transition: $transition;
+          &.active {
+            background-color: #0d9276;
+          }
+          &.unactive {
+            height: 2rem;
+          }
+        }
+        .config__box {
+          position: relative;
+          width: 100%;
+          background-color: $backGround;
+          padding: 5rem 2rem 2rem 2rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 5rem;
+          border-radius: 1rem;
+          box-shadow: $boxShadow;
+          .config__icon {
+            position: absolute;
+            top: -2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background-color: $secondary;
+            padding: 0.8rem 3rem;
+            border-radius: 1rem;
+            color: $light;
+            .icon {
+              font-size: 2.5rem;
+            }
+            .name {
+              text-transform: uppercase;
+              font-size: 1.5rem;
+              font-weight: 600;
+            }
+          }
+          .config__item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            .config__item_content {
+              display: flex;
+              flex-direction: column;
+              gap: 2rem;
+              input {
+                width: 35rem;
+                outline: none;
+                border: none;
+                border-bottom: 0.2rem solid $dark;
+                font-size: 2rem;
+                padding: 0.5rem 1rem;
+                background-color: transparent;
+              }
+            }
+            .config__item_list {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              flex-wrap: wrap;
+              width: 35rem;
+              gap: 2rem;
+              .item {
+                width: 45%;
+                background-color: #c9c8c5;
+                display: flex;
+                justify-content: center;
+                padding: 1rem 2rem;
+                border-radius: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 2rem;
+                .item__lable {
+                  font-size: 1.2rem;
+                  font-weight: 900;
+                  color: $dark;
+                }
+              }
+            }
+            .config__item_btn {
+              background-color: $secondary;
+              width: 100%;
+              text-align: center;
+              padding: 1rem 0;
+              font-size: 1.8rem;
+              font-weight: 600;
+              color: $light;
+              border-radius: 1rem;
+            }
+          }
+        }
+      }
+    }
+  }
   .header {
     position: fixed;
     width: 100%;
     z-index: 1;
-    background-color: $backGround;
-    .header__bottom_width {
-      width: 100%;
-      height: 0.3rem;
-      background-color: $dark;
-    }
+    background-color: $light;
+    box-shadow: 0rem 0rem 2rem rgb(175, 175, 175);
     .header__content {
-      @media (min-width: $large) {
-        max-width: 1290px !important;
+      @media (max-width: $large) {
+        max-width: 1090px !important;
         margin: 0 auto;
       }
       @media (min-width: $desktopMin) and (max-width: $desktopMax) {
@@ -96,7 +265,9 @@ body {
         gap: 2rem;
         padding: 2rem 0rem 4rem 0rem;
       }
-      padding: 3rem 0rem;
+      max-width: 1490px !important;
+      margin: 0 auto;
+      padding: 4rem 0rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -157,12 +328,12 @@ body {
         .headline__create {
           display: flex;
           align-items: center;
-          gap: 2rem;
+          gap: 3rem;
           width: 100%;
-          background-color: $light;
+          background-color: $backGround;
           justify-content: space-between;
           align-items: center;
-          padding: 1rem 2rem;
+          padding: 1rem 3rem;
           border-radius: 1rem;
           box-shadow: $boxShadow;
           @media (max-width: $mobileMax) {
@@ -179,45 +350,75 @@ body {
               width: 100%;
             }
             .create__device {
-              width: 13rem;
+              width: 10rem;
               @media (max-width: $mobileMax) {
                 width: 25rem;
               }
             }
             .create__owner {
-              width: 25rem;
+              width: 20rem;
             }
             input {
               background-color: transparent;
               outline: none;
               border: none;
-              padding: .5rem 2rem;
+              padding: 0.5rem 1rem;
               font-size: 2rem;
               font-weight: 900;
               border-bottom: 0.2rem solid $dark;
             }
           }
-          .create__btn {
-            background-color: $secondary;
-            outline: none;
-            border: $light;
-            width: 4rem;
-            height: 4rem;
-            border-radius: 50%;
-            cursor: pointer;
+          .create__btn_container {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-left: 1rem;
+            gap: 2rem;
             @media (max-width: $mobileMax) {
+              display: flex;
+              flex-direction: column;
               width: 100%;
-              border-radius: 1rem;
-              margin-left: 0;
-              margin-top: 2rem;
             }
-            .create__btn_icon {
-              font-size: 4rem;
-              color: $light;
+            .create__btn {
+              background-color: $secondary;
+              outline: none;
+              border: $light;
+              width: 4rem;
+              height: 4rem;
+              border-radius: 50%;
+              cursor: pointer;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-left: 1rem;
+              @media (max-width: $mobileMax) {
+                width: 100%;
+                border-radius: 1rem;
+                margin-left: 0;
+                margin-top: 2rem;
+              }
+              .create__btn_icon {
+                font-size: 4rem;
+                color: $light;
+              }
+            }
+            .import__btn {
+              outline: none;
+              border: 0.2rem solid $secondary;
+              width: 4rem;
+              height: 4rem;
+              border-radius: 50%;
+              cursor: pointer;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-left: 1rem;
+              @media (max-width: $mobileMax) {
+                width: 100%;
+                border-radius: 1rem;
+                margin-left: 0;
+              }
+              .import__btn_icon {
+                font-size: 2rem;
+                color: $secondary;
+              }
             }
           }
         }
@@ -227,252 +428,102 @@ body {
           }
         }
       }
-      .header__menu {
+      .header__search {
+        position: relative;
         display: flex;
-        justify-content: center;
-        gap: 5rem;
-        .config__wifi_box {
-          position: relative;
-          &:hover {
-            transition: all ease-in-out 0.3s;
-            cursor: pointer;
-            .config__icon_container {
-              background-color: $secondary;
-              transition: all ease-in-out 0.3s;
-              .config__icon {
-                color: $light;
-              }
-            }
-            .item__wifi {
-              display: block;
-              position: absolute;
-              top: 5rem;
-              transition: all ease-in-out 0.3s;
+        align-items: center;
+        justify-content: space-between;
+        gap: 3rem;
+        &:hover {
+          transition: $transition;
+          .search__container {
+          }
+        }
+        .search__container {
+          display: flex;
+          align-items: center;
+          background-color: $backGround;
+          padding: 1rem 1.5rem;
+          gap: 2rem;
+          border-radius: 1rem;
+          box-shadow: $boxShadow;
+          transition: $transition;
+          .search__count {
+            font-size: 1.5rem;
+            color: $dark;
+            font-weight: 600;
+            .count__number {
+              font-size: 3rem;
+              font-weight: 600;
             }
           }
-          .config__icon_container {
-            background-color: $configIconColor;
-            outline: none;
-            border: 0.2rem solid $secondary;
-            width: 5rem;
-            height: 5rem;
-            border-radius: 50%;
+          .search_box {
             display: flex;
-            justify-content: center;
             align-items: center;
-            cursor: pointer;
-            transition: all ease-in-out 0.3s;
-            .config__icon {
-              font-size: 2rem;
-              color: $secondary;
+            justify-content: space-between;
+            input {
+              padding: 0.5rem 1rem;
+              outline: none;
+              border: none;
+              background-color: transparent;
+              border-bottom: 0.2rem solid $dark;
+              font-size: 1.5rem;
+              font-weight: 600;
+              width: 60%;
             }
-          }
-          .item__wifi {
-            position: absolute;
-            display: none;
-            top: 6rem;
-            right: 0;
-            // opacity: 0;
-            padding: 1rem 0;
-            z-index: 99;
-            transition: all ease-in-out 0.3s;
-            @media (max-width: $tiny) {
-              right: -12rem;
-            }
-            .item__wifi_content {
-              background-color: $light;
-              padding: 2rem 3rem;
+            .search__btn {
+              width: 4rem;
+              height: 4rem;
+              border-radius: 50%;
+              background-color: $secondary;
               display: flex;
-              flex-direction: column;
-              gap: 1rem;
-              border-radius: 2rem;
-              border: 2px solid $dark;
-              input {
-                background-color: transparent;
-                outline: none;
-                border: none;
-                padding: 1.5rem;
-                font-size: 1.5rem;
-                font-weight: 600;
-                border-bottom: 0.2rem solid $dark;
-              }
-              .item__config_btn {
-                background-color: $secondary;
-                padding: 1rem 0rem;
-                border-radius: 3rem;
+              justify-content: center;
+              align-items: center;
+              .search__btn_icon {
                 color: $light;
-                font-weight: 600;
-                border: 0.2rem solid $secondary;
                 font-size: 1.5rem;
-                cursor: pointer;
-                margin-top: 2.5rem;
+              }
+            }
+            .clear__btn {
+              width: 4rem;
+              height: 4rem;
+              border-radius: 50%;
+              background-color: transparent;
+              border: 0.2rem solid $secondary;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              .clear__btn_icon {
+                color: $secondary;
+                font-size: 1.5rem;
               }
             }
           }
         }
-        .config__pri_box {
+        .setting__container {
           position: relative;
-          &:hover {
-            transition: all ease-in-out 0.3s;
-            .item__pri {
-              display: block;
-              position: absolute;
-              top: 5rem;
-              transition: all ease-in-out 0.3s;
-              opacity: 1;
-            }
-            .config__icon_container {
-              background-color: $secondary;
-              transition: all ease-in-out 0.3s;
-              .config__icon {
-                color: $light;
-              }
-            }
-          }
-          .config__icon_container {
-            background-color: $configIconColor;
-            outline: none;
-            border: 0.2rem solid $secondary;
-            width: 5rem;
-            height: 5rem;
+          .setting__icon {
+            width: 4rem;
+            height: 4rem;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
-            transition: all ease-in-out 0.3s;
-            .config__icon {
+            border: 0.2rem solid $secondary;
+            .icon {
               font-size: 2rem;
               color: $secondary;
             }
           }
-          .item__pri {
+          .setting__box {
             position: absolute;
-            top: 5rem;
-            right: 0;
-            // opacity: 0;
-            display: none;
-            // display: block;
-            padding: 1rem 0;
-            z-index: 99;
-            transition: all ease-in-out 0.3s;
-            width: 48rem;
-            @media (max-width: $mobileMax) {
-              right: -10rem;
-            }
-            @media (max-width: $tiny) {
-              right: -10rem;
-              width: 30rem;
-            }
-            .item__pri_content {
-              background-color: $light;
-              padding: 2rem;
-              display: flex;
-              flex-direction: column;
-              gap: 1rem;
-              border-radius: 2rem;
-              border: 2px solid $dark;
-              .item__pri_input_container {
-                input {
-                  background-color: transparent;
-                  outline: none;
-                  border: none;
-                  padding: 1.5rem;
-                  font-size: 1.5rem;
-                  font-weight: 600;
-                  width: 100%;
-                  border-bottom: 0.2rem solid $dark;
-                }
+            // bottom: -20rem;
+            background-color: tomato;
+            width: 100%;
+            height: 100%;
+            .setting__item {
+              .setting__title {
               }
-              .item__pri_list {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                flex-wrap: wrap;
-                gap: 2rem;
-                padding: 2rem 0;
-                @media (max-width: $tiny) {
-                  gap: 1rem;
-                }
-                .pri__item {
-                  width: 45%;
-                  display: flex;
-                  align-items: center;
-                  gap: 1rem;
-                  background-color: #ededed;
-                  padding: 1.5rem 3rem;
-                  border-radius: 1rem;
-                  transition: all ease-in-out 0.2s;
-                  @media (max-width: $tiny) {
-                    width: 48%;
-                    padding: 1rem;
-                  }
-                  &:hover {
-                    transition: all ease-in-out 0.2s;
-                    background-color: $dark;
-                    .pri__item_title {
-                      color: $light;
-                      transition: all ease-in-out 0.2s;
-                    }
-                  }
-                  input {
-                    cursor: pointer;
-                  }
-                  .pri__item_title {
-                    font-size: 1.5rem;
-                    font-weight: 900;
-                    color: $dark;
-                    transition: all ease-in-out 0.3s;
-                    @media (max-width: $tiny) {
-                      font-size: 1rem;
-                      font-weight: 0;
-                    }
-                  }
-                }
-              }
-              .item__config_btn {
-                background-color: $secondary;
-                padding: 1rem 0rem;
-                border-radius: 3rem;
-                color: $light;
-                font-weight: 600;
-                border: 0.2rem solid $secondary;
-                font-size: 2rem;
-                cursor: pointer;
-                @media (max-width: $tiny) {
-                }
-              }
-            }
-          }
-        }
-        .import__container {
-          &:hover {
-            transition: all ease-in-out 0.3s;
-            .import__btn {
-              background-color: $secondary;
-              transition: all ease-in-out 0.3s;
-              .import__icon {
-                color: $light;
-                transition: all ease-in-out 0.3s;
-              }
-            }
-          }
-          .import__btn {
-            background-color: $configIconColor;
-            outline: none;
-            border: 0.2rem solid $secondary;
-            width: 5rem;
-            height: 5rem;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all ease-in-out 0.3s;
-            .import__icon {
-              font-size: 2rem;
-              color: $secondary;
-              transition: all ease-in-out 0.3s;
             }
           }
         }
@@ -512,24 +563,10 @@ body {
         margin-left: 2rem;
       }
     }
-    .config {
-      position: relative;
-      z-index: 99;
-      width: 100%;
-      background-color: #0d9276;
-      font-size: 7rem;
-      text-align: center;
-      padding: 2rem 0;
-      color: $light;
-      text-transform: uppercase;
-      @media (max-width: $mobileMax) {
-        font-size: 3rem;
-      }
-    }
   }
   .content {
     @media (min-width: $large) {
-      max-width: 1290px !important;
+      max-width: 1390px !important;
       margin: 0 auto;
     }
     @media (min-width: $desktopMin) and (max-width: $desktopMax) {
@@ -553,74 +590,6 @@ body {
       padding-top: 25rem;
     }
     padding-top: 20rem;
-    .find__container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      align-items: center;
-      padding: 3rem 0rem 8rem 0rem;
-      @media (max-width: $mobileMin) {
-        flex-direction: column;
-        gap: 4rem;
-        padding: 2rem 0rem 6rem 0rem;
-      }
-      .find__count {
-        font-size: 2rem;
-        color: $dark;
-        font-weight: 600;
-        display: flex;
-        align-items: flex-end;
-        .count__number {
-          font-size: 3rem;
-          margin-right: 1rem;
-        }
-      }
-      .search_container {
-        display: flex;
-        gap: 2rem;
-        align-items: center;
-        justify-content: flex-end;
-        input {
-          padding: 1rem;
-          font-size: 1.5rem;
-          font-weight: 600;
-          background-color: transparent;
-          outline: none;
-          border: none;
-          border-bottom: 0.2rem solid $dark;
-        }
-        .search__btn {
-          width: 4rem;
-          height: 4rem;
-          border-radius: 50%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          cursor: pointer;
-          background-color: $secondary;
-          border: none;
-          .search__btn_icon {
-            font-size: 1.5rem;
-            color: $light;
-          }
-        }
-        .clear__btn {
-          width: 4rem;
-          height: 4rem;
-          border-radius: 50%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          border: none;
-          cursor: pointer;
-          background-color: $light;
-          .clear__btn_icon {
-            font-size: 1.5rem;
-            color: $secondary;
-          }
-        }
-      }
-    }
     .device__list {
       @media (min-width: $large) {
       }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import mqtt from "mqtt";
 import * as XLSX from "xlsx";
-import "../scss/HomeStyle.scss";
+import "../scss/Test.scss";
 
 //ICONS
 import { FaPlus, FaWifi } from "react-icons/fa";
@@ -46,6 +46,7 @@ const Testing = () => {
       deviceAlive: true,
     },
   ]);
+  const [devicePreID, setDevicePreId] = useState("");
   const [wifiDeviceId, setWifiDeviceId] = useState("");
   const [ssid, setSSID] = useState("");
   const [password, setPassword] = useState("");
@@ -245,12 +246,15 @@ const Testing = () => {
   //HANDLE CREATE DEVICE
   const handleAddDevice = () => {
     if (deviceId !== "") {
-      setTopics((preDevice) => [...preDevice, `server/${deviceId}/data`]);
+      setTopics((preDevice) => [
+        ...preDevice,
+        `server/${devicePreID + deviceId}/data`,
+      ]);
       setDeviceId("");
       setOwner((preOwner) => [...preOwner, owner]);
       setOwner("");
       const combineDeviceInfo = {
-        deviceInfoId: `server/${deviceId}/data`,
+        deviceInfoId: `server/${devicePreID + deviceId}/data`,
         deviceInfoOwner: owner === "" ? "no owner" : owner,
         deviceAlive: false,
       };
@@ -426,885 +430,128 @@ const Testing = () => {
 
   return (
     <div className="container">
-      <div className="header">
-        <div className="header__content">
-          <div className="header__headline">
-            <div className="headline__logo">
-              <p className="headline__title" onClick={handleOpenBox}>
-                test
-              </p>
-              <div className="plus__icon_mobile">
-                <FaPlus className="plus__icon" />
-              </div>
+      <div className="menu">
+        <div className="menu__headline">
+          <div className="menu__logo">
+            <p className="logo">eoc</p>
+          </div>
+          <div className="menu__create">
+            <div className="create__input_container">
+              <input
+                placeholder="pre id"
+                value={devicePreID}
+                onChange={(e) => setDevicePreId(e.target.value)}
+                className="create__device"
+              />
+              <input
+                placeholder="device"
+                value={deviceId}
+                onChange={handleDeviceInput}
+                className="create__device"
+              />
+              <input
+                placeholder="device's owner"
+                value={owner}
+                onChange={(e) => setOwner(e.target.value)}
+                className="create__owner"
+              />
             </div>
-            {/* WHEN SCREEN AT MOBILE SIZE */}
-            {isVisible ? (
-              <div className="headline__create mobile__res">
-                <div className="create__input_container">
-                  <input
-                    placeholder="device"
-                    value={deviceId}
-                    onChange={handleDeviceInput}
-                    className="create__device"
-                  />
-                  <input
-                    placeholder="device's owner"
-                    value={owner}
-                    onChange={(e) => setOwner(e.target.value)}
-                    className="create__owner"
-                  />
-                </div>
-                <button className="create__btn" onClick={handleAddDevice}>
-                  <p className="create__btn_icon">+</p>
-                </button>
-              </div>
-            ) : (
-              <></>
-            )}
-            {/* WHEN SCREEN BIGGER THAN MOBEIL SIZE */}
-            <div className="headline__create more__than_mobile">
-              <div className="create__input_container">
-                <input
-                  placeholder="device"
-                  value={deviceId}
-                  onChange={handleDeviceInput}
-                  className="create__device"
-                />
-                <input
-                  placeholder="device's owner"
-                  value={owner}
-                  onChange={(e) => setOwner(e.target.value)}
-                  className="create__owner"
-                />
-              </div>
-              <button className="create__btn" onClick={handleAddDevice}>
-                <p className="create__btn_icon">+</p>
-              </button>
+            <div className="create__btn" onClick={handleAddDevice}>
+              <FaPlus className="create__btn_icon" />
             </div>
           </div>
-          <div className="header__menu">
-            {/* CONFIG WIFI */}
-            <div className="config__wifi_box">
-              <div className="config__icon_container">
-                <FaWifi className="config__icon" />
-              </div>
-              <div className="item__wifi">
-                <div className="item__wifi_content">
+        </div>
+        {/* <div className="menu__list">
+          WIFI
+          <div className="menu__item">
+            <div className="item__icon">
+              <div className="item__head"></div>
+              <FaWifi className="icon" />
+            </div>
+            <div className="config__container">
+              <div className="config__content">
+                <div className="config__input">
                   <input
                     placeholder="enter device's id"
                     value={wifiDeviceId}
                     onChange={handleWifiDevice}
-                    className="item__wifi_input"
+                    className="input__content"
                   />
                   <input
                     placeholder="enter wifi name"
                     value={ssid}
                     onChange={handleSSID}
-                    className="item__wifi_input"
+                    className="input__content"
                   />
                   <input
                     placeholder="enter wifi password"
                     value={password}
                     onChange={handlePassword}
-                    className="item__wifi_input"
+                    className="input__content"
                   />
-                  <button
-                    className="item__config_btn"
-                    onClick={handleConfigWifi}>
-                    CONFIG NOW
-                  </button>
+                </div>
+                <div className="config__btn" onClick={handleConfigWifi}>
+                  CONFIG NOW
                 </div>
               </div>
             </div>
-            {/* CONFIG PRIORITY */}
-            <div className="config__pri_box">
-              <div className="config__icon_container">
-                <FaThList className="config__icon" />
-              </div>
-              <div className="item__pri">
-                <div className="item__pri_content">
-                  <div className="item__pri_input_container">
-                    <input
-                      placeholder="enter device's id"
-                      value={priDeviceId}
-                      onChange={handlePriDevice}
-                      className="item__pri_input"
-                    />
-                  </div>
-                  <div className="item__pri_list">
-                    {priArray.map((item, index) => (
-                      <div key={index} className="pri__item">
-                        <input
-                          type="radio"
-                          id={item.pri}
-                          name="priorityGroup"
-                          className="pri__item_checkbox"
-                          onChange={() => handleRadioChange(item.pri)}
-                        />
-                        <label className="pri__item_title">
-                          {item.priName}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                  <button
-                    className="item__config_btn"
-                    onClick={handleConfigPri}>
-                    CONFIG NOW
-                  </button>
+          </div>
+          PRIORITY
+          <div className="menu__item">
+            <div className="item__icon">
+              <div className="item__head"></div>
+
+              <FaThList className="icon" />
+            </div>
+            <div className="config__container">
+              <div className="config__content">
+                <div className="config__input">
+                  <input
+                    placeholder="enter device's id"
+                    value={priDeviceId}
+                    onChange={handlePriDevice}
+                    className="input__content"
+                  />
+                </div>
+                <div className="config__list">
+                  {priArray.map((item, index) => (
+                    <div key={index} className="list__item">
+                      <input
+                        type="radio"
+                        id={item.pri}
+                        name="priorityGroup"
+                        className="item__checkbox"
+                        onChange={() => handleRadioChange(item.pri)}
+                      />
+                      <label className="item__title">{item.priName}</label>
+                    </div>
+                  ))}
+                </div>
+                <div className="config__btn" onClick={handleConfigPri}>
+                  CONFIG NOW
                 </div>
               </div>
             </div>
-            {/* IMPORT EXCEL */}
-            <div className="import__container">
-              <div className="import__btn" onClick={handleButtonClick}>
-                <FaFileImport className="import__icon" />
-              </div>
-              <input
-                type="file"
-                accept=".xlsx, .xls"
-                ref={fileInputRef}
-                style={{ display: "none" }}
-                onChange={handleFileChange}
-              />
+          </div>
+          IMPORT EXCEL
+          <div className="menu__item">
+            <div className="item__icon" onClick={handleButtonClick}>
+              <div className="item__head"></div>
+
+              <FaFileImport className="icon" />
             </div>
+            <input
+              type="file"
+              accept=".xlsx, .xls"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
           </div>
-        </div>
-        {emergency ? (
-          <div className="fire">
-            <FaFireAlt /> <p className="alert__id">{emergencyMessage}</p>
-          </div>
-        ) : (
-          <></>
-        )}
-        {test ? (
-          <div className="test">
-            <FaBell /> <p className="alert__id">{testMessage}</p>
-          </div>
-        ) : (
-          <></>
-        )}
-        {config ? (
-          <div className="config">
-            <FaRegCheckCircle />
-          </div>
-        ) : (
-          <></>
-        )}
-        {emergency || test || config ? (
-          <></>
-        ) : (
-          <div className="header__bottom_width"></div>
-        )}
+        </div> */}
       </div>
-      {emergency || test || config ? (
-        <div className="alert__box"></div>
-      ) : (
-        <div className="alert__box_unactive"></div>
-      )}
-      <div className="content">
-        <div className="find__container">
-          <p className="find__count">
-            <span className="count__number">{deviceInfo.length}</span> devices
-          </p>
-          {deviceInfo.length > 2 ? (
-            <div className="search_container">
-              <input
-                type="text"
-                placeholder="search for device"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <button className="search__btn" onClick={handleSearch}>
-                <p className="search__btn_icon">
-                  <FaSearch />
-                </p>
-              </button>
-              <button className="clear__btn" onClick={() => setSearchQuery("")}>
-                <p className="clear__btn_icon">
-                  <FaChevronLeft />
-                </p>
-              </button>
-            </div>
-          ) : (
-            <></>
-          )}
-        </div>
-        <div className="device__list">
-          {deviceInfo.map((item, index) => (
-            <div
-              className={
-                emergency &&
-                informationMessages[item.deviceInfoId] &&
-                emergencyMessage ===
-                  informationMessages[item.deviceInfoId].deviceId
-                  ? "device emergency__alert"
-                  : test &&
-                    informationMessages[item.deviceInfoId] &&
-                    testMessage ===
-                      informationMessages[item.deviceInfoId].deviceId
-                  ? "device test__alert"
-                  : "device"
-              }
-              key={index}>
-              <p className="device__name">
-                {item.deviceInfoOwner} <br />
-                {item.deviceInfoId.substring(7, 12)}
-              </p>
-              {informationMessages[item.deviceInfoId] ? (
-                <div className="device__info">
-                  <div className="info__version">
-                    <p className="info__name">ONLINE: </p>
-                    {item.deviceAlive ? (
-                      <p className="info__value">ON</p>
-                    ) : (
-                      <p className="info__value">OFF</p>
-                    )}
-                  </div>
-                  {/* VERSION */}
-                  <div className="info__version">
-                    <p className="info__name">Version </p>
-                    <p className="info__value">
-                      {informationMessages[item.deviceInfoId].data.FWver}
-                    </p>
-                  </div>
-                  <div className="line"></div>
-                  {/* CONNECTION TYPE - PRIORITY */}
-                  <div className="info__connection">
-                    <p className="info__name">Connection type</p>
-                    <div className="info__conpri">
-                      {JSON.stringify(
-                        informationMessages[item.deviceInfoId].data.CONpri
-                      ) === JSON.stringify([1, 2, 3]) ? (
-                        <>
-                          {informationMessages[item.deviceInfoId].data
-                            .CONtyp === 1 ? (
-                            <div className="conpri__list">
-                              <div className="conn__active">
-                                <p className="info__value active">SIM</p>
-                                {informationMessages[item.deviceInfoId].data.SIM
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">LAN</p>
-                                {informationMessages[item.deviceInfoId].data
-                                  .LANstt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">WiFi</p>
-                                {informationMessages[item.deviceInfoId].data.WIF
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                            </div>
-                          ) : informationMessages[item.deviceInfoId].data
-                              .CONtyp === 2 ? (
-                            <div className="conpri__list">
-                              <div className="conn__active">
-                                <p className="info__value ">SIM</p>
-                                {informationMessages[item.deviceInfoId].data.SIM
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value active">LAN</p>
-                                {informationMessages[item.deviceInfoId].data
-                                  .LANstt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">WiFi</p>
-                                {informationMessages[item.deviceInfoId].data.WIF
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="conpri__list">
-                              <div className="conn__active">
-                                <p className="info__value ">SIM</p>
-                                {informationMessages[item.deviceInfoId].data.SIM
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">LAN</p>
-                                {informationMessages[item.deviceInfoId].data
-                                  .LANstt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value active">WiFi</p>
-                                {informationMessages[item.deviceInfoId].data.WIF
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                      {JSON.stringify(
-                        informationMessages[item.deviceInfoId].data.CONpri
-                      ) === JSON.stringify([1, 3, 2]) ? (
-                        <>
-                          {informationMessages[item.deviceInfoId].data
-                            .CONtyp === 1 ? (
-                            <div className="conpri__list">
-                              <div className="conn__active">
-                                <p className="info__value active">SIM</p>
-                                {informationMessages[item.deviceInfoId].data.SIM
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">WiFi</p>
-                                {informationMessages[item.deviceInfoId].data.WIF
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">LAN</p>
-                                {informationMessages[item.deviceInfoId].data
-                                  .LANstt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                            </div>
-                          ) : informationMessages[item.deviceInfoId].data
-                              .CONtyp === 2 ? (
-                            <div className="conpri__list">
-                              <div className="conn__active">
-                                <p className="info__value ">SIM</p>
-                                {informationMessages[item.deviceInfoId].data.SIM
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">WiFi</p>
-                                {informationMessages[item.deviceInfoId].data.WIF
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value active">LAN</p>
-                                {informationMessages[item.deviceInfoId].data
-                                  .LANstt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="conpri__list">
-                              <div className="conn__active">
-                                <p className="info__value ">SIM</p>
-                                {informationMessages[item.deviceInfoId].data.SIM
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value active">WiFi</p>
-                                {informationMessages[item.deviceInfoId].data.WIF
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">LAN</p>
-                                {informationMessages[item.deviceInfoId].data
-                                  .LANstt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                      {JSON.stringify(
-                        informationMessages[item.deviceInfoId].data.CONpri
-                      ) === JSON.stringify([2, 1, 3]) ? (
-                        <>
-                          {informationMessages[item.deviceInfoId].data
-                            .CONtyp === 2 ? (
-                            <div className="conpri__list">
-                              <p className="info__value active">LAN</p>
-                              <p className="info__value ">SIM</p>
-                              <p className="info__value ">WiFi</p>
-                            </div>
-                          ) : informationMessages[item.deviceInfoId].data
-                              .CONtyp === 1 ? (
-                            <div className="conpri__list">
-                              <p className="info__value ">LAN</p>
-                              <p className="info__value active">SIM</p>
-                              <p className="info__value ">WiFi</p>
-                            </div>
-                          ) : (
-                            <div className="conpri__list">
-                              <p className="info__value ">LAN</p>
-                              <p className="info__value ">SIM</p>
-                              <p className="info__value active">WiFi</p>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                      {JSON.stringify(
-                        informationMessages[item.deviceInfoId].data.CONpri
-                      ) === JSON.stringify([2, 3, 1]) ? (
-                        <>
-                          {informationMessages[item.deviceInfoId].data
-                            .CONtyp === 1 ? (
-                            <div className="conpri__list">
-                              <p className="info__value ">LAN</p>
-                              <div>
-                                <p className="info__value ">WiFi</p>
-                                {informationMessages[item.deviceInfoId].data.SIM
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <p className="info__value active">SIM</p>
-                            </div>
-                          ) : informationMessages[item.deviceInfoId].data
-                              .CONtyp === 2 ? (
-                            <div className="conpri__list">
-                              <div className="conn__active">
-                                <p className="info__value active">LAN</p>
-                                {informationMessages[item.deviceInfoId].data
-                                  .LANstt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">WiFi</p>
-                                {informationMessages[item.deviceInfoId].data.WIF
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">SIM</p>
-                                {informationMessages[item.deviceInfoId].data.SIM
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="conpri__list">
-                              <div className="conn__active">
-                                <p className="info__value ">LAN</p>
-                                {informationMessages[item.deviceInfoId].data
-                                  .LANstt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value active ">WiFi</p>
-                                {informationMessages[item.deviceInfoId].data.WIF
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">SIM</p>
-                                {informationMessages[item.deviceInfoId].data.SIM
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                      {JSON.stringify(
-                        informationMessages[item.deviceInfoId].data.CONpri
-                      ) === JSON.stringify([3, 1, 2]) ? (
-                        <>
-                          {informationMessages[item.deviceInfoId].data
-                            .CONtyp === 1 ? (
-                            <div className="conpri__list">
-                              <div className="conn__active">
-                                <p className="info__value ">WiFi</p>
-                                {informationMessages[item.deviceInfoId].data.WIF
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value active">SIM</p>
-                                {informationMessages[item.deviceInfoId].data.SIM
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">LAN</p>
-                                {informationMessages[item.deviceInfoId].data
-                                  .LANstt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                            </div>
-                          ) : informationMessages[item.deviceInfoId].data
-                              .CONtyp === 2 ? (
-                            <div className="conpri__list">
-                              <div className="conn__active">
-                                <p className="info__value ">WiFi</p>
-                                {informationMessages[item.deviceInfoId].data.WIF
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">SIM</p>
-                                {informationMessages[item.deviceInfoId].data.SIM
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">LAN</p>
-                                {informationMessages[item.deviceInfoId].data
-                                  .LANstt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="conpri__list">
-                              <div className="conn__active">
-                                <p className="info__value active">WiFi</p>
-                                {informationMessages[item.deviceInfoId].data.WIF
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">SIM</p>
-                                {informationMessages[item.deviceInfoId].data.SIM
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">LAN</p>
-                                {informationMessages[item.deviceInfoId].data
-                                  .LANstt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                      {JSON.stringify(
-                        informationMessages[item.deviceInfoId].data.CONpri
-                      ) === JSON.stringify([3, 2, 1]) ? (
-                        <>
-                          {informationMessages[item.deviceInfoId].data
-                            .CONtyp === 1 ? (
-                            <div className="conpri__list">
-                              <div className="conn__active">
-                                <p className="info__value ">WiFi</p>
-                                {informationMessages[item.deviceInfoId].data.WIF
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">LAN</p>
-                                {informationMessages[item.deviceInfoId].data
-                                  .LANstt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value active">SIM</p>
-                                {informationMessages[item.deviceInfoId].data.SIM
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                            </div>
-                          ) : informationMessages[item.deviceInfoId].data
-                              .CONtyp === 2 ? (
-                            <div className="conpri__list">
-                              <div className="conn__active">
-                                <p className="info__value ">WiFi</p>
-                                {informationMessages[item.deviceInfoId].data.WIF
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value active">LAN</p>
-                                {informationMessages[item.deviceInfoId].data
-                                  .LANstt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">SIM</p>
-                                {informationMessages[item.deviceInfoId].data.SIM
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="conpri__list">
-                              <div className="conn__active">
-                                <p className="info__value active">WiFi</p>
-                                {informationMessages[item.deviceInfoId].data.WIF
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">LAN</p>
-                                {informationMessages[item.deviceInfoId].data
-                                  .LANstt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                              <div className="conn__active">
-                                <p className="info__value ">SIM</p>
-                                {informationMessages[item.deviceInfoId].data.SIM
-                                  .stt === 1 ? (
-                                  <FaCheck className="conn__status conn__able" />
-                                ) : (
-                                  <FaTimes className="conn__status conn__disable" />
-                                )}
-                              </div>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                  </div>
-                  <div className="line"></div>
-                  {/* WiFi */}
-                  <div className="info__group">
-                    <div className="info__version">
-                      <p className="info__name">WiFi name: </p>
-                      <p className="info__value">
-                        {informationMessages[item.deviceInfoId].data.WIF.ssid}
-                      </p>
-                    </div>
-                    <div className="info__version">
-                      <p className="info__name">Password: </p>
-                      <p className="info__value  small__text">
-                        {
-                          informationMessages[item.deviceInfoId].data.WIF
-                            .password
-                        }
-                      </p>
-                    </div>
-                  </div>
-                  <div className="line"></div>
-                  {/* CONNECTION MODE */}
-                  <div className="info__version">
-                    <p className="info__name">Connection Mode: </p>
-                    {informationMessages[item.deviceInfoId].data.BAT.percent >
-                      0 &&
-                    informationMessages[item.deviceInfoId].data.BAT.percent <
-                      25 ? (
-                      <div className="info__value">
-                        <p className="bat low">
-                          <FaBatteryQuarter />
-                        </p>
-                        <span className="bat__per">
-                          {
-                            informationMessages[item.deviceInfoId].data.BAT
-                              .percent
-                          }
-                          %
-                        </span>
-                      </div>
-                    ) : informationMessages[item.deviceInfoId].data.BAT
-                        .percent > 25 &&
-                      informationMessages[item.deviceInfoId].data.BAT.percent <
-                        50 ? (
-                      <div className="info__value">
-                        <p className="bat half__full">
-                          <FaBatteryHalf />
-                        </p>
-                        <span className="bat__per">
-                          {
-                            informationMessages[item.deviceInfoId].data.BAT
-                              .percent
-                          }
-                          %
-                        </span>
-                      </div>
-                    ) : informationMessages[item.deviceInfoId].data.BAT
-                        .percent > 50 &&
-                      informationMessages[item.deviceInfoId].data.BAT.percent <
-                        75 ? (
-                      <div className="info__value">
-                        <p className="bat quar__full">
-                          <FaBatteryThreeQuarters />
-                        </p>
-                        <span className="bat__per">
-                          {
-                            informationMessages[item.deviceInfoId].data.BAT
-                              .percent
-                          }
-                          %
-                        </span>
-                      </div>
-                    ) : informationMessages[item.deviceInfoId].data.BAT
-                        .percent > 75 &&
-                      informationMessages[item.deviceInfoId].data.BAT.percent <=
-                        100 ? (
-                      <div className="info__value">
-                        <p className="bat full">
-                          <FaBatteryFull />
-                        </p>
-                        <span className="bat__per">
-                          {
-                            informationMessages[item.deviceInfoId].data.BAT
-                              .percent
-                          }
-                          %
-                        </span>
-                      </div>
-                    ) : (
-                      <p className="info__value">AC</p>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className="welcome">
-                  <div className="welcome__content">
-                    <p className="welcome__text">Connecting to device</p>
-                    <p className="welcome__text">Please wait a moment</p>
-                  </div>
-                </div>
-              )}
-              {emergency || test ? (
-                <></>
-              ) : (
-                <button
-                  className="device_detele"
-                  onClick={() => handleDeleteDevice(index)}>
-                  x
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
+      <div className="header">
+        <div className="header__alert"></div>
       </div>
     </div>
   );

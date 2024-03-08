@@ -4,7 +4,7 @@ import * as XLSX from "xlsx";
 import "../scss/HomeStyle.scss";
 
 //ICONS
-import { FaPlus, FaWifi } from "react-icons/fa";
+import { FaBars, FaPlus, FaWifi } from "react-icons/fa";
 import { FaThList } from "react-icons/fa";
 import { FaFireAlt } from "react-icons/fa";
 import { FaRegCheckCircle } from "react-icons/fa";
@@ -343,7 +343,7 @@ const HomePage = () => {
       (device) => device.deviceInfoId === fixedSearchQuery
     );
     if (found) {
-      setFoundDevice(found.deviceInfoId);
+      setFoundDevice(found);
     } else {
       alert("Device not found!");
     }
@@ -400,6 +400,87 @@ const HomePage = () => {
 
   return (
     <div className="container">
+      <div className="count__deivce">
+        <p className="count__number">{deviceInfo.length}</p> devices
+      </div>
+      <div className="setting__container">
+        <div className="setting__content">
+          <div className="setting__icon">
+            <FaBars className="icon" />
+          </div>
+          <div className="setting__config">
+            {config ? (
+              <div className="config active">
+                <FaRegCheckCircle />
+              </div>
+            ) : (
+              <div className="config unactive"></div>
+            )}
+            <div className="config__box">
+              <div className="config__icon">
+                <FaWifi className="icon" />
+              </div>
+              <div className="config__item">
+                <div className="config__item_content">
+                  <input
+                    placeholder="enter device's id"
+                    value={wifiDeviceId}
+                    onChange={handleWifiDevice}
+                    className="config__item_input"
+                  />
+                  <input
+                    placeholder="enter wifi name"
+                    value={ssid}
+                    onChange={handleSSID}
+                    className="config__item_input"
+                  />
+                  <input
+                    placeholder="enter wifi password"
+                    value={password}
+                    onChange={handlePassword}
+                    className="config__item_input"
+                  />
+                </div>
+                <div className="config__item_btn" onClick={handleConfigWifi}>
+                  CONFIG NOW
+                </div>
+              </div>
+            </div>
+            <div className="config__box">
+              <div className="config__icon">
+                <FaThList className="icon" />
+              </div>
+              <div className="config__item">
+                <div className="config__item_content">
+                  <input
+                    placeholder="enter device's id"
+                    value={priDeviceId}
+                    onChange={handlePriDevice}
+                    className="config__item_input"
+                  />
+                </div>
+                <div className="config__item_list">
+                  {priArray.map((item, index) => (
+                    <div key={index} className="item">
+                      <input
+                        type="radio"
+                        id={item.pri}
+                        name="priorityGroup"
+                        className="item__input"
+                        onChange={() => handleRadioChange(item.pri)}
+                      />
+                      <label className="item__lable">{item.priName}</label>
+                    </div>
+                  ))}
+                </div>
+                <div className="config__item_btn" onClick={handleConfigPri}>
+                  CONFIG NOW
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="header">
         <div className="header__content">
           <div className="header__headline">
@@ -420,7 +501,7 @@ const HomePage = () => {
               <div className="headline__create mobile__res">
                 <div className="create__input_container">
                   <input
-                    placeholder="pre id"
+                    placeholder="id"
                     value={devicePreID}
                     onChange={(e) => setDevicePreId(e.target.value)}
                     className="create__device"
@@ -438,9 +519,21 @@ const HomePage = () => {
                     className="create__owner"
                   />
                 </div>
-                <button className="create__btn" onClick={handleAddDevice}>
-                  <p className="create__btn_icon">+</p>
-                </button>
+                <div className="create__btn_container">
+                  <button className="create__btn" onClick={handleAddDevice}>
+                    <p className="create__btn_icon">+</p>
+                  </button>
+                  <div className="import__btn" onClick={handleButtonClick}>
+                    <FaFileImport className="import__btn_icon" />
+                  </div>
+                  <input
+                    type="file"
+                    accept=".xlsx, .xls"
+                    ref={fileInputRef}
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                  />
+                </div>
               </div>
             ) : (
               <></>
@@ -449,7 +542,7 @@ const HomePage = () => {
             <div className="headline__create more__than_mobile">
               <div className="create__input_container">
                 <input
-                  placeholder="pre id"
+                  placeholder="id"
                   value={devicePreID}
                   onChange={(e) => setDevicePreId(e.target.value)}
                   className="create__device"
@@ -467,98 +560,43 @@ const HomePage = () => {
                   className="create__owner"
                 />
               </div>
-              <button className="create__btn" onClick={handleAddDevice}>
-                <p className="create__btn_icon">+</p>
-              </button>
+              <div className="create__btn_container">
+                <button className="create__btn" onClick={handleAddDevice}>
+                  <p className="create__btn_icon">+</p>
+                </button>
+                <div className="import__btn" onClick={handleButtonClick}>
+                  <FaFileImport className="import__btn_icon" />
+                </div>
+                <input
+                  type="file"
+                  accept=".xlsx, .xls"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                  onChange={handleFileChange}
+                />
+              </div>
             </div>
           </div>
-          <div className="header__menu">
-            {/* CONFIG WIFI */}
-            <div className="config__wifi_box">
-              <div className="config__icon_container">
-                <FaWifi className="config__icon" />
-              </div>
-              <div className="item__wifi">
-                <div className="item__wifi_content">
-                  <input
-                    placeholder="enter device's id"
-                    value={wifiDeviceId}
-                    onChange={handleWifiDevice}
-                    className="item__wifi_input"
-                  />
-                  <input
-                    placeholder="enter wifi name"
-                    value={ssid}
-                    onChange={handleSSID}
-                    className="item__wifi_input"
-                  />
-                  <input
-                    placeholder="enter wifi password"
-                    value={password}
-                    onChange={handlePassword}
-                    className="item__wifi_input"
-                  />
-                  <button
-                    className="item__config_btn"
-                    onClick={handleConfigWifi}
-                  >
-                    CONFIG NOW
-                  </button>
+          <div className="header__search">
+            <div className="search__container">
+              <div className="search_box">
+                <input
+                  type="text"
+                  placeholder="search for device"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <div className="search__btn" onClick={handleSearch}>
+                  <p className="search__btn_icon">
+                    <FaSearch />
+                  </p>
+                </div>
+                <div className="clear__btn" onClick={() => setSearchQuery("")}>
+                  <p className="clear__btn_icon">
+                    <FaChevronLeft />
+                  </p>
                 </div>
               </div>
-            </div>
-            {/* CONFIG PRIORITY */}
-            <div className="config__pri_box">
-              <div className="config__icon_container">
-                <FaThList className="config__icon" />
-              </div>
-              <div className="item__pri">
-                <div className="item__pri_content">
-                  <div className="item__pri_input_container">
-                    <input
-                      placeholder="enter device's id"
-                      value={priDeviceId}
-                      onChange={handlePriDevice}
-                      className="item__pri_input"
-                    />
-                  </div>
-                  <div className="item__pri_list">
-                    {priArray.map((item, index) => (
-                      <div key={index} className="pri__item">
-                        <input
-                          type="radio"
-                          id={item.pri}
-                          name="priorityGroup"
-                          className="pri__item_checkbox"
-                          onChange={() => handleRadioChange(item.pri)}
-                        />
-                        <label className="pri__item_title">
-                          {item.priName}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                  <button
-                    className="item__config_btn"
-                    onClick={handleConfigPri}
-                  >
-                    CONFIG NOW
-                  </button>
-                </div>
-              </div>
-            </div>
-            {/* IMPORT EXCEL */}
-            <div className="import__container">
-              <div className="import__btn" onClick={handleButtonClick}>
-                <FaFileImport className="import__icon" />
-              </div>
-              <input
-                type="file"
-                accept=".xlsx, .xls"
-                ref={fileInputRef}
-                style={{ display: "none" }}
-                onChange={handleFileChange}
-              />
             </div>
           </div>
         </div>
@@ -576,13 +614,6 @@ const HomePage = () => {
         ) : (
           <></>
         )}
-        {config ? (
-          <div className="config">
-            <FaRegCheckCircle />
-          </div>
-        ) : (
-          <></>
-        )}
         {emergency || test || config ? (
           <></>
         ) : (
@@ -595,56 +626,33 @@ const HomePage = () => {
         <div className="alert__box_unactive"></div>
       )}
       <div className="content">
-        <div className="find__container">
-          <p className="find__count">
-            <span className="count__number">{deviceInfo.length}</span> devices
-          </p>
-          {deviceInfo.length > 2 ? (
-            <div className="search_container">
-              <input
-                type="text"
-                placeholder="search for device"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <button className="search__btn" onClick={handleSearch}>
-                <p className="search__btn_icon">
-                  <FaSearch />
-                </p>
-              </button>
-              <button className="clear__btn" onClick={() => setSearchQuery("")}>
-                <p className="clear__btn_icon">
-                  <FaChevronLeft />
-                </p>
-              </button>
-            </div>
-          ) : (
-            <></>
-          )}
-        </div>
         {foundDevice ? (
           <div className="device__list">
             <div
               className={
                 emergency &&
-                informationMessages[foundDevice] &&
-                emergencyMessage === informationMessages[foundDevice].id
+                informationMessages[foundDevice.deviceInfoId] &&
+                emergencyMessage ===
+                  informationMessages[foundDevice.deviceInfoId].id
                   ? "device emergency__alert"
                   : test &&
-                    informationMessages[foundDevice] &&
-                    testMessage === informationMessages[foundDevice].id
+                    informationMessages[foundDevice.deviceInfoId] &&
+                    testMessage ===
+                      informationMessages[foundDevice.deviceInfoId].id
                   ? "device test__alert"
                   : "device"
-              }
-            >
-              <p className="device__name">{foundDevice}</p>
-              {informationMessages[foundDevice] ? (
+              }>
+              <p className="device__name">
+                {foundDevice.deviceInfoOwner} <br />
+                {foundDevice.deviceInfoId.substring(7, 12)}
+              </p>
+              {informationMessages[foundDevice.deviceInfoId] ? (
                 <div className="device__info">
                   {/* VERSION */}
                   <div className="info__version">
                     <p className="info__name">Version </p>
                     <p className="info__value">
-                      {informationMessages[foundDevice].data.FWver}
+                      {informationMessages[foundDevice.deviceInfoId].data.FWver}
                     </p>
                   </div>
                   <div className="line"></div>
@@ -653,16 +661,17 @@ const HomePage = () => {
                     <p className="info__name">Connection type</p>
                     <div className="info__conpri">
                       {JSON.stringify(
-                        informationMessages[foundDevice].data.CONpri
+                        informationMessages[foundDevice.deviceInfoId].data
+                          .CONpri
                       ) === JSON.stringify([1, 2, 3]) ? (
                         <>
-                          {informationMessages[foundDevice].data.CONtyp ===
-                          1 ? (
+                          {informationMessages[foundDevice.deviceInfoId].data
+                            .CONtyp === 1 ? (
                             <div className="conpri__list">
                               <div className="conn__active">
                                 <p className="info__value active">SIM</p>
-                                {informationMessages[foundDevice].data.SIM
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.SIM.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -670,8 +679,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">LAN</p>
-                                {informationMessages[foundDevice].data
-                                  .LANstt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.LANstt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -679,21 +688,21 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">WiFi</p>
-                                {informationMessages[foundDevice].data.WIF
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.WIF.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
                                 )}
                               </div>
                             </div>
-                          ) : informationMessages[foundDevice].data.CONtyp ===
-                            2 ? (
+                          ) : informationMessages[foundDevice.deviceInfoId].data
+                              .CONtyp === 2 ? (
                             <div className="conpri__list">
                               <div className="conn__active">
                                 <p className="info__value ">SIM</p>
-                                {informationMessages[foundDevice].data.SIM
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.SIM.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -701,8 +710,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value active">LAN</p>
-                                {informationMessages[foundDevice].data
-                                  .LANstt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.LANstt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -710,8 +719,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">WiFi</p>
-                                {informationMessages[foundDevice].data.WIF
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.WIF.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -722,8 +731,8 @@ const HomePage = () => {
                             <div className="conpri__list">
                               <div className="conn__active">
                                 <p className="info__value ">SIM</p>
-                                {informationMessages[foundDevice].data.SIM
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.SIM.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -731,8 +740,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">LAN</p>
-                                {informationMessages[foundDevice].data
-                                  .LANstt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.LANstt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -740,8 +749,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value active">WiFi</p>
-                                {informationMessages[foundDevice].data.WIF
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.WIF.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -754,16 +763,17 @@ const HomePage = () => {
                         <></>
                       )}
                       {JSON.stringify(
-                        informationMessages[foundDevice].data.CONpri
+                        informationMessages[foundDevice.deviceInfoId].data
+                          .CONpri
                       ) === JSON.stringify([1, 3, 2]) ? (
                         <>
-                          {informationMessages[foundDevice].data.CONtyp ===
-                          1 ? (
+                          {informationMessages[foundDevice.deviceInfoId].data
+                            .CONtyp === 1 ? (
                             <div className="conpri__list">
                               <div className="conn__active">
                                 <p className="info__value active">SIM</p>
-                                {informationMessages[foundDevice].data.SIM
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.SIM.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -771,8 +781,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">WiFi</p>
-                                {informationMessages[foundDevice].data.WIF
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.WIF.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -780,21 +790,21 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">LAN</p>
-                                {informationMessages[foundDevice].data
-                                  .LANstt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.LANstt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
                                 )}
                               </div>
                             </div>
-                          ) : informationMessages[foundDevice].data.CONtyp ===
-                            2 ? (
+                          ) : informationMessages[foundDevice.deviceInfoId].data
+                              .CONtyp === 2 ? (
                             <div className="conpri__list">
                               <div className="conn__active">
                                 <p className="info__value ">SIM</p>
-                                {informationMessages[foundDevice].data.SIM
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.SIM.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -802,8 +812,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">WiFi</p>
-                                {informationMessages[foundDevice].data.WIF
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.WIF.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -811,8 +821,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value active">LAN</p>
-                                {informationMessages[foundDevice].data
-                                  .LANstt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.LANstt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -823,8 +833,8 @@ const HomePage = () => {
                             <div className="conpri__list">
                               <div className="conn__active">
                                 <p className="info__value ">SIM</p>
-                                {informationMessages[foundDevice].data.SIM
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.SIM.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -832,8 +842,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value active">WiFi</p>
-                                {informationMessages[foundDevice].data.WIF
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.WIF.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -841,8 +851,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">LAN</p>
-                                {informationMessages[foundDevice].data
-                                  .LANstt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.LANstt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -855,18 +865,19 @@ const HomePage = () => {
                         <></>
                       )}
                       {JSON.stringify(
-                        informationMessages[foundDevice].data.CONpri
+                        informationMessages[foundDevice.deviceInfoId].data
+                          .CONpri
                       ) === JSON.stringify([2, 1, 3]) ? (
                         <>
-                          {informationMessages[foundDevice].data.CONtyp ===
-                          2 ? (
+                          {informationMessages[foundDevice.deviceInfoId].data
+                            .CONtyp === 2 ? (
                             <div className="conpri__list">
                               <p className="info__value active">LAN</p>
                               <p className="info__value ">SIM</p>
                               <p className="info__value ">WiFi</p>
                             </div>
-                          ) : informationMessages[foundDevice].data.CONtyp ===
-                            1 ? (
+                          ) : informationMessages[foundDevice.deviceInfoId].data
+                              .CONtyp === 1 ? (
                             <div className="conpri__list">
                               <p className="info__value ">LAN</p>
                               <p className="info__value active">SIM</p>
@@ -884,17 +895,18 @@ const HomePage = () => {
                         <></>
                       )}
                       {JSON.stringify(
-                        informationMessages[foundDevice].data.CONpri
+                        informationMessages[foundDevice.deviceInfoId].data
+                          .CONpri
                       ) === JSON.stringify([2, 3, 1]) ? (
                         <>
-                          {informationMessages[foundDevice].data.CONtyp ===
-                          1 ? (
+                          {informationMessages[foundDevice.deviceInfoId].data
+                            .CONtyp === 1 ? (
                             <div className="conpri__list">
                               <p className="info__value ">LAN</p>
                               <div>
                                 <p className="info__value ">WiFi</p>
-                                {informationMessages[foundDevice].data.SIM
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.SIM.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -902,13 +914,13 @@ const HomePage = () => {
                               </div>
                               <p className="info__value active">SIM</p>
                             </div>
-                          ) : informationMessages[foundDevice].data.CONtyp ===
-                            2 ? (
+                          ) : informationMessages[foundDevice.deviceInfoId].data
+                              .CONtyp === 2 ? (
                             <div className="conpri__list">
                               <div className="conn__active">
                                 <p className="info__value active">LAN</p>
-                                {informationMessages[foundDevice].data
-                                  .LANstt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.LANstt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -916,8 +928,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">WiFi</p>
-                                {informationMessages[foundDevice].data.WIF
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.WIF.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -925,8 +937,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">SIM</p>
-                                {informationMessages[foundDevice].data.SIM
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.SIM.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -937,8 +949,8 @@ const HomePage = () => {
                             <div className="conpri__list">
                               <div className="conn__active">
                                 <p className="info__value ">LAN</p>
-                                {informationMessages[foundDevice].data
-                                  .LANstt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.LANstt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -946,8 +958,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value active ">WiFi</p>
-                                {informationMessages[foundDevice].data.WIF
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.WIF.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -955,8 +967,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">SIM</p>
-                                {informationMessages[foundDevice].data.SIM
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.SIM.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -969,16 +981,17 @@ const HomePage = () => {
                         <></>
                       )}
                       {JSON.stringify(
-                        informationMessages[foundDevice].data.CONpri
+                        informationMessages[foundDevice.deviceInfoId].data
+                          .CONpri
                       ) === JSON.stringify([3, 1, 2]) ? (
                         <>
-                          {informationMessages[foundDevice].data.CONtyp ===
-                          1 ? (
+                          {informationMessages[foundDevice.deviceInfoId].data
+                            .CONtyp === 1 ? (
                             <div className="conpri__list">
                               <div className="conn__active">
                                 <p className="info__value ">WiFi</p>
-                                {informationMessages[foundDevice].data.WIF
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.WIF.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -986,8 +999,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value active">SIM</p>
-                                {informationMessages[foundDevice].data.SIM
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.SIM.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -995,21 +1008,21 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">LAN</p>
-                                {informationMessages[foundDevice].data
-                                  .LANstt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.LANstt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
                                 )}
                               </div>
                             </div>
-                          ) : informationMessages[foundDevice].data.CONtyp ===
-                            2 ? (
+                          ) : informationMessages[foundDevice.deviceInfoId].data
+                              .CONtyp === 2 ? (
                             <div className="conpri__list">
                               <div className="conn__active">
                                 <p className="info__value ">WiFi</p>
-                                {informationMessages[foundDevice].data.WIF
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.WIF.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -1017,8 +1030,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">SIM</p>
-                                {informationMessages[foundDevice].data.SIM
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.SIM.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -1026,8 +1039,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">LAN</p>
-                                {informationMessages[foundDevice].data
-                                  .LANstt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.LANstt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -1038,8 +1051,8 @@ const HomePage = () => {
                             <div className="conpri__list">
                               <div className="conn__active">
                                 <p className="info__value active">WiFi</p>
-                                {informationMessages[foundDevice].data.WIF
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.WIF.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -1047,8 +1060,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">SIM</p>
-                                {informationMessages[foundDevice].data.SIM
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.SIM.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -1056,8 +1069,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">LAN</p>
-                                {informationMessages[foundDevice].data
-                                  .LANstt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.LANstt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -1070,16 +1083,17 @@ const HomePage = () => {
                         <></>
                       )}
                       {JSON.stringify(
-                        informationMessages[foundDevice].data.CONpri
+                        informationMessages[foundDevice.deviceInfoId].data
+                          .CONpri
                       ) === JSON.stringify([3, 2, 1]) ? (
                         <>
-                          {informationMessages[foundDevice].data.CONtyp ===
-                          1 ? (
+                          {informationMessages[foundDevice.deviceInfoId].data
+                            .CONtyp === 1 ? (
                             <div className="conpri__list">
                               <div className="conn__active">
                                 <p className="info__value ">WiFi</p>
-                                {informationMessages[foundDevice].data.WIF
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.WIF.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -1087,8 +1101,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">LAN</p>
-                                {informationMessages[foundDevice].data
-                                  .LANstt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.LANstt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -1096,21 +1110,21 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value active">SIM</p>
-                                {informationMessages[foundDevice].data.SIM
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.SIM.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
                                 )}
                               </div>
                             </div>
-                          ) : informationMessages[foundDevice].data.CONtyp ===
-                            2 ? (
+                          ) : informationMessages[foundDevice.deviceInfoId].data
+                              .CONtyp === 2 ? (
                             <div className="conpri__list">
                               <div className="conn__active">
                                 <p className="info__value ">WiFi</p>
-                                {informationMessages[foundDevice].data.WIF
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.WIF.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -1118,8 +1132,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value active">LAN</p>
-                                {informationMessages[foundDevice].data
-                                  .LANstt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.LANstt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -1127,8 +1141,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">SIM</p>
-                                {informationMessages[foundDevice].data.SIM
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.SIM.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -1139,8 +1153,8 @@ const HomePage = () => {
                             <div className="conpri__list">
                               <div className="conn__active">
                                 <p className="info__value active">WiFi</p>
-                                {informationMessages[foundDevice].data.WIF
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.WIF.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -1148,8 +1162,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">LAN</p>
-                                {informationMessages[foundDevice].data
-                                  .LANstt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.LANstt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -1157,8 +1171,8 @@ const HomePage = () => {
                               </div>
                               <div className="conn__active">
                                 <p className="info__value ">SIM</p>
-                                {informationMessages[foundDevice].data.SIM
-                                  .stt === 1 ? (
+                                {informationMessages[foundDevice.deviceInfoId]
+                                  .data.SIM.stt === 1 ? (
                                   <FaCheck className="conn__status conn__able" />
                                 ) : (
                                   <FaTimes className="conn__status conn__disable" />
@@ -1178,13 +1192,19 @@ const HomePage = () => {
                     <div className="info__version">
                       <p className="info__name">WiFi name: </p>
                       <p className="info__value">
-                        {informationMessages[foundDevice].data.WIF.ssid}
+                        {
+                          informationMessages[foundDevice.deviceInfoId].data.WIF
+                            .ssid
+                        }
                       </p>
                     </div>
                     <div className="info__version">
                       <p className="info__name">Password: </p>
                       <p className="info__value  small__text">
-                        {informationMessages[foundDevice].data.WIF.password}
+                        {
+                          informationMessages[foundDevice.deviceInfoId].data.WIF
+                            .password
+                        }
                       </p>
                     </div>
                   </div>
@@ -1192,44 +1212,60 @@ const HomePage = () => {
                   {/* CONNECTION MODE */}
                   <div className="info__version">
                     <p className="info__name">Connection Mode: </p>
-                    {informationMessages[foundDevice].data.BAT.percent ===
-                    25 ? (
+                    {informationMessages[foundDevice.deviceInfoId].data.BAT
+                      .percent === 25 ? (
                       <div className="info__value">
                         <p className="bat low">
                           <FaBatteryQuarter />
                         </p>
                         <span className="bat__per">
-                          {informationMessages[foundDevice].data.BAT.percent}%
+                          {
+                            informationMessages[foundDevice.deviceInfoId].data
+                              .BAT.percent
+                          }
+                          %
                         </span>
                       </div>
-                    ) : informationMessages[foundDevice].data.BAT.percent ===
-                      50 ? (
+                    ) : informationMessages[foundDevice.deviceInfoId].data.BAT
+                        .percent === 50 ? (
                       <div className="info__value">
                         <p className="bat half__full">
                           <FaBatteryHalf />
                         </p>
                         <span className="bat__per">
-                          {informationMessages[foundDevice].data.BAT.percent}%
+                          {
+                            informationMessages[foundDevice.deviceInfoId].data
+                              .BAT.percent
+                          }
+                          %
                         </span>
                       </div>
-                    ) : informationMessages[foundDevice].data.BAT.percent ===
-                      75 ? (
+                    ) : informationMessages[foundDevice.deviceInfoId].data.BAT
+                        .percent === 75 ? (
                       <div className="info__value">
                         <p className="bat quar__full">
                           <FaBatteryThreeQuarters />
                         </p>
                         <span className="bat__per">
-                          {informationMessages[foundDevice].data.BAT.percent}%
+                          {
+                            informationMessages[foundDevice.deviceInfoId].data
+                              .BAT.percent
+                          }
+                          %
                         </span>
                       </div>
-                    ) : informationMessages[foundDevice].data.BAT.percent ===
-                      100 ? (
+                    ) : informationMessages[foundDevice.deviceInfoId].data.BAT
+                        .percent === 100 ? (
                       <div className="info__value">
                         <p className="bat full">
                           <FaBatteryFull />
                         </p>
                         <span className="bat__per">
-                          {informationMessages[foundDevice].data.BAT.percent}%
+                          {
+                            informationMessages[foundDevice.deviceInfoId].data
+                              .BAT.percent
+                          }
+                          %
                         </span>
                       </div>
                     ) : (
@@ -1260,8 +1296,7 @@ const HomePage = () => {
               ) : (
                 <button
                   className="device_detele"
-                  onClick={() => handleDeteleFindDevice(foundDevice)}
-                >
+                  onClick={() => handleDeteleFindDevice(foundDevice)}>
                   x
                 </button>
               )}
@@ -1284,8 +1319,7 @@ const HomePage = () => {
                     ? "device test__alert"
                     : "device"
                 }
-                key={index}
-              >
+                key={index}>
                 <p className="device__name">
                   {item.deviceInfoOwner} <br />
                   {item.deviceInfoId.substring(7, 12)}
@@ -1983,14 +2017,6 @@ const HomePage = () => {
                     {/* SD CARD */}
                     <div className="info__version">
                       <p className="info__name">SD Card </p>
-                      {/* {isSD &&
-                      informationMessages[item.deviceInfoId] &&
-                      startMessage ===
-                        informationMessages[item.deviceInfoId].deviceId ? (
-                        <FaCheck className="info__value checked" />
-                      ) : (
-                        <FaTimes className="info__value not__checked" />
-                      )} */}
                       {startMessage[item.deviceInfoId] ? (
                         <>
                           {startMessage[item.deviceInfoId].SDCard === 1 ? (
@@ -2017,8 +2043,7 @@ const HomePage = () => {
                 ) : (
                   <button
                     className="device_detele"
-                    onClick={() => handleDeleteDevice(index)}
-                  >
+                    onClick={() => handleDeleteDevice(index)}>
                     x
                   </button>
                 )}
