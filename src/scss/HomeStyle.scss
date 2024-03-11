@@ -104,7 +104,6 @@ body {
       .setting__config {
         position: fixed;
         right: -100rem;
-        // right: 0rem;
         height: 100%;
         background-color: $light;
         transition: $transition;
@@ -113,6 +112,9 @@ body {
         display: flex;
         flex-direction: column;
         gap: 6rem;
+        @media (max-width: $mobileMax) {
+          height: 80%;
+        }
         .config {
           width: 100%;
           font-size: 5rem;
@@ -126,92 +128,6 @@ body {
           }
           &.unactive {
             height: 2rem;
-          }
-        }
-        .config__box {
-          position: relative;
-          width: 100%;
-          background-color: $backGround;
-          padding: 5rem 2rem 2rem 2rem;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 5rem;
-          border-radius: 1rem;
-          box-shadow: $boxShadow;
-          .config__icon {
-            position: absolute;
-            top: -2rem;
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            background-color: $secondary;
-            padding: 0.8rem 3rem;
-            border-radius: 1rem;
-            color: $light;
-            .icon {
-              font-size: 2.5rem;
-            }
-            .name {
-              text-transform: uppercase;
-              font-size: 1.5rem;
-              font-weight: 600;
-            }
-          }
-          .config__item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 3rem;
-            .config__item_content {
-              display: flex;
-              flex-direction: column;
-              gap: 2rem;
-              input {
-                width: 35rem;
-                outline: none;
-                border: none;
-                border-bottom: 0.2rem solid $dark;
-                font-size: 2rem;
-                padding: 0.5rem 1rem;
-                background-color: transparent;
-              }
-            }
-            .config__item_list {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              flex-wrap: wrap;
-              width: 35rem;
-              gap: 2rem;
-              .item {
-                width: 45%;
-                background-color: #c9c8c5;
-                display: flex;
-                justify-content: center;
-                padding: 1rem 2rem;
-                border-radius: 1rem;
-                display: flex;
-                align-items: center;
-                gap: 2rem;
-                .item__lable {
-                  font-size: 1.2rem;
-                  font-weight: 900;
-                  color: $dark;
-                }
-              }
-            }
-            .config__item_btn {
-              background-color: $secondary;
-              width: 100%;
-              text-align: center;
-              padding: 1rem 0;
-              font-size: 1.8rem;
-              font-weight: 600;
-              color: $light;
-              border-radius: 1rem;
-            }
           }
         }
         .config__content {
@@ -256,6 +172,9 @@ body {
             background-color: $backGround;
             padding: 1.5rem 2rem;
             border-radius: 1rem;
+            @media (max-width: $mobileMax) {
+              padding: 1rem 1.5rem;
+            }
             .config__item_content {
               display: flex;
               flex-direction: column;
@@ -268,6 +187,9 @@ body {
                 font-size: 2rem;
                 padding: 0.5rem 1rem;
                 background-color: transparent;
+                @media (max-width: $mobileMax) {
+                  width: 27rem;
+                }
               }
             }
             .config__item_list {
@@ -277,6 +199,9 @@ body {
               flex-wrap: wrap;
               width: 35rem;
               gap: 2rem;
+              @media (max-width: $mobileMax) {
+                width: 27rem;
+              }
               .item {
                 width: 45%;
                 background-color: #c9c8c5;
@@ -287,6 +212,10 @@ body {
                 display: flex;
                 align-items: center;
                 gap: 2rem;
+                @media (max-width: $mobileMax) {
+                  width: 45%;
+                  padding: 0.5rem 1rem;
+                }
                 .item__lable {
                   font-size: 1.2rem;
                   font-weight: 900;
@@ -303,6 +232,10 @@ body {
               font-weight: 600;
               color: $light;
               border-radius: 1rem;
+              @media (max-width: $mobileMax) {
+                font-size: 1.5rem;
+                width: 100%;
+              }
             }
           }
         }
