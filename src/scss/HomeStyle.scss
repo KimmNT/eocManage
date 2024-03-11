@@ -214,6 +214,98 @@ body {
             }
           }
         }
+        .config__content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 5rem;
+          .config__nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            .config__icon {
+              background-color: $light;
+              padding: 0.8rem 3rem;
+              border-radius: 1rem;
+              color: $light;
+              .icon {
+                font-size: 2.5rem;
+                color: $secondary;
+              }
+              &.active {
+                background-color: $secondary;
+                .icon {
+                  font-size: 2.5rem;
+                  color: $light;
+                }
+              }
+            }
+            .config__line_vertical {
+              height: 4rem;
+              width: 0.5rem;
+              background-color: $backGround;
+            }
+          }
+          .config__item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            background-color: $backGround;
+            padding: 1.5rem 2rem;
+            border-radius: 1rem;
+            .config__item_content {
+              display: flex;
+              flex-direction: column;
+              gap: 2rem;
+              input {
+                width: 35rem;
+                outline: none;
+                border: none;
+                border-bottom: 0.2rem solid $dark;
+                font-size: 2rem;
+                padding: 0.5rem 1rem;
+                background-color: transparent;
+              }
+            }
+            .config__item_list {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              flex-wrap: wrap;
+              width: 35rem;
+              gap: 2rem;
+              .item {
+                width: 45%;
+                background-color: #c9c8c5;
+                display: flex;
+                justify-content: center;
+                padding: 1rem 2rem;
+                border-radius: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 2rem;
+                .item__lable {
+                  font-size: 1.2rem;
+                  font-weight: 900;
+                  color: $dark;
+                }
+              }
+            }
+            .config__item_btn {
+              background-color: $secondary;
+              width: 100%;
+              text-align: center;
+              padding: 1rem 0;
+              font-size: 1.8rem;
+              font-weight: 600;
+              color: $light;
+              border-radius: 1rem;
+            }
+          }
+        }
       }
     }
   }
@@ -479,6 +571,7 @@ body {
               display: flex;
               justify-content: center;
               align-items: center;
+              cursor: pointer;
               .search__btn_icon {
                 color: $light;
                 font-size: 1.5rem;
@@ -493,6 +586,7 @@ body {
               display: flex;
               justify-content: center;
               align-items: center;
+              cursor: pointer;
               .clear__btn_icon {
                 color: $secondary;
                 font-size: 1.5rem;
