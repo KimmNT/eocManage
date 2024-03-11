@@ -50,8 +50,8 @@ body {
   width: 100%;
   .count__deivce {
     position: fixed;
-    bottom: 5rem;
-    right: 8rem;
+    bottom: 2rem;
+    left: 2rem;
     font-weight: 600;
     font-size: 2rem;
     display: flex;
@@ -62,8 +62,14 @@ body {
     border-radius: 1rem;
     color: $light;
     z-index: 3;
+    @media (max-width: $mobileMax) {
+      font-size: 1.5rem;
+    }
     .count__number {
       font-size: 3rem;
+      @media (max-width: $mobileMax) {
+        font-size: 2rem;
+      }
     }
   }
   .setting__container {
@@ -85,10 +91,11 @@ body {
       }
       .setting__icon {
         position: absolute;
-        bottom: 13rem;
-        right: 8rem;
+        bottom: 2rem;
+        right: 2rem;
         z-index: -1;
-        background-color: $secondary;
+        background-color: transparent;
+        border: 0.2rem solid $secondary;
         width: 4rem;
         height: 4rem;
         border-radius: 50%;
@@ -98,7 +105,7 @@ body {
         transition: $transition;
         .icon {
           font-size: 2rem;
-          color: $light;
+          color: $secondary;
         }
       }
       .setting__config {
