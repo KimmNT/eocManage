@@ -274,7 +274,8 @@ const Admin = () => {
     client.on("connect", () => {
       console.log("Connected to MQTT broker");
 
-      const topic = `device/${wifiDeviceId}/cmd`;
+      // const topic = `device/${wifiDeviceId}/cmd`;
+      const topic = `device/n_${wifiDeviceId}`;
       const payload = `{
         "type": "wifi",
         "deviceId": "n_123456",
@@ -315,7 +316,8 @@ const Admin = () => {
     client.on("connect", () => {
       console.log("Connected to MQTT broker");
 
-      const topic = `device/${priDeviceId}/cmd`;
+      // const topic = `device/${priDeviceId}/cmd`;
+      const topic = `device/n_${priDeviceId}`;
       const payload = ` {
         "type": "priority",
         "deviceId": "n_123456",

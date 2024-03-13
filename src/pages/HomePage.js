@@ -403,7 +403,8 @@ const HomePage = () => {
   return (
     <div className="container">
       <div className="count__deivce">
-        <p className="count__number">{deviceInfo.length}</p> devices
+        <p className="count__number">{deviceInfo.length}</p>{" "}
+        {deviceInfo.length > 1 ? <p>devices</p> : <p>device</p>}
       </div>
       <div className="setting__container">
         <div className="setting__content">

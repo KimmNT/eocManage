@@ -1,6 +1,7 @@
+//VARIABLES
 $primary: #f73718;
 $secondary: #12674a;
-$backGround: #e5e1da;
+$backGround: #e9e1db;
 $dark: #281713;
 $light: #fff;
 $delete: #d04848;
@@ -8,6 +9,7 @@ $configIconColor: #f8f4ec;
 $emergencyAlertColor: #d04848;
 $testAlertColor: #fc6736;
 $buttonBgc: #f0f0f0;
+$testBackground: #d7e4c0;
 
 //ATTRIBUTE
 $transition: all ease-in-out 0.3s;
@@ -39,145 +41,834 @@ body {
   scroll-behavior: smooth;
 }
 
-.container {
+.test__container {
   position: relative;
   min-height: 100vh;
-  background-color: $backGround;
-  font-family: Rale;
+  background-color: $testBackground;
   padding-bottom: 10rem;
   z-index: 0;
-  .menu {
+  width: 100%;
+  .count__deivce {
     position: fixed;
-    margin-top: 5rem;
-    width: 15%;
-    background-color: $light;
-    padding: 3rem 0rem;
+    bottom: 2rem;
+    left: 2rem;
+    font-weight: 600;
+    font-size: 2rem;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 10rem;
-    border-top-right-radius: 2rem;
-    border-bottom-right-radius: 2rem;
-    .menu__headline {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      gap: 2rem;
-      width: 100%;
-      .menu__logo {
-        background-color: $primary;
-        padding: 0.5rem 2rem;
-        border-radius: 1.5rem;
-        .logo {
-          color: $light;
-          font-size: 5rem;
-          text-transform: uppercase;
-          font-weight: 900;
-        }
-      }
-      .menu__create {
-        width: 80%;
-        display: flex;
-        flex-direction: column;
-        gap: 4rem;
-        padding: 2rem;
-        background-color: #f3eeea;
-        border-radius: 1.5rem;
-        // box-shadow: $boxShadow;
-        .create__input_container {
-          display: flex;
-          flex-direction: column;
-          gap: 3rem;
-          input {
-            width: 100%;
-            padding: 1rem 2rem;
-            border: none;
-            border-bottom: 0.2rem solid $dark;
-            font-size: 1.5rem;
-            font-weight: 600;
-            background-color: transparent;
-            outline: none;
-          }
-        }
-        .create__btn {
-          width: 100%;
-          padding: 1rem 0rem;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background-color: $secondary;
-          border-radius: 2rem;
-          .create__btn_icon {
-            font-size: 2rem;
-            color: $light;
-            font-weight: 600;
-          }
-        }
+    align-items: flex-end;
+    gap: 1rem;
+    background-color: $secondary;
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    color: $light;
+    z-index: 3;
+    @media (max-width: $mobileMax) {
+      font-size: 1.5rem;
+    }
+    .count__number {
+      font-size: 3rem;
+      @media (max-width: $mobileMax) {
+        font-size: 2rem;
       }
     }
-    .menu__list {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 10rem;
-      .menu__item {
-        position: relative;
-        width: 100%;
-        &:hover {
-          cursor: pointer;
-          .item__head {
-            transform: translateX(0rem);
-            transition: $transition;
-          }
-          .config__container {
-            right: -23rem;
-            opacity: 1;
-            transition: $transition;
-          }
-        }
-        .item__head {
-          height: 2rem;
-          width: 2rem;
-          border-radius: 50%;
-          background-color: $secondary;
+  }
+  .setting__container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 5;
+    .setting__content {
+      position: fixed;
+      right: 0;
+      height: 100%;
+      &:hover {
+        transition: $transition;
+        .setting__config {
+          right: 0;
           transition: $transition;
-          transform: translateX(-10rem);
-          opacity: 1;
         }
-        .item__icon {
-          display: flex;
-          align-items: center;
+      }
+      .setting__icon {
+        position: absolute;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: -1;
+        background-color: transparent;
+        border: 0.2rem solid $secondary;
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: $transition;
+        .icon {
+          font-size: 2rem;
+          color: $secondary;
+        }
+      }
+      .setting__config {
+        position: fixed;
+        bottom: 0;
+        right: -100rem;
+        height: 60rem;
+        background-color: $light;
+        transition: $transition;
+        box-shadow: $boxShadow;
+        // padding: 3rem 4rem;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        border-top-left-radius: 1rem;
+        @media (max-width: $mobileMax) {
+          // height: 85%;
+        }
+        .config {
           width: 100%;
-          gap: 3rem;
+          font-size: 5rem;
+          text-align: center;
+          padding: 1rem 0;
+          color: $light;
+          text-transform: uppercase;
           transition: $transition;
-          padding: 1rem;
-          border-radius: 2rem;
-          .icon {
-            font-size: 4rem;
-            font-weight: 900;
-          }
-          .name {
-            font-size: 2rem;
+          height: 7rem;
+          &.active {
+            background-color: #0d9276;
           }
         }
-        .config__container {
-          position: absolute;
-          right: -20rem;
-          top: 0;
-          opacity: 0;
-          transition: $transition;
-          .config__content {
+        .config__content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 5rem;
+          padding-bottom: 5rem;
+          padding: 3rem 4rem;
+          .config__nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            .config__icon {
+              background-color: $light;
+              padding: 0.8rem 3rem;
+              border-radius: 1rem;
+              color: $light;
+              cursor: pointer;
+              .icon {
+                font-size: 2.5rem;
+                color: $secondary;
+              }
+              &.active {
+                background-color: $secondary;
+                .icon {
+                  font-size: 2.5rem;
+                  color: $light;
+                }
+              }
+            }
+            .config__line_vertical {
+              height: 4rem;
+              width: 0.3rem;
+              background-color: $dark;
+            }
+          }
+          .config__item {
             display: flex;
             flex-direction: column;
-            .config__input {
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            background-color: $backGround;
+            padding: 1.5rem 2rem;
+            border-radius: 1rem;
+            box-shadow: $boxShadow;
+            @media (max-width: $mobileMax) {
+              padding: 2rem 1.5rem;
+            }
+            .config__item_content {
               display: flex;
               flex-direction: column;
+              gap: 2rem;
+              input {
+                width: 35rem;
+                outline: none;
+                border: none;
+                border-bottom: 0.2rem solid $dark;
+                font-size: 2rem;
+                padding: 0.5rem 1rem;
+                background-color: transparent;
+                @media (max-width: $mobileMax) {
+                  width: 27rem;
+                }
+              }
+            }
+            .config__item_list {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              flex-wrap: wrap;
+              width: 35rem;
+              gap: 2rem;
+              @media (max-width: $mobileMax) {
+                width: 27rem;
+              }
+              .item {
+                width: 45%;
+                background-color: #c9c8c5;
+                display: flex;
+                justify-content: center;
+                padding: 1rem 2rem;
+                border-radius: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 2rem;
+                cursor: pointer;
+                @media (max-width: $mobileMax) {
+                  width: 45%;
+                  padding: 0.5rem 1rem;
+                }
+                .item__lable {
+                  font-size: 1.2rem;
+                  font-weight: 900;
+                  color: $dark;
+                }
+              }
+            }
+            .config__item_btn {
+              background-color: $secondary;
+              width: 100%;
+              text-align: center;
+              padding: 1rem 0;
+              font-size: 1.8rem;
+              font-weight: 600;
+              color: $light;
+              border-radius: 1rem;
+              cursor: pointer;
+              @media (max-width: $mobileMax) {
+                font-size: 1.5rem;
+                width: 100%;
+              }
             }
           }
         }
       }
     }
+  }
+  .header {
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+    background-color: $light;
+    box-shadow: 0rem 0rem 2rem rgb(175, 175, 175);
+    .header__content {
+      @media (max-width: $large) {
+        max-width: 1090px !important;
+        margin: 0 auto;
+      }
+      @media (min-width: $desktopMin) and (max-width: $desktopMax) {
+        max-width: 950px !important;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        gap: 3rem;
+      }
+      @media (min-width: $tabletMin) and (max-width: $tabletMax) {
+        max-width: 750px !important;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        gap: 3rem;
+      }
+      @media (min-width: $mobileMin) and (max-width: $mobileMax) {
+        max-width: 550px !important;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        gap: 5rem;
+      }
+      @media (max-width: $tiny) {
+        max-width: 550px !important;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        gap: 2rem;
+        padding: 2rem 0rem 4rem 0rem;
+      }
+      max-width: 1490px !important;
+      margin: 0 auto;
+      padding: 4rem 0rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .header__headline {
+        @media (min-width: $tabletMin) and (max-width: $tabletMax) {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          justify-self: center;
+          gap: 3rem;
+        }
+        @media (min-width: $mobileMin) and (max-width: $mobileMax) {
+          max-width: 550px !important;
+          margin: 0 auto;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 5rem;
+        }
+        @media (max-width: $tiny) {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          justify-self: center;
+          gap: 2rem;
+        }
+        display: flex;
+        align-items: center;
+        gap: 5rem;
+        .headline__logo {
+          position: relative;
+          .headline__title {
+            font-size: 3rem;
+            font-weight: 900;
+            color: $light;
+            text-transform: uppercase;
+            padding: 1rem;
+            background-color: $primary;
+            border-radius: 1rem;
+            @media (max-width: $tabletMax) {
+              cursor: pointer;
+              margin-bottom: 1rem;
+            }
+          }
+          .plus__icon_mobile {
+            position: absolute;
+            right: -7px;
+            bottom: -5px;
+            background-color: $secondary;
+            padding: 0.5rem;
+            border-radius: 50%;
+            .plus__icon {
+              font-size: 2rem;
+              color: $light;
+            }
+          }
+        }
+        .headline__create {
+          display: flex;
+          align-items: center;
+          gap: 3rem;
+          width: 100%;
+          background-color: $backGround;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1rem 3rem;
+          border-radius: 1rem;
+          box-shadow: $boxShadow;
+          @media (max-width: $mobileMax) {
+            flex-direction: column;
+            justify-content: center;
+          }
+          .create__input_container {
+            width: 60%;
+            display: flex;
+            gap: 3rem;
+            @media (max-width: $mobileMax) {
+              flex-direction: column;
+              justify-content: center;
+              width: 100%;
+            }
+            .create__device {
+              width: 10rem;
+              @media (max-width: $mobileMax) {
+                width: 25rem;
+              }
+            }
+            .create__owner {
+              width: 20rem;
+            }
+            input {
+              background-color: transparent;
+              outline: none;
+              border: none;
+              padding: 0.5rem 1rem;
+              font-size: 2rem;
+              font-weight: 900;
+              border-bottom: 0.2rem solid $dark;
+            }
+          }
+          .create__btn_container {
+            display: flex;
+            gap: 2rem;
+            @media (max-width: $mobileMax) {
+              display: flex;
+              flex-direction: column;
+              width: 100%;
+            }
+            .create__btn {
+              background-color: $secondary;
+              outline: none;
+              border: $light;
+              width: 4rem;
+              height: 4rem;
+              border-radius: 50%;
+              cursor: pointer;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-left: 1rem;
+              @media (max-width: $mobileMax) {
+                width: 100%;
+                border-radius: 1rem;
+                margin-left: 0;
+                margin-top: 2rem;
+              }
+              .create__btn_icon {
+                font-size: 4rem;
+                color: $light;
+              }
+            }
+            .import__btn {
+              outline: none;
+              border: 0.2rem solid $secondary;
+              width: 4rem;
+              height: 4rem;
+              border-radius: 50%;
+              cursor: pointer;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-left: 1rem;
+              @media (max-width: $mobileMax) {
+                width: 100%;
+                border-radius: 1rem;
+                margin-left: 0;
+              }
+              .import__btn_icon {
+                font-size: 2rem;
+                color: $secondary;
+              }
+            }
+          }
+        }
+        .more__than_mobile {
+          @media (max-width: $tabletMax) {
+            display: none;
+          }
+        }
+      }
+      .header__search {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 3rem;
+        &:hover {
+          transition: $transition;
+          .search__container {
+          }
+        }
+        .search__container {
+          display: flex;
+          align-items: center;
+          background-color: $backGround;
+          padding: 1rem 1.5rem;
+          gap: 2rem;
+          border-radius: 1rem;
+          box-shadow: $boxShadow;
+          transition: $transition;
+          .search__count {
+            font-size: 1.5rem;
+            color: $dark;
+            font-weight: 600;
+            .count__number {
+              font-size: 3rem;
+              font-weight: 600;
+            }
+          }
+          .search_box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            input {
+              padding: 0.5rem 1rem;
+              outline: none;
+              border: none;
+              background-color: transparent;
+              border-bottom: 0.2rem solid $dark;
+              font-size: 1.5rem;
+              font-weight: 600;
+              width: 60%;
+            }
+            .search__btn {
+              width: 4rem;
+              height: 4rem;
+              border-radius: 50%;
+              background-color: $secondary;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              cursor: pointer;
+              .search__btn_icon {
+                color: $light;
+                font-size: 1.5rem;
+              }
+            }
+            .clear__btn {
+              width: 4rem;
+              height: 4rem;
+              border-radius: 50%;
+              background-color: transparent;
+              border: 0.2rem solid $secondary;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              cursor: pointer;
+              .clear__btn_icon {
+                color: $secondary;
+                font-size: 1.5rem;
+              }
+            }
+          }
+        }
+        .setting__container {
+          position: relative;
+          .setting__icon {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 0.2rem solid $secondary;
+            .icon {
+              font-size: 2rem;
+              color: $secondary;
+            }
+          }
+          .setting__box {
+            position: absolute;
+            // bottom: -20rem;
+            background-color: tomato;
+            width: 100%;
+            height: 100%;
+            .setting__item {
+              .setting__title {
+              }
+            }
+          }
+        }
+      }
+    }
+    .fire {
+      position: relative;
+      z-index: 99;
+      width: 100%;
+      background-color: #d04848;
+      font-size: 7rem;
+      text-align: center;
+      padding: 2rem 0;
+      color: $light;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .alert__id {
+        font-size: 4rem;
+        margin-left: 2rem;
+      }
+    }
+    .test {
+      position: relative;
+      z-index: 99;
+      width: 100%;
+      background-color: #fc6736;
+      font-size: 7rem;
+      text-align: center;
+      padding: 2rem 0;
+      color: $light;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .alert__id {
+        font-size: 4rem;
+        margin-left: 2rem;
+      }
+    }
+  }
+  .content {
+    @media (min-width: $large) {
+      max-width: 1390px !important;
+      margin: 0 auto;
+    }
+    @media (min-width: $desktopMin) and (max-width: $desktopMax) {
+      max-width: 950px !important;
+      margin: 0 auto;
+      padding-top: 25rem;
+    }
+    @media (min-width: $tabletMin) and (max-width: $tabletMax) {
+      max-width: 750px !important;
+      margin: 0 auto;
+      padding-top: 36rem;
+    }
+    @media (min-width: $mobileMin) and (max-width: $mobileMax) {
+      max-width: 550px !important;
+      margin: 0 auto;
+      padding-top: 45rem;
+    }
+    @media (max-width: $tiny) {
+      max-width: 550px !important;
+      margin: 0 auto;
+      padding-top: 25rem;
+    }
+    padding-top: 20rem;
+    .device__list {
+      @media (min-width: $large) {
+      }
+      @media (min-width: $desktopMin) and (max-width: $desktopMax) {
+      }
+      @media (min-width: $tabletMin) and (max-width: $tabletMax) {
+        justify-content: center;
+        gap: 10rem;
+      }
+      @media (min-width: $mobileMin) and (max-width: $mobileMax) {
+        justify-content: center;
+        gap: 10rem;
+      }
+      @media (max-width: $tiny) {
+        justify-content: center;
+        gap: 10rem;
+      }
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14rem;
+      .device {
+        @media (min-width: $large) {
+          width: 26%;
+        }
+        @media (min-width: $desktopMin) and (max-width: $desktopMax) {
+          width: 40%;
+        }
+        @media (min-width: $tabletMin) and (max-width: $tabletMax) {
+          width: 60%;
+        }
+        @media (min-width: $mobileMin) and (max-width: $mobileMax) {
+          width: 80%;
+        }
+        @media (max-width: $tiny) {
+          width: 80%;
+        }
+        position: relative;
+        // height: 61rem;
+        width: 25%;
+        background-color: $light;
+        padding: 2rem;
+        border-radius: 1.5rem;
+        box-shadow: $boxShadow;
+        .device__name {
+          background-color: $secondary;
+          width: 100%;
+          font-size: 1.5rem;
+          color: $light;
+          text-align: center;
+          padding: 1rem;
+          border-radius: 1rem;
+          font-weight: 600;
+        }
+        .device__info {
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+          margin-top: 2rem;
+          padding: 2rem 2.5rem;
+          .line {
+            border: 1px $dark;
+            border-style: dashed;
+          }
+          .info__version {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            width: 100%;
+            justify-content: space-between;
+            .info__name {
+              font-size: 1.7rem;
+              font-weight: 600;
+              width: 30%;
+            }
+            .info__value {
+              font-size: 2rem;
+              font-weight: 900;
+              display: flex;
+              align-items: center;
+              .bat {
+                transform: rotate(270deg);
+              }
+              .low {
+                color: $delete;
+              }
+              .half__full {
+                color: #faa300;
+              }
+              .quar__full {
+                color: #337357;
+              }
+              .full {
+                color: #337357;
+              }
+              .bat__per {
+                font-size: 1.5rem;
+              }
+            }
+            .checked {
+              color: $secondary;
+            }
+            .not__checked {
+              color: $delete;
+            }
+          }
+          .info__connection {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row;
+            align-items: center;
+            .info__name {
+              font-size: 1.7rem;
+              font-weight: 600;
+              width: 30%;
+            }
+            .info__conpri {
+              .conpri__list {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+                .conn__active {
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  gap: 2rem;
+                  .info__value {
+                    font-size: 1.5rem;
+                    font-weight: 600;
+                    padding: 0.5rem 2rem;
+                    border-radius: 0.5rem;
+                    font-weight: 600;
+                    color: $dark;
+                  }
+                  .active {
+                    background-color: $secondary;
+                    color: $light;
+                    font-weight: 900;
+                    // border: 0.3rem solid $secondary;
+                  }
+                  .conn__status {
+                    font-size: 1.5rem;
+                  }
+                  .conn__able {
+                    color: $secondary;
+                  }
+                  .conn__disable {
+                    color: $delete;
+                  }
+                }
+              }
+            }
+          }
+          .info__group {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            gap: 3rem;
+            .info__name {
+              font-size: 1.7rem;
+              font-weight: 600;
+              width: 30%;
+            }
+            .info__conpri {
+              display: flex;
+              align-items: center;
+              gap: 2rem;
+              width: 100%;
+              justify-content: space-between;
+              .info__name {
+                font-size: 1.7rem;
+                font-weight: 600;
+                width: 30%;
+              }
+              .conpri__list {
+                display: flex;
+                .info__value {
+                  font-size: 1.5rem;
+                  font-weight: 600;
+                  padding: 0.5rem 2rem;
+                  border-radius: 0.5rem;
+                  font-weight: 600;
+                  color: $dark;
+                }
+                .active {
+                  background-color: #fc9e70;
+                  color: $light;
+                }
+              }
+            }
+          }
+        }
+        .welcome {
+          height: 100%;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .welcome__content {
+            .welcome__text {
+              text-align: center;
+              font-size: 1.5rem;
+              font-style: italic;
+              font-weight: 600;
+              margin-bottom: 2rem;
+              color: #7e7e7e;
+            }
+          }
+        }
+        .device_detele {
+          position: absolute;
+          top: -1.3rem;
+          right: -1.3rem;
+          width: 3rem;
+          height: 3rem;
+          border-radius: 50%;
+          background-color: $delete;
+          color: $light;
+          border: none;
+          cursor: pointer;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+      }
+      .emergency__alert {
+        background-color: $emergencyAlertColor;
+      }
+      .test__alert {
+        background-color: $testAlertColor;
+      }
+    }
+  }
+  .alert__box {
+    width: 100%;
+    padding-top: 10rem;
+    background-color: transparent;
+  }
+  .alert__box_unactive {
+    height: 10rem;
+    width: 100%;
   }
 }
