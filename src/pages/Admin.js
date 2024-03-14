@@ -281,12 +281,6 @@ const Admin = () => {
         "deviceId": "n_123456",
         "data": { "ssidName": "${ssid}", "password": "${password}" },
       }`;
-      // const payload = `{
-      //   type: wifi,
-      //   deviceId: n_123456,
-      //   data: { ssidName: ${ssid}, password: ${password} },
-      // }`;
-
       // Publish the message
       client.publish(topic, payload, (err) => {
         // Handling the result of the publish
@@ -323,12 +317,6 @@ const Admin = () => {
         "deviceId": "n_123456",
         "data": { "value": "[${selectedOption}]"},
       }`;
-      // const payload = ` {
-      //   type: priority,
-      //   deviceId: n_123456,
-      //   data: { value: [${selectedOption}]},
-      // }`;
-
       // Publish the message
       client.publish(topic, payload, (err) => {
         // Handling the result of the publish
@@ -394,7 +382,8 @@ const Admin = () => {
                   />
                   <button
                     className="item__config_btn"
-                    onClick={handleConfigWifi}>
+                    onClick={handleConfigWifi}
+                  >
                     CONFIG NOW
                   </button>
                 </div>
@@ -433,7 +422,8 @@ const Admin = () => {
                   </div>
                   <button
                     className="item__config_btn"
-                    onClick={handleConfigPri}>
+                    onClick={handleConfigPri}
+                  >
                     CONFIG NOW
                   </button>
                 </div>
@@ -493,7 +483,8 @@ const Admin = () => {
                   ? "device test__alert"
                   : "device "
               }
-              key={index}>
+              key={index}
+            >
               <p className="device__name">{item}</p>
               <p className="device__name" style={{ marginTop: ".5rem" }}>
                 Count Restart: {countReset}
@@ -503,7 +494,8 @@ const Admin = () => {
                   display: "flex",
                   margin: ".5rem 0rem",
                   gap: ".5rem",
-                }}>
+                }}
+              >
                 <p className="device__name">Count LAN:{countLAN}</p>
                 <p className="device__name">count WIFI:{countWifi}</p>
                 <p className="device__name">count SIM:{countSIM}</p>
@@ -767,7 +759,8 @@ const Admin = () => {
               ) : (
                 <button
                   className="device_detele"
-                  onClick={() => handleDeleteDevice(index)}>
+                  onClick={() => handleDeleteDevice(index)}
+                >
                   x
                 </button>
               )}
