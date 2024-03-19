@@ -9,7 +9,6 @@ $configIconColor: #f8f4ec;
 $emergencyAlertColor: #d04848;
 $testAlertColor: #fc6736;
 $buttonBgc: #f0f0f0;
-$testBackground: #d7e4c0;
 
 //ATTRIBUTE
 $transition: all ease-in-out 0.3s;
@@ -44,7 +43,7 @@ body {
 .test__container {
   position: relative;
   min-height: 100vh;
-  background-color: $testBackground;
+  background-color: $backGround;
   padding-bottom: 10rem;
   z-index: 0;
   width: 100%;
@@ -628,7 +627,11 @@ body {
       margin: 0 auto;
       padding-top: 25rem;
     }
-    padding-top: 20rem;
+    padding-top: 15rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     .device__list {
       @media (min-width: $large) {
       }
@@ -651,6 +654,7 @@ body {
       align-items: center;
       flex-wrap: wrap;
       gap: 14rem;
+      width: 100%;
       .device {
         @media (min-width: $large) {
           width: 26%;
@@ -668,63 +672,22 @@ body {
           width: 80%;
         }
         position: relative;
-        width: 25%;
-        background-color: #dadada;
+        // height: 61rem;
+        width: 15%;
+        background-color: $light;
         padding: 2rem;
         border-radius: 1.5rem;
-        margin-top: 3rem;
-        transition: $transition;
-
-        &:hover {
-          transition: $transition;
-          box-shadow: $boxShadow;
-          background-color: $light;
-          .device__hide_info {
-            top: -14rem;
-            transition: $transition;
-          }
-        }
-        .device__headline {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          .device__name {
-            background-color: $secondary;
-            font-size: 1.5rem;
-            color: $light;
-            text-align: center;
-            padding: 1rem 4rem;
-            border-radius: 1rem;
-            font-weight: 600;
-          }
-          .device__power {
-            .power__value {
-              text-transform: uppercase;
-              font-size: 2rem;
-              display: flex;
-              align-items: center;
-              .bat {
-                transform: rotate(270deg);
-                font-size: 1.7rem;
-                &.low {
-                  color: $delete;
-                }
-                &.half__full {
-                  color: #faa300;
-                }
-                &.quar__full {
-                  color: #337357;
-                }
-                &.full {
-                  color: #337357;
-                }
-              }
-              .bat__per {
-                font-size: 1.7rem;
-                font-weight: 600;
-              }
-            }
-          }
+        box-shadow: $boxShadow;
+        .device__name {
+          background-color: $secondary;
+          width: 100%;
+          font-size: 1.5rem;
+          color: $light;
+          text-align: center;
+          padding: 1rem;
+          border-radius: 1rem;
+          font-weight: 600;
+          cursor: pointer;
         }
         .device__info {
           display: flex;
@@ -871,6 +834,46 @@ body {
       }
       .test__alert {
         background-color: $testAlertColor;
+      }
+    }
+    .device__info{
+      margin-top: 10rem;
+      width: 50%;
+      background-color: $secondary;
+      height: 100%;
+      padding: 2rem 3rem;
+      border-radius: 1rem;
+      .device__info_name{
+       background-color: $light;
+       padding: 1rem 2rem;
+       font-size: 3rem;
+       border-radius: 1rem;
+       font-weight: 900;
+       color: $secondary;
+       text-align: center ;
+      }
+      .device__info_wifi{
+        margin-top: 2rem;
+        .wifi__name{
+          color: $light;
+          font-size: 4rem;
+          text-align: center;
+          &.empty{
+            font-style: italic;
+          }
+          &.visible{
+            
+          }
+        }
+        .wifi__pass{
+          color: $light;
+        font-size: 4rem;
+        text-align: center;
+          &.empty{
+            font-style: italic;
+          }
+          &.visible{}
+        }
       }
     }
   }

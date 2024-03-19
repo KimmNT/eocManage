@@ -113,13 +113,14 @@ const HomePage = () => {
       console.log("Connected to MQTT broker");
       // Subscribe to each topic in the state
       deviceInfo.forEach((topic) => {
-        client.subscribe(topic.deviceInfoId, (err) => {
-          if (err) {
-            console.error(`Error subscribing to topic ${topic}:`, err);
-          } else {
-            console.log(`Subscribed to topic: ${topic}`);
-          }
-        });
+        // client.subscribe(topic.deviceInfoId, (err) => {
+        //   if (err) {
+        //     console.error(`Error subscribing to topic ${topic}:`, err);
+        //   } else {
+        //     console.log(`Subscribed to topic: ${topic}`);
+        //   }
+        // });
+        client.subscribe(`broker/message/listener/device`);
       });
     });
 
@@ -264,77 +265,71 @@ const HomePage = () => {
 
   //HANDLE WIFI CONFIGURATION
   const handleConfigWifi = () => {
-    if (wifiDeviceId !== "") {
-      const client = mqtt.connect(brokerUrl, brokerConfig);
+    const client = mqtt.connect(brokerUrl, brokerConfig);
 
-      client.on("connect", () => {
-        console.log("Connected to MQTT broker");
+    client.on("connect", () => {
+      console.log("Connected to MQTT broker");
 
-        const topic = `device/${wifiDeviceId}/cmd`;
-        const payload = `{
-      "type": "wifi",
-      "deviceId": "n_123456",
-      "data": { "ssidName": "${ssid}", "password": "${password}" },
-    }`;
+      // const topic = `device/${wifiDeviceId}/cmd`;
+      const topic = `device/n_${wifiDeviceId}`;
+      const payload = `{
+        "type": "wifi",
+        "deviceId": "n_123456",
+        "data": { "ssidName": "${ssid}", "password": "${password}" },
+      }`;
+      // Publish the message
+      client.publish(topic, payload, (err) => {
+        // Handling the result of the publish
+        if (err) {
+          console.error(`Error publishing message to topic ${topic}:`, err);
+        } else {
+          console.log(
+            `Published message to topic: ${topic} ${JSON.stringify(payload)}`
+          );
+        }
 
-        // Publish the message
-        client.publish(topic, payload, (err) => {
-          // Handling the result of the publish
-          if (err) {
-            console.error(`Error publishing message to topic ${topic}:`, err);
-          } else {
-            console.log(
-              `Published message to topic: ${topic} ${JSON.stringify(payload)}`
-            );
-          }
-
-          // Disconnect from the MQTT broker
-          client.end();
-        });
+        // Disconnect from the MQTT broker
+        client.end();
       });
-      setWifiDeviceId("");
-      // setSSID("");
-      // setPassword("");
-      setConfig(true);
-    } else {
-      alert("Haven't enter device's id");
-    }
+    });
+    setWifiDeviceId("");
+    setSSID("");
+    setPassword("");
+    setConfig(true);
+    topics.map((item) => console.log(item));
   };
 
   //HANDLE PRIORITY CONFIGURATION
   const handleConfigPri = () => {
-    if (priDeviceId !== "") {
-      const client = mqtt.connect(brokerUrl, brokerConfig);
-      client.on("connect", () => {
-        console.log("Connected to MQTT broker");
+    const client = mqtt.connect(brokerUrl, brokerConfig);
 
-        const topic = `device/${priDeviceId}/cmd`;
-        const payload = ` {
-          "type": "priority",
-          "deviceId": "n_123456",
-          "data": { "value": "[${selectedOption}]"},
-        }`;
+    client.on("connect", () => {
+      console.log("Connected to MQTT broker");
 
-        // Publish the message
-        client.publish(topic, payload, (err) => {
-          // Handling the result of the publish
-          if (err) {
-            console.error(`Error publishing message to topic ${topic}:`, err);
-          } else {
-            console.log(
-              `Published message to topic: ${topic} ${JSON.stringify(payload)}`
-            );
-          }
+      // const topic = `device/${priDeviceId}/cmd`;
+      const topic = `device/n_${priDeviceId}`;
+      const payload = ` {
+        "type": "priority",
+        "deviceId": "n_123456",
+        "data": { "value": "[${selectedOption}]"},
+      }`;
+      // Publish the message
+      client.publish(topic, payload, (err) => {
+        // Handling the result of the publish
+        if (err) {
+          console.error(`Error publishing message to topic ${topic}:`, err);
+        } else {
+          console.log(
+            `Published message to topic: ${topic} ${JSON.stringify(payload)}`
+          );
+        }
 
-          // Disconnect from the MQTT broker
-          client.end();
-        });
+        // Disconnect from the MQTT broker
+        client.end();
       });
-      setPriDeviceId("");
-      setConfig(true);
-    } else {
-      alert("Haven't enter device's id");
-    }
+    });
+    setPriDeviceId("");
+    setConfig(true);
   };
 
   //HANDLE FIND DEVICE BY ID
@@ -400,6 +395,35 @@ const HomePage = () => {
     }
   };
 
+  //HANDLE RECEIVED INFO WHEN PRESSED
+  const handleReceivedInfo = (deviceId) => {
+    const client = mqtt.connect(brokerUrl, brokerConfig);
+
+    client.on("connect", () => {
+      console.log("Connected to MQTT broker");
+      const topic = `device/n_${deviceId.substring(7, 12)}`;
+      const payload = ` {
+        "type": "info",
+        "deviceId": "n_123456",
+        "data": {},
+      }`;
+      // Publish the message
+      client.publish(topic, payload, (err) => {
+        // Handling the result of the publish
+        if (err) {
+          console.error(`Error publishing message to topic ${topic}:`, err);
+        } else {
+          console.log(
+            `Published message to topic: ${topic} ${JSON.stringify(payload)}`
+          );
+        }
+
+        // Disconnect from the MQTT broker
+        client.end();
+      });
+    });
+  };
+
   return (
     <div className="container">
       <div className="count__deivce">
@@ -425,13 +449,15 @@ const HomePage = () => {
                   <>
                     <div
                       className="config__icon"
-                      onClick={() => setWifiConfig(false)}>
+                      onClick={() => setWifiConfig(false)}
+                    >
                       <FaWifi className="icon" />
                     </div>
                     <div className="config__line_vertical"></div>
                     <div
                       className="config__icon active"
-                      onClick={() => setWifiConfig(true)}>
+                      onClick={() => setWifiConfig(true)}
+                    >
                       <FaThList className="icon" />
                     </div>
                   </>
@@ -439,13 +465,15 @@ const HomePage = () => {
                   <>
                     <div
                       className="config__icon active"
-                      onClick={() => setWifiConfig(false)}>
+                      onClick={() => setWifiConfig(false)}
+                    >
                       <FaWifi className="icon" />
                     </div>
                     <div className="config__line_vertical"></div>
                     <div
                       className="config__icon"
-                      onClick={() => setWifiConfig(true)}>
+                      onClick={() => setWifiConfig(true)}
+                    >
                       <FaThList className="icon" />
                     </div>
                   </>
@@ -670,7 +698,8 @@ const HomePage = () => {
                       informationMessages[foundDevice.deviceInfoId].id
                   ? "device test__alert"
                   : "device"
-              }>
+              }
+            >
               <p className="device__name">
                 {foundDevice.deviceInfoOwner} <br />
                 {foundDevice.deviceInfoId.substring(7, 12)}
@@ -1419,7 +1448,8 @@ const HomePage = () => {
               ) : (
                 <button
                   className="device_detele"
-                  onClick={() => handleDeteleFindDevice(foundDevice)}>
+                  onClick={() => handleDeteleFindDevice(foundDevice)}
+                >
                   x
                 </button>
               )}
@@ -1442,11 +1472,15 @@ const HomePage = () => {
                     ? "device test__alert"
                     : "device"
                 }
-                key={index}>
-                <p className="device__name">
+                key={index}
+              >
+                <div
+                  onClick={() => handleReceivedInfo(item.deviceInfoId)}
+                  className="device__name"
+                >
                   {item.deviceInfoOwner} <br />
                   {item.deviceInfoId.substring(7, 12)}
-                </p>
+                </div>
                 {informationMessages[item.deviceInfoId] ? (
                   <div className="device__info">
                     {/* VERSION */}
@@ -2182,7 +2216,8 @@ const HomePage = () => {
                 ) : (
                   <button
                     className="device_detele"
-                    onClick={() => handleDeleteDevice(index)}>
+                    onClick={() => handleDeleteDevice(index)}
+                  >
                     x
                   </button>
                 )}

@@ -316,6 +316,7 @@ const Admin = () => {
       client.on("connect", () => {
         console.log("Connected to MQTT broker");
 
+<<<<<<< HEAD
         const topic = `device/${wifiDeviceId}/cmd`;
         const payload = `{
       "type": "wifi",
@@ -333,6 +334,25 @@ const Admin = () => {
               `Published message to topic: ${topic} ${JSON.stringify(payload)}`
             );
           }
+=======
+      // const topic = `device/${wifiDeviceId}/cmd`;
+      const topic = `device/n_${wifiDeviceId}`;
+      const payload = `{
+        "type": "wifi",
+        "deviceId": "n_123456",
+        "data": { "ssidName": "${ssid}", "password": "${password}" },
+      }`;
+      // Publish the message
+      client.publish(topic, payload, (err) => {
+        // Handling the result of the publish
+        if (err) {
+          console.error(`Error publishing message to topic ${topic}:`, err);
+        } else {
+          console.log(
+            `Published message to topic: ${topic} ${JSON.stringify(payload)}`
+          );
+        }
+>>>>>>> 27e47eee5dc03d7ee28c3d7a0a9e0a594fdeaa65
 
           // Disconnect from the MQTT broker
           client.end();
@@ -453,10 +473,17 @@ const Admin = () => {
       console.log("Connected to MQTT broker");
       const topic = `device/n_${deviceId.substring(7, 12)}`;
       const payload = ` {
+<<<<<<< HEAD
           "type": "info",
           "deviceId": "n_123456",
           "data": {},
         }`;
+=======
+        "type": "priority",
+        "deviceId": "n_123456",
+        "data": { "value": "[${selectedOption}]"},
+      }`;
+>>>>>>> 27e47eee5dc03d7ee28c3d7a0a9e0a594fdeaa65
       // Publish the message
       client.publish(topic, payload, (err) => {
         // Handling the result of the publish
@@ -512,10 +539,18 @@ const Admin = () => {
                     onChange={(e) => setOwner(e.target.value)}
                     className="create__owner"
                   />
+<<<<<<< HEAD
                 </div>
                 <div className="create__btn_container">
                   <button className="create__btn" onClick={handleAddDevice}>
                     <p className="create__btn_icon">+</p>
+=======
+                  <button
+                    className="item__config_btn"
+                    onClick={handleConfigWifi}
+                  >
+                    CONFIG NOW
+>>>>>>> 27e47eee5dc03d7ee28c3d7a0a9e0a594fdeaa65
                   </button>
                   <div className="import__btn" onClick={handleButtonClick}>
                     <FaFileImport className="import__btn_icon" />
@@ -554,6 +589,7 @@ const Admin = () => {
                   className="create__owner"
                 />
               </div>
+<<<<<<< HEAD
               <div className="create__btn_container">
                 <button className="create__btn" onClick={handleAddDevice}>
                   <p className="create__btn_icon">+</p>
@@ -589,6 +625,40 @@ const Admin = () => {
                   <p className="clear__btn_icon">
                     <FaChevronLeft />
                   </p>
+=======
+              <div className="item__pri">
+                <div className="item__pri_content">
+                  <div className="item__pri_input_container">
+                    <input
+                      placeholder="enter device's id"
+                      value={priDeviceId}
+                      onChange={handlePriDevice}
+                      className="item__pri_input"
+                    />
+                  </div>
+                  <div className="item__pri_list">
+                    {priArray.map((item, index) => (
+                      <div key={index} className="pri__item">
+                        <input
+                          type="radio"
+                          id={item.pri}
+                          name="priorityGroup"
+                          className="pri__item_checkbox"
+                          onChange={() => handleRadioChange(item.pri)}
+                        />
+                        <label className="pri__item_title">
+                          {item.priName}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    className="item__config_btn"
+                    onClick={handleConfigPri}
+                  >
+                    CONFIG NOW
+                  </button>
+>>>>>>> 27e47eee5dc03d7ee28c3d7a0a9e0a594fdeaa65
                 </div>
               </div>
             </div>
@@ -622,6 +692,7 @@ const Admin = () => {
       <div className="content">
         <div className="device__list">
           {topics.map((item, index) => (
+<<<<<<< HEAD
             <div className="device " key={index}>
               <div className="device__headline">
                 <p className="device__name">{item}</p>
@@ -631,6 +702,23 @@ const Admin = () => {
                   <FaInfo />
                 </div>
               </div>
+=======
+            <div
+              className={
+                emergency &&
+                informationMessages[item] &&
+                emergencyMessage === informationMessages[item].deviceId
+                  ? "device emergency__alert"
+                  : test &&
+                    informationMessages[item] &&
+                    testMessage === informationMessages[item].deviceId
+                  ? "device test__alert"
+                  : "device "
+              }
+              key={index}
+            >
+              <p className="device__name">{item}</p>
+>>>>>>> 27e47eee5dc03d7ee28c3d7a0a9e0a594fdeaa65
               <p className="device__name" style={{ marginTop: ".5rem" }}>
                 Count Restart: {countReset}
               </p>
@@ -639,6 +727,7 @@ const Admin = () => {
                   display: "flex",
                   margin: ".5rem 0rem",
                   gap: ".5rem",
+<<<<<<< HEAD
                 }}>
                 <p className="device__count_reset">Count LAN:{countLAN}</p>
                 <p className="device__count_reset">count WIFI:{countWifi}</p>
@@ -649,6 +738,278 @@ const Admin = () => {
                 onClick={() => handleDeleteDevice(index)}>
                 x
               </button>
+=======
+                }}
+              >
+                <p className="device__name">Count LAN:{countLAN}</p>
+                <p className="device__name">count WIFI:{countWifi}</p>
+                <p className="device__name">count SIM:{countSIM}</p>
+              </div>
+              {informationMessages[item] ? (
+                <div className="device__info">
+                  {/* VERSION */}
+                  <div className="info__version">
+                    <p className="info__name">Version </p>
+                    <p className="info__value">
+                      {informationMessages[item].data.FWver}
+                    </p>
+                  </div>
+                  <div className="line"></div>
+                  {/* CONNECTION TYPE - PRIORITY */}
+                  <div className="info__connection">
+                    <p className="info__name">Connection type</p>
+                    <div className="info__conpri">
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([1, 2, 3]) ? (
+                        <>
+                          {informationMessages[item].data.CONtyp === 1 ? (
+                            <div className="conpri__list">
+                              <p className="info__value active">SIM</p>
+                              <p className="info__value ">LAN</p>
+                              <p className="info__value ">WiFi</p>
+                            </div>
+                          ) : informationMessages[item].data.CONtyp === 2 ? (
+                            <div className="conpri__list">
+                              <p className="info__value ">SIM</p>
+                              <p className="info__value active">LAN</p>
+                              <p className="info__value ">WiFi</p>
+                            </div>
+                          ) : (
+                            <div className="conpri__list">
+                              <p className="info__value ">SIM</p>
+                              <p className="info__value ">LAN</p>
+                              <p className="info__value active">WiFi</p>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([1, 3, 2]) ? (
+                        <>
+                          {informationMessages[item].data.CONtyp === 1 ? (
+                            <div className="conpri__list">
+                              <p className="info__value active">SIM</p>
+                              <p className="info__value ">WiFi</p>
+                              <p className="info__value ">LAN</p>
+                            </div>
+                          ) : informationMessages[item].data.CONtyp === 2 ? (
+                            <div className="conpri__list">
+                              <p className="info__value ">SIM</p>
+                              <p className="info__value ">WiFi</p>
+                              <p className="info__value active">LAN</p>
+                            </div>
+                          ) : (
+                            <div className="conpri__list">
+                              <p className="info__value ">SIM</p>
+                              <p className="info__value active">WiFi</p>
+                              <p className="info__value ">LAN</p>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([2, 1, 3]) ? (
+                        <>
+                          {informationMessages[item].data.CONtyp === 2 ? (
+                            <div className="conpri__list">
+                              <p className="info__value active">LAN</p>
+                              <p className="info__value ">SIM</p>
+                              <p className="info__value ">WiFi</p>
+                            </div>
+                          ) : informationMessages[item].data.CONtyp === 1 ? (
+                            <div className="conpri__list">
+                              <p className="info__value ">LAN</p>
+                              <p className="info__value active">SIM</p>
+                              <p className="info__value ">WiFi</p>
+                            </div>
+                          ) : (
+                            <div className="conpri__list">
+                              <p className="info__value ">LAN</p>
+                              <p className="info__value ">SIM</p>
+                              <p className="info__value active">WiFi</p>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([2, 3, 1]) ? (
+                        <>
+                          {informationMessages[item].data.CONtyp === 1 ? (
+                            <div className="conpri__list">
+                              <p className="info__value ">LAN</p>
+                              <p className="info__value ">WiFi</p>
+                              <p className="info__value active">SIM</p>
+                            </div>
+                          ) : informationMessages[item].data.CONtyp === 2 ? (
+                            <div className="conpri__list">
+                              <p className="info__value active">LAN</p>
+                              <p className="info__value ">WiFi</p>
+                              <p className="info__value ">SIM</p>
+                            </div>
+                          ) : (
+                            <div className="conpri__list">
+                              <p className="info__value ">LAN</p>
+                              <p className="info__value active">WiFi</p>
+                              <p className="info__value ">SIM</p>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([3, 1, 2]) ? (
+                        <>
+                          {informationMessages[item].data.CONtyp === 1 ? (
+                            <div className="conpri__list">
+                              <p className="info__value ">WiFi</p>
+                              <p className="info__value active">SIM</p>
+                              <p className="info__value ">LAN</p>
+                            </div>
+                          ) : informationMessages[item].data.CONtyp === 2 ? (
+                            <div className="conpri__list">
+                              <p className="info__value ">WiFi</p>
+                              <p className="info__value ">SIM</p>
+                              <p className="info__value active">LAN</p>
+                            </div>
+                          ) : (
+                            <div className="conpri__list">
+                              <p className="info__value active">WiFi</p>
+                              <p className="info__value ">SIM</p>
+                              <p className="info__value ">LAN</p>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                      {JSON.stringify(informationMessages[item].data.CONpri) ===
+                      JSON.stringify([3, 2, 1]) ? (
+                        <>
+                          {informationMessages[item].data.CONtyp === 1 ? (
+                            <div className="conpri__list">
+                              <p className="info__value ">WiFi</p>
+                              <p className="info__value ">LAN</p>
+                              <p className="info__value active">SIM</p>
+                            </div>
+                          ) : informationMessages[item].data.CONtyp === 2 ? (
+                            <div className="conpri__list">
+                              <p className="info__value ">WiFi</p>
+                              <p className="info__value active">LAN</p>
+                              <p className="info__value ">SIM</p>
+                            </div>
+                          ) : (
+                            <div className="conpri__list">
+                              <p className="info__value active">WiFi</p>
+                              <p className="info__value ">LAN</p>
+                              <p className="info__value ">SIM</p>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                  </div>
+                  <div className="line"></div>
+                  {/* WiFi */}
+                  <div className="info__group">
+                    <div className="info__version">
+                      <p className="info__name">WiFi name: </p>
+                      <p className="info__value">
+                        {informationMessages[item].data.WIF.ssid}
+                      </p>
+                    </div>
+                    <div className="info__version">
+                      <p className="info__name">Password: </p>
+                      <p className="info__value  small__text">
+                        {informationMessages[item].data.WIF.password}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="line"></div>
+                  {/* CONNECTION MODE */}
+                  <div className="info__version">
+                    <p className="info__name">Connection Mode: </p>
+                    {informationMessages[item].data.BAT.percent > 0 &&
+                    informationMessages[item].data.BAT.percent <= 25 ? (
+                      <div className="info__value">
+                        <p className="bat low">
+                          <FaBatteryQuarter />
+                        </p>
+                        <span className="bat__per">
+                          {informationMessages[item].data.BAT.percent}%
+                        </span>
+                      </div>
+                    ) : informationMessages[item].data.BAT.percent > 25 &&
+                      informationMessages[item].data.BAT.percent <= 50 ? (
+                      <div className="info__value">
+                        <p className="bat half__full">
+                          <FaBatteryHalf />
+                        </p>
+                        <span className="bat__per">
+                          {informationMessages[item].data.BAT.percent}%
+                        </span>
+                      </div>
+                    ) : informationMessages[item].data.BAT.percent > 50 &&
+                      informationMessages[item].data.BAT.percent <= 75 ? (
+                      <div className="info__value">
+                        <p className="bat quar__full">
+                          <FaBatteryThreeQuarters />
+                        </p>
+                        <span className="bat__per">
+                          {informationMessages[item].data.BAT.percent}%
+                        </span>
+                      </div>
+                    ) : informationMessages[item].data.BAT.percent > 75 &&
+                      informationMessages[item].data.BAT.percent <= 100 ? (
+                      <div className="info__value">
+                        <p className="bat full">
+                          <FaBatteryFull />
+                        </p>
+                        <span className="bat__per">
+                          {informationMessages[item].data.BAT.percent}%
+                        </span>
+                      </div>
+                    ) : (
+                      <p className="info__value">AC</p>
+                    )}
+                  </div>
+                  {/* SD CARD */}
+                  <div className="info__version">
+                    <p className="info__name">SD Card </p>
+                    {isSD ? (
+                      <FaCheck className="info__value checked" />
+                    ) : (
+                      <FaTimes className="info__value not__checked" />
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="welcome">
+                  <div className="welcome__content">
+                    <p className="welcome__text">Connecting to device</p>
+                    <p className="welcome__text">Please wait a moment</p>
+                  </div>
+                </div>
+              )}
+              {emergency || test ? (
+                <></>
+              ) : (
+                <button
+                  className="device_detele"
+                  onClick={() => handleDeleteDevice(index)}
+                >
+                  x
+                </button>
+              )}
+>>>>>>> 27e47eee5dc03d7ee28c3d7a0a9e0a594fdeaa65
             </div>
           ))}
           <div></div>
