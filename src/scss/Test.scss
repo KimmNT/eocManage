@@ -47,6 +47,7 @@ body {
   padding-bottom: 10rem;
   z-index: 0;
   width: 100%;
+
   .count__deivce {
     position: fixed;
     bottom: 2rem;
@@ -610,22 +611,22 @@ body {
     @media (min-width: $desktopMin) and (max-width: $desktopMax) {
       max-width: 950px !important;
       margin: 0 auto;
-      padding-top: 25rem;
+      padding: 30rem 0rem;
     }
     @media (min-width: $tabletMin) and (max-width: $tabletMax) {
       max-width: 750px !important;
       margin: 0 auto;
-      padding-top: 36rem;
+      padding: 30rem 0rem;
     }
     @media (min-width: $mobileMin) and (max-width: $mobileMax) {
       max-width: 550px !important;
       margin: 0 auto;
-      padding-top: 45rem;
+      padding: 30rem 0rem;
     }
     @media (max-width: $tiny) {
       max-width: 550px !important;
       margin: 0 auto;
-      padding-top: 25rem;
+      padding: 25rem 0rem;
     }
     padding-top: 15rem;
     display: flex;
@@ -633,34 +634,22 @@ body {
     align-items: center;
     justify-content: center;
     .device__list {
-      @media (min-width: $large) {
-      }
-      @media (min-width: $desktopMin) and (max-width: $desktopMax) {
-      }
-      @media (min-width: $tabletMin) and (max-width: $tabletMax) {
+      @media (max-width: $tabletMax) {
         justify-content: center;
-        gap: 10rem;
-      }
-      @media (min-width: $mobileMin) and (max-width: $mobileMax) {
-        justify-content: center;
-        gap: 10rem;
-      }
-      @media (max-width: $tiny) {
-        justify-content: center;
-        gap: 10rem;
+        gap: 20rem;
       }
       display: flex;
       justify-content: flex-start;
       align-items: center;
       flex-wrap: wrap;
-      gap: 14rem;
+      gap: 20rem;
       width: 100%;
       .device {
         @media (min-width: $large) {
-          width: 26%;
+          width: 23%;
         }
         @media (min-width: $desktopMin) and (max-width: $desktopMax) {
-          width: 40%;
+          width: 39%;
         }
         @media (min-width: $tabletMin) and (max-width: $tabletMax) {
           width: 60%;
@@ -672,45 +661,84 @@ body {
           width: 80%;
         }
         position: relative;
-        // height: 61rem;
-        width: 15%;
-        background-color: $light;
+        background-color: #c7c0bb;
         padding: 2rem;
         border-radius: 1.5rem;
-        box-shadow: $boxShadow;
-        .device__name {
-          background-color: $secondary;
-          width: 100%;
-          font-size: 1.5rem;
-          color: $light;
-          text-align: center;
-          padding: 1rem;
-          border-radius: 1rem;
-          font-weight: 600;
-          cursor: pointer;
+        transition: $transition;
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+        &:hover {
+          transition: $transition;
+          box-shadow: $boxShadow;
+          background-color: $light;
+          .device__hide_info {
+            bottom: -16rem;
+            transition: $transition;
+          }
+        }
+        .device__headline {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .device__name {
+            background-color: $secondary;
+            font-size: 1.5rem;
+            color: $light;
+            text-align: center;
+            padding: 1rem 3rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+          }
+          .device__power {
+            .power__name {
+              font-size: 2rem;
+              font-weight: 600;
+              display: flex;
+              align-items: center;
+              .bat {
+                font-size: 2rem;
+                transform: rotate(270deg);
+                &.low {
+                  color: $delete;
+                }
+                &.half__full {
+                  color: #faa300;
+                }
+                &.quar__full {
+                  color: #337357;
+                }
+                &.full {
+                  color: #337357;
+                }
+              }
+              .bat__per {
+                font-size: 1.5rem;
+                font-weight: 600;
+              }
+            }
+          }
         }
         .device__info {
-          display: flex;
-          flex-direction: column;
-          gap: 2rem;
-          margin-top: 2rem;
-          padding: 2rem 0rem;
+          width: 100%;
           .info__connection {
             width: 100%;
             .info__conpri {
+              width: 100%;
               .conpri__list {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 .conn__active {
-                  width: 33%;
+                  width: 31.3%;
                   display: flex;
                   justify-content: center;
                   align-items: center;
                   flex-direction: column;
                   .info__value {
                     font-size: 3rem;
-                    padding: 1rem 3rem;
+                    padding: 0.5rem 2rem;
                     border-radius: 1rem;
                     &.active {
                       background-color: $secondary;
@@ -734,7 +762,7 @@ body {
         }
         .device__hide_info {
           position: absolute;
-          top: 0;
+          bottom: 0;
           z-index: -1;
           right: 0;
           width: 100%;
@@ -756,6 +784,7 @@ body {
               font-weight: 600;
               &.empty {
                 font-style: italic;
+                color: #afafaf;
               }
             }
           }
@@ -766,10 +795,10 @@ body {
             align-items: flex-start;
             gap: 2rem;
             .version {
-              font-size: 2rem;
+              font-size: 1.5rem;
               font-weight: 600;
               background-color: $light;
-              padding: 1rem 2rem;
+              padding: 0.5rem 1.5rem;
               border-radius: 1rem;
               border: 0.3rem solid $secondary;
             }
@@ -779,10 +808,9 @@ body {
               font-size: 2rem;
               align-items: flex-start;
               background-color: $light;
-              padding: 1rem 2rem;
+              padding: 0.5rem 1.5rem;
               border-radius: 1rem;
               border: 0.3rem solid $secondary;
-
               .sdcard__name {
                 color: $dark;
                 font-size: 1.5rem;
@@ -834,46 +862,6 @@ body {
       }
       .test__alert {
         background-color: $testAlertColor;
-      }
-    }
-    .device__info{
-      margin-top: 10rem;
-      width: 50%;
-      background-color: $secondary;
-      height: 100%;
-      padding: 2rem 3rem;
-      border-radius: 1rem;
-      .device__info_name{
-       background-color: $light;
-       padding: 1rem 2rem;
-       font-size: 3rem;
-       border-radius: 1rem;
-       font-weight: 900;
-       color: $secondary;
-       text-align: center ;
-      }
-      .device__info_wifi{
-        margin-top: 2rem;
-        .wifi__name{
-          color: $light;
-          font-size: 4rem;
-          text-align: center;
-          &.empty{
-            font-style: italic;
-          }
-          &.visible{
-            
-          }
-        }
-        .wifi__pass{
-          color: $light;
-        font-size: 4rem;
-        text-align: center;
-          &.empty{
-            font-style: italic;
-          }
-          &.visible{}
-        }
       }
     }
   }

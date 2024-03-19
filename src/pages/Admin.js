@@ -316,14 +316,13 @@ const Admin = () => {
       client.on("connect", () => {
         console.log("Connected to MQTT broker");
 
-<<<<<<< HEAD
-        const topic = `device/${wifiDeviceId}/cmd`;
+        // const topic = `device/${wifiDeviceId}/cmd`;
+        const topic = `device/n_${wifiDeviceId}`;
         const payload = `{
-      "type": "wifi",
-      "deviceId": "n_123456",
-      "data": { "ssidName": "${ssid}", "password": "${password}" },
-    }`;
-
+        "type": "wifi",
+        "deviceId": "n_123456",
+        "data": { "ssidName": "${ssid}", "password": "${password}" },
+      }`;
         // Publish the message
         client.publish(topic, payload, (err) => {
           // Handling the result of the publish
@@ -334,25 +333,6 @@ const Admin = () => {
               `Published message to topic: ${topic} ${JSON.stringify(payload)}`
             );
           }
-=======
-      // const topic = `device/${wifiDeviceId}/cmd`;
-      const topic = `device/n_${wifiDeviceId}`;
-      const payload = `{
-        "type": "wifi",
-        "deviceId": "n_123456",
-        "data": { "ssidName": "${ssid}", "password": "${password}" },
-      }`;
-      // Publish the message
-      client.publish(topic, payload, (err) => {
-        // Handling the result of the publish
-        if (err) {
-          console.error(`Error publishing message to topic ${topic}:`, err);
-        } else {
-          console.log(
-            `Published message to topic: ${topic} ${JSON.stringify(payload)}`
-          );
-        }
->>>>>>> 27e47eee5dc03d7ee28c3d7a0a9e0a594fdeaa65
 
           // Disconnect from the MQTT broker
           client.end();
@@ -473,17 +453,10 @@ const Admin = () => {
       console.log("Connected to MQTT broker");
       const topic = `device/n_${deviceId.substring(7, 12)}`;
       const payload = ` {
-<<<<<<< HEAD
           "type": "info",
           "deviceId": "n_123456",
           "data": {},
         }`;
-=======
-        "type": "priority",
-        "deviceId": "n_123456",
-        "data": { "value": "[${selectedOption}]"},
-      }`;
->>>>>>> 27e47eee5dc03d7ee28c3d7a0a9e0a594fdeaa65
       // Publish the message
       client.publish(topic, payload, (err) => {
         // Handling the result of the publish
@@ -539,18 +512,10 @@ const Admin = () => {
                     onChange={(e) => setOwner(e.target.value)}
                     className="create__owner"
                   />
-<<<<<<< HEAD
-                </div>
-                <div className="create__btn_container">
-                  <button className="create__btn" onClick={handleAddDevice}>
-                    <p className="create__btn_icon">+</p>
-=======
                   <button
                     className="item__config_btn"
-                    onClick={handleConfigWifi}
-                  >
+                    onClick={handleConfigWifi}>
                     CONFIG NOW
->>>>>>> 27e47eee5dc03d7ee28c3d7a0a9e0a594fdeaa65
                   </button>
                   <div className="import__btn" onClick={handleButtonClick}>
                     <FaFileImport className="import__btn_icon" />
@@ -589,43 +554,6 @@ const Admin = () => {
                   className="create__owner"
                 />
               </div>
-<<<<<<< HEAD
-              <div className="create__btn_container">
-                <button className="create__btn" onClick={handleAddDevice}>
-                  <p className="create__btn_icon">+</p>
-                </button>
-                <div className="import__btn" onClick={handleButtonClick}>
-                  <FaFileImport className="import__btn_icon" />
-                </div>
-                <input
-                  type="file"
-                  accept=".xlsx, .xls"
-                  ref={fileInputRef}
-                  style={{ display: "none" }}
-                  onChange={handleFileChange}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="header__search">
-            <div className="search__container">
-              <div className="search_box">
-                <input
-                  type="text"
-                  placeholder="search for device"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <div className="search__btn" onClick={handleSearch}>
-                  <p className="search__btn_icon">
-                    <FaSearch />
-                  </p>
-                </div>
-                <div className="clear__btn" onClick={() => setSearchQuery("")}>
-                  <p className="clear__btn_icon">
-                    <FaChevronLeft />
-                  </p>
-=======
               <div className="item__pri">
                 <div className="item__pri_content">
                   <div className="item__pri_input_container">
@@ -654,11 +582,9 @@ const Admin = () => {
                   </div>
                   <button
                     className="item__config_btn"
-                    onClick={handleConfigPri}
-                  >
+                    onClick={handleConfigPri}>
                     CONFIG NOW
                   </button>
->>>>>>> 27e47eee5dc03d7ee28c3d7a0a9e0a594fdeaa65
                 </div>
               </div>
             </div>
@@ -692,17 +618,6 @@ const Admin = () => {
       <div className="content">
         <div className="device__list">
           {topics.map((item, index) => (
-<<<<<<< HEAD
-            <div className="device " key={index}>
-              <div className="device__headline">
-                <p className="device__name">{item}</p>
-                <div
-                  onClick={() => handleGetInfo(item)}
-                  className="device__info_get">
-                  <FaInfo />
-                </div>
-              </div>
-=======
             <div
               className={
                 emergency &&
@@ -715,10 +630,8 @@ const Admin = () => {
                   ? "device test__alert"
                   : "device "
               }
-              key={index}
-            >
+              key={index}>
               <p className="device__name">{item}</p>
->>>>>>> 27e47eee5dc03d7ee28c3d7a0a9e0a594fdeaa65
               <p className="device__name" style={{ marginTop: ".5rem" }}>
                 Count Restart: {countReset}
               </p>
@@ -727,20 +640,7 @@ const Admin = () => {
                   display: "flex",
                   margin: ".5rem 0rem",
                   gap: ".5rem",
-<<<<<<< HEAD
                 }}>
-                <p className="device__count_reset">Count LAN:{countLAN}</p>
-                <p className="device__count_reset">count WIFI:{countWifi}</p>
-                <p className="device__count_reset">count SIM:{countSIM}</p>
-              </div>
-              <button
-                className="device_detele"
-                onClick={() => handleDeleteDevice(index)}>
-                x
-              </button>
-=======
-                }}
-              >
                 <p className="device__name">Count LAN:{countLAN}</p>
                 <p className="device__name">count WIFI:{countWifi}</p>
                 <p className="device__name">count SIM:{countSIM}</p>
@@ -1004,12 +904,10 @@ const Admin = () => {
               ) : (
                 <button
                   className="device_detele"
-                  onClick={() => handleDeleteDevice(index)}
-                >
+                  onClick={() => handleDeleteDevice(index)}>
                   x
                 </button>
               )}
->>>>>>> 27e47eee5dc03d7ee28c3d7a0a9e0a594fdeaa65
             </div>
           ))}
           <div></div>
