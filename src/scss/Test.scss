@@ -668,156 +668,168 @@ body {
           width: 80%;
         }
         position: relative;
-        // height: 61rem;
         width: 25%;
-        background-color: $light;
+        background-color: #dadada;
         padding: 2rem;
         border-radius: 1.5rem;
-        box-shadow: $boxShadow;
-        .device__name {
-          background-color: $secondary;
-          width: 100%;
-          font-size: 1.5rem;
-          color: $light;
-          text-align: center;
-          padding: 1rem;
-          border-radius: 1rem;
-          font-weight: 600;
+        margin-top: 3rem;
+        transition: $transition;
+
+        &:hover {
+          transition: $transition;
+          box-shadow: $boxShadow;
+          background-color: $light;
+          .device__hide_info {
+            top: -14rem;
+            transition: $transition;
+          }
+        }
+        .device__headline {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          .device__name {
+            background-color: $secondary;
+            font-size: 1.5rem;
+            color: $light;
+            text-align: center;
+            padding: 1rem 4rem;
+            border-radius: 1rem;
+            font-weight: 600;
+          }
+          .device__power {
+            .power__value {
+              text-transform: uppercase;
+              font-size: 2rem;
+              display: flex;
+              align-items: center;
+              .bat {
+                transform: rotate(270deg);
+                font-size: 1.7rem;
+                &.low {
+                  color: $delete;
+                }
+                &.half__full {
+                  color: #faa300;
+                }
+                &.quar__full {
+                  color: #337357;
+                }
+                &.full {
+                  color: #337357;
+                }
+              }
+              .bat__per {
+                font-size: 1.7rem;
+                font-weight: 600;
+              }
+            }
+          }
         }
         .device__info {
           display: flex;
           flex-direction: column;
           gap: 2rem;
           margin-top: 2rem;
-          padding: 2rem 2.5rem;
-          .line {
-            border: 1px $dark;
-            border-style: dashed;
-          }
-          .info__version {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            width: 100%;
-            justify-content: space-between;
-            .info__name {
-              font-size: 1.7rem;
-              font-weight: 600;
-              width: 30%;
-            }
-            .info__value {
-              font-size: 2rem;
-              font-weight: 900;
-              display: flex;
-              align-items: center;
-              .bat {
-                transform: rotate(270deg);
-              }
-              .low {
-                color: $delete;
-              }
-              .half__full {
-                color: #faa300;
-              }
-              .quar__full {
-                color: #337357;
-              }
-              .full {
-                color: #337357;
-              }
-              .bat__per {
-                font-size: 1.5rem;
-              }
-            }
-            .checked {
-              color: $secondary;
-            }
-            .not__checked {
-              color: $delete;
-            }
-          }
+          padding: 2rem 0rem;
           .info__connection {
-            display: flex;
-            justify-content: space-between;
-            flex-direction: row;
-            align-items: center;
-            .info__name {
-              font-size: 1.7rem;
-              font-weight: 600;
-              width: 30%;
-            }
+            width: 100%;
             .info__conpri {
               .conpri__list {
                 display: flex;
-                flex-direction: column;
-                gap: 2rem;
+                justify-content: space-between;
+                align-items: center;
                 .conn__active {
+                  width: 33%;
                   display: flex;
+                  justify-content: center;
                   align-items: center;
-                  justify-content: space-between;
-                  gap: 2rem;
+                  flex-direction: column;
                   .info__value {
-                    font-size: 1.5rem;
-                    font-weight: 600;
-                    padding: 0.5rem 2rem;
-                    border-radius: 0.5rem;
-                    font-weight: 600;
-                    color: $dark;
-                  }
-                  .active {
-                    background-color: $secondary;
-                    color: $light;
-                    font-weight: 900;
-                    // border: 0.3rem solid $secondary;
+                    font-size: 3rem;
+                    padding: 1rem 3rem;
+                    border-radius: 1rem;
+                    &.active {
+                      background-color: $secondary;
+                      color: $light;
+                    }
                   }
                   .conn__status {
-                    font-size: 1.5rem;
-                  }
-                  .conn__able {
-                    color: $secondary;
-                  }
-                  .conn__disable {
-                    color: $delete;
+                    margin-top: 2rem;
+                    font-size: 2rem;
+                    &.conn__able {
+                      color: $secondary;
+                    }
+                    &.conn__disable {
+                      color: $delete;
+                    }
                   }
                 }
               }
             }
           }
-          .info__group {
+        }
+        .device__hide_info {
+          position: absolute;
+          top: 0;
+          z-index: -1;
+          right: 0;
+          width: 100%;
+          padding: 1rem 2rem;
+          display: flex;
+          justify-content: space-between;
+          transition: $transition;
+          .device__info_wifi {
+            background-color: $light;
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
             display: flex;
-            justify-content: space-between;
             flex-direction: column;
-            gap: 3rem;
-            .info__name {
-              font-size: 1.7rem;
+            justify-content: space-around;
+            gap: 1.5rem;
+            border: 0.3rem solid $secondary;
+            .wifi__info {
+              font-size: 2rem;
               font-weight: 600;
-              width: 30%;
-            }
-            .info__conpri {
-              display: flex;
-              align-items: center;
-              gap: 2rem;
-              width: 100%;
-              justify-content: space-between;
-              .info__name {
-                font-size: 1.7rem;
-                font-weight: 600;
-                width: 30%;
+              &.empty {
+                font-style: italic;
               }
-              .conpri__list {
-                display: flex;
-                .info__value {
-                  font-size: 1.5rem;
-                  font-weight: 600;
-                  padding: 0.5rem 2rem;
-                  border-radius: 0.5rem;
-                  font-weight: 600;
-                  color: $dark;
-                }
-                .active {
-                  background-color: #fc9e70;
-                  color: $light;
-                }
+            }
+          }
+          .device__info_version {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 2rem;
+            .version {
+              font-size: 2rem;
+              font-weight: 600;
+              background-color: $light;
+              padding: 1rem 2rem;
+              border-radius: 1rem;
+              border: 0.3rem solid $secondary;
+            }
+            .sdcard {
+              display: flex;
+              gap: 1rem;
+              font-size: 2rem;
+              align-items: flex-start;
+              background-color: $light;
+              padding: 1rem 2rem;
+              border-radius: 1rem;
+              border: 0.3rem solid $secondary;
+
+              .sdcard__name {
+                color: $dark;
+                font-size: 1.5rem;
+                font-weight: 600;
+              }
+              .able {
+                color: $secondary;
+              }
+              .disable {
+                color: $delete;
               }
             }
           }
