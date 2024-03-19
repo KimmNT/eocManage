@@ -475,6 +475,114 @@ const Admin = () => {
 
   return (
     <div className="admin_container">
+      <div className="count__deivce">
+        <p className="count__number">{deviceInfo.length}</p>{" "}
+        {deviceInfo.length > 1 ? <p>devices</p> : <p>device</p>}
+      </div>
+      <div className="setting__container">
+        <div className="setting__content">
+          <div className="setting__icon">
+            <FaBars className="icon" />
+          </div>
+          <div className="setting__config">
+            {config ? (
+              <div className="config active">
+                <FaRegCheckCircle />
+              </div>
+            ) : (
+              <div className="config unactive"></div>
+            )}
+            <div className="config__content">
+              <div className="config__nav">
+                {wifiConfig ? (
+                  <>
+                    <div
+                      className="config__icon"
+                      onClick={() => setWifiConfig(false)}>
+                      <FaWifi className="icon" />
+                    </div>
+                    <div className="config__line_vertical"></div>
+                    <div
+                      className="config__icon active"
+                      onClick={() => setWifiConfig(true)}>
+                      <FaThList className="icon" />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div
+                      className="config__icon active"
+                      onClick={() => setWifiConfig(false)}>
+                      <FaWifi className="icon" />
+                    </div>
+                    <div className="config__line_vertical"></div>
+                    <div
+                      className="config__icon"
+                      onClick={() => setWifiConfig(true)}>
+                      <FaThList className="icon" />
+                    </div>
+                  </>
+                )}
+              </div>
+              {wifiConfig ? (
+                <div className="config__item">
+                  <div className="config__item_content">
+                    <input
+                      placeholder="enter device's id"
+                      value={priDeviceId}
+                      onChange={handlePriDevice}
+                      className="config__item_input"
+                    />
+                  </div>
+                  <div className="config__item_list">
+                    {priArray.map((item, index) => (
+                      <div key={index} className="item">
+                        <input
+                          type="radio"
+                          id={item.pri}
+                          name="priorityGroup"
+                          className="item__input"
+                          onChange={() => handleRadioChange(item.pri)}
+                        />
+                        <label className="item__lable">{item.priName}</label>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="config__item_btn" onClick={handleConfigPri}>
+                    CONFIG NOW
+                  </div>
+                </div>
+              ) : (
+                <div className="config__item">
+                  <div className="config__item_content">
+                    <input
+                      placeholder="enter device's id"
+                      value={wifiDeviceId}
+                      onChange={handleWifiDevice}
+                      className="config__item_input"
+                    />
+                    <input
+                      placeholder="enter wifi name"
+                      value={ssid}
+                      onChange={handleSSID}
+                      className="config__item_input"
+                    />
+                    <input
+                      placeholder="enter wifi password"
+                      value={password}
+                      onChange={handlePassword}
+                      className="config__item_input"
+                    />
+                  </div>
+                  <div className="config__item_btn" onClick={handleConfigWifi}>
+                    CONFIG NOW
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="header">
         <div className="header__content">
           <div className="header__headline">
@@ -512,10 +620,10 @@ const Admin = () => {
                     onChange={(e) => setOwner(e.target.value)}
                     className="create__owner"
                   />
-                  <button
-                    className="item__config_btn"
-                    onClick={handleConfigWifi}>
-                    CONFIG NOW
+                </div>
+                <div className="create__btn_container">
+                  <button className="create__btn" onClick={handleAddDevice}>
+                    <p className="create__btn_icon">+</p>
                   </button>
                   <div className="import__btn" onClick={handleButtonClick}>
                     <FaFileImport className="import__btn_icon" />
@@ -554,37 +662,41 @@ const Admin = () => {
                   className="create__owner"
                 />
               </div>
-              <div className="item__pri">
-                <div className="item__pri_content">
-                  <div className="item__pri_input_container">
-                    <input
-                      placeholder="enter device's id"
-                      value={priDeviceId}
-                      onChange={handlePriDevice}
-                      className="item__pri_input"
-                    />
-                  </div>
-                  <div className="item__pri_list">
-                    {priArray.map((item, index) => (
-                      <div key={index} className="pri__item">
-                        <input
-                          type="radio"
-                          id={item.pri}
-                          name="priorityGroup"
-                          className="pri__item_checkbox"
-                          onChange={() => handleRadioChange(item.pri)}
-                        />
-                        <label className="pri__item_title">
-                          {item.priName}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                  <button
-                    className="item__config_btn"
-                    onClick={handleConfigPri}>
-                    CONFIG NOW
-                  </button>
+              <div className="create__btn_container">
+                <button className="create__btn" onClick={handleAddDevice}>
+                  <p className="create__btn_icon">+</p>
+                </button>
+                <div className="import__btn" onClick={handleButtonClick}>
+                  <FaFileImport className="import__btn_icon" />
+                </div>
+                <input
+                  type="file"
+                  accept=".xlsx, .xls"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                  onChange={handleFileChange}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="header__search">
+            <div className="search__container">
+              <div className="search_box">
+                <input
+                  type="text"
+                  placeholder="search for device"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <div className="search__btn" onClick={handleSearch}>
+                  <p className="search__btn_icon">
+                    <FaSearch />
+                  </p>
+                </div>
+                <div className="clear__btn" onClick={() => setSearchQuery("")}>
+                  <p className="clear__btn_icon">
+                    <FaChevronLeft />
+                  </p>
                 </div>
               </div>
             </div>
@@ -619,6 +731,7 @@ const Admin = () => {
         <div className="device__list">
           {topics.map((item, index) => (
             <div
+              onClick={() => handleGetInfo(item)}
               className={
                 emergency &&
                 informationMessages[item] &&
@@ -892,12 +1005,7 @@ const Admin = () => {
                   </div>
                 </div>
               ) : (
-                <div className="welcome">
-                  <div className="welcome__content">
-                    <p className="welcome__text">Connecting to device</p>
-                    <p className="welcome__text">Please wait a moment</p>
-                  </div>
-                </div>
+                <></>
               )}
               {emergency || test ? (
                 <></>

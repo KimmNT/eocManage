@@ -113,14 +113,13 @@ const HomePage = () => {
       console.log("Connected to MQTT broker");
       // Subscribe to each topic in the state
       deviceInfo.forEach((topic) => {
-        // client.subscribe(topic.deviceInfoId, (err) => {
-        //   if (err) {
-        //     console.error(`Error subscribing to topic ${topic}:`, err);
-        //   } else {
-        //     console.log(`Subscribed to topic: ${topic}`);
-        //   }
-        // });
-        client.subscribe(`broker/message/listener/device`);
+        client.subscribe(topic.deviceInfoId, (err) => {
+          if (err) {
+            console.error(`Error subscribing to topic ${topic}:`, err);
+          } else {
+            console.log(`Subscribed to topic: ${topic}`);
+          }
+        });
       });
     });
 
@@ -270,8 +269,8 @@ const HomePage = () => {
     client.on("connect", () => {
       console.log("Connected to MQTT broker");
 
-      // const topic = `device/${wifiDeviceId}/cmd`;
-      const topic = `device/n_${wifiDeviceId}`;
+      const topic = `device/${wifiDeviceId}/cmd`;
+      // const topic = `device/n_${wifiDeviceId}`;
       const payload = `{
         "type": "wifi",
         "deviceId": "n_123456",
@@ -306,8 +305,8 @@ const HomePage = () => {
     client.on("connect", () => {
       console.log("Connected to MQTT broker");
 
-      // const topic = `device/${priDeviceId}/cmd`;
-      const topic = `device/n_${priDeviceId}`;
+      const topic = `device/${priDeviceId}/cmd`;
+      // const topic = `device/n_${priDeviceId}`;
       const payload = ` {
         "type": "priority",
         "deviceId": "n_123456",
@@ -449,15 +448,13 @@ const HomePage = () => {
                   <>
                     <div
                       className="config__icon"
-                      onClick={() => setWifiConfig(false)}
-                    >
+                      onClick={() => setWifiConfig(false)}>
                       <FaWifi className="icon" />
                     </div>
                     <div className="config__line_vertical"></div>
                     <div
                       className="config__icon active"
-                      onClick={() => setWifiConfig(true)}
-                    >
+                      onClick={() => setWifiConfig(true)}>
                       <FaThList className="icon" />
                     </div>
                   </>
@@ -465,15 +462,13 @@ const HomePage = () => {
                   <>
                     <div
                       className="config__icon active"
-                      onClick={() => setWifiConfig(false)}
-                    >
+                      onClick={() => setWifiConfig(false)}>
                       <FaWifi className="icon" />
                     </div>
                     <div className="config__line_vertical"></div>
                     <div
                       className="config__icon"
-                      onClick={() => setWifiConfig(true)}
-                    >
+                      onClick={() => setWifiConfig(true)}>
                       <FaThList className="icon" />
                     </div>
                   </>
@@ -698,8 +693,7 @@ const HomePage = () => {
                       informationMessages[foundDevice.deviceInfoId].id
                   ? "device test__alert"
                   : "device"
-              }
-            >
+              }>
               <p className="device__name">
                 {foundDevice.deviceInfoOwner} <br />
                 {foundDevice.deviceInfoId.substring(7, 12)}
@@ -1448,8 +1442,7 @@ const HomePage = () => {
               ) : (
                 <button
                   className="device_detele"
-                  onClick={() => handleDeteleFindDevice(foundDevice)}
-                >
+                  onClick={() => handleDeteleFindDevice(foundDevice)}>
                   x
                 </button>
               )}
@@ -1472,12 +1465,10 @@ const HomePage = () => {
                     ? "device test__alert"
                     : "device"
                 }
-                key={index}
-              >
+                key={index}>
                 <div
-                  onClick={() => handleReceivedInfo(item.deviceInfoId)}
-                  className="device__name"
-                >
+                  // onClick={() => handleReceivedInfo(item.deviceInfoId)}
+                  className="device__name">
                   {item.deviceInfoOwner} <br />
                   {item.deviceInfoId.substring(7, 12)}
                 </div>
@@ -2216,8 +2207,7 @@ const HomePage = () => {
                 ) : (
                   <button
                     className="device_detele"
-                    onClick={() => handleDeleteDevice(index)}
-                  >
+                    onClick={() => handleDeleteDevice(index)}>
                     x
                   </button>
                 )}

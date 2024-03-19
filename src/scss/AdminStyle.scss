@@ -45,9 +45,215 @@ body {
   position: relative;
   min-height: 100vh;
   background-color: $backGround;
-  font-family: Rale;
   padding-bottom: 10rem;
   z-index: 0;
+  width: 100%;
+  .count__deivce {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    font-weight: 600;
+    font-size: 2rem;
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    background-color: $secondary;
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    color: $light;
+    z-index: 3;
+    @media (max-width: $mobileMax) {
+      font-size: 1.5rem;
+    }
+    .count__number {
+      font-size: 3rem;
+      @media (max-width: $mobileMax) {
+        font-size: 2rem;
+      }
+    }
+  }
+  .setting__container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 5;
+    .setting__content {
+      position: fixed;
+      right: 0;
+      height: 100%;
+      &:hover {
+        transition: $transition;
+        .setting__config {
+          right: 0;
+          transition: $transition;
+        }
+      }
+      .setting__icon {
+        position: absolute;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: -1;
+        background-color: transparent;
+        border: 0.2rem solid $secondary;
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: $transition;
+        .icon {
+          font-size: 2rem;
+          color: $secondary;
+        }
+      }
+      .setting__config {
+        position: fixed;
+        bottom: 0;
+        right: -100rem;
+        height: 60rem;
+        background-color: $light;
+        transition: $transition;
+        box-shadow: $boxShadow;
+        // padding: 3rem 4rem;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        border-top-left-radius: 1rem;
+        @media (max-width: $mobileMax) {
+          // height: 85%;
+        }
+        .config {
+          width: 100%;
+          font-size: 5rem;
+          text-align: center;
+          padding: 1rem 0;
+          color: $light;
+          text-transform: uppercase;
+          transition: $transition;
+          height: 7rem;
+          &.active {
+            background-color: #0d9276;
+          }
+        }
+        .config__content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 5rem;
+          padding-bottom: 5rem;
+          padding: 3rem 4rem;
+          .config__nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            .config__icon {
+              background-color: $light;
+              padding: 0.8rem 3rem;
+              border-radius: 1rem;
+              color: $light;
+              cursor: pointer;
+              .icon {
+                font-size: 2.5rem;
+                color: $secondary;
+              }
+              &.active {
+                background-color: $secondary;
+                .icon {
+                  font-size: 2.5rem;
+                  color: $light;
+                }
+              }
+            }
+            .config__line_vertical {
+              height: 4rem;
+              width: 0.3rem;
+              background-color: $dark;
+            }
+          }
+          .config__item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            background-color: $backGround;
+            padding: 1.5rem 2rem;
+            border-radius: 1rem;
+            box-shadow: $boxShadow;
+            @media (max-width: $mobileMax) {
+              padding: 2rem 1.5rem;
+            }
+            .config__item_content {
+              display: flex;
+              flex-direction: column;
+              gap: 2rem;
+              input {
+                width: 35rem;
+                outline: none;
+                border: none;
+                border-bottom: 0.2rem solid $dark;
+                font-size: 2rem;
+                padding: 0.5rem 1rem;
+                background-color: transparent;
+                @media (max-width: $mobileMax) {
+                  width: 27rem;
+                }
+              }
+            }
+            .config__item_list {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              flex-wrap: wrap;
+              width: 35rem;
+              gap: 2rem;
+              @media (max-width: $mobileMax) {
+                width: 27rem;
+              }
+              .item {
+                width: 45%;
+                background-color: #c9c8c5;
+                display: flex;
+                justify-content: center;
+                padding: 1rem 2rem;
+                border-radius: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 2rem;
+                cursor: pointer;
+                @media (max-width: $mobileMax) {
+                  width: 45%;
+                  padding: 0.5rem 1rem;
+                }
+                .item__lable {
+                  font-size: 1.2rem;
+                  font-weight: 900;
+                  color: $dark;
+                }
+              }
+            }
+            .config__item_btn {
+              background-color: $secondary;
+              width: 100%;
+              text-align: center;
+              padding: 1rem 0;
+              font-size: 1.8rem;
+              font-weight: 600;
+              color: $light;
+              border-radius: 1rem;
+              cursor: pointer;
+              @media (max-width: $mobileMax) {
+                font-size: 1.5rem;
+                width: 100%;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   .header {
     position: fixed;
     width: 100%;
