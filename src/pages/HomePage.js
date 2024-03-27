@@ -270,10 +270,7 @@ const HomePage = () => {
       console.log("Connected to MQTT broker");
 
       const topic = `device/${wifiDeviceId}/cmd`;
-<<<<<<< HEAD
-=======
       // const topic = `device/n_${wifiDeviceId}`;
->>>>>>> b8b3774530dc1140838d28c7c74db3742068dbed
       const payload = `{
         "type": "wifi",
         "deviceId": "n_123456",
@@ -309,10 +306,7 @@ const HomePage = () => {
       console.log("Connected to MQTT broker");
 
       const topic = `device/${priDeviceId}/cmd`;
-<<<<<<< HEAD
-=======
       // const topic = `device/n_${priDeviceId}`;
->>>>>>> b8b3774530dc1140838d28c7c74db3742068dbed
       const payload = ` {
         "type": "priority",
         "deviceId": "n_123456",
@@ -454,13 +448,15 @@ const HomePage = () => {
                   <>
                     <div
                       className="config__icon"
-                      onClick={() => setWifiConfig(false)}>
+                      onClick={() => setWifiConfig(false)}
+                    >
                       <FaWifi className="icon" />
                     </div>
                     <div className="config__line_vertical"></div>
                     <div
                       className="config__icon active"
-                      onClick={() => setWifiConfig(true)}>
+                      onClick={() => setWifiConfig(true)}
+                    >
                       <FaThList className="icon" />
                     </div>
                   </>
@@ -468,13 +464,15 @@ const HomePage = () => {
                   <>
                     <div
                       className="config__icon active"
-                      onClick={() => setWifiConfig(false)}>
+                      onClick={() => setWifiConfig(false)}
+                    >
                       <FaWifi className="icon" />
                     </div>
                     <div className="config__line_vertical"></div>
                     <div
                       className="config__icon"
-                      onClick={() => setWifiConfig(true)}>
+                      onClick={() => setWifiConfig(true)}
+                    >
                       <FaThList className="icon" />
                     </div>
                   </>
@@ -699,7 +697,8 @@ const HomePage = () => {
                       informationMessages[foundDevice.deviceInfoId].id
                   ? "device test__alert"
                   : "device"
-              }>
+              }
+            >
               <p className="device__name">
                 {foundDevice.deviceInfoOwner} <br />
                 {foundDevice.deviceInfoId.substring(7, 12)}
@@ -1448,7 +1447,8 @@ const HomePage = () => {
               ) : (
                 <button
                   className="device_detele"
-                  onClick={() => handleDeteleFindDevice(foundDevice)}>
+                  onClick={() => handleDeteleFindDevice(foundDevice)}
+                >
                   x
                 </button>
               )}
@@ -1471,10 +1471,12 @@ const HomePage = () => {
                     ? "device test__alert"
                     : "device"
                 }
-                key={index}>
+                key={index}
+              >
                 <div
                   // onClick={() => handleReceivedInfo(item.deviceInfoId)}
-                  className="device__name">
+                  className="device__name"
+                >
                   {item.deviceInfoOwner} <br />
                   {item.deviceInfoId.substring(7, 12)}
                 </div>
@@ -2213,7 +2215,8 @@ const HomePage = () => {
                 ) : (
                   <button
                     className="device_detele"
-                    onClick={() => handleDeleteDevice(index)}>
+                    onClick={() => handleDeleteDevice(index)}
+                  >
                     x
                   </button>
                 )}

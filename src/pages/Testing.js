@@ -4,11 +4,9 @@ import * as XLSX from "xlsx";
 import "../scss/Test.scss";
 
 //ICONS
-<<<<<<< HEAD
-import { FaBars, FaKey, FaPlus, FaWifi } from "react-icons/fa";
-=======
 import {
   FaBars,
+  FaKey,
   FaNetworkWired,
   FaPlug,
   FaPlus,
@@ -16,7 +14,6 @@ import {
   FaSimCard,
   FaWifi,
 } from "react-icons/fa";
->>>>>>> b8b3774530dc1140838d28c7c74db3742068dbed
 import { FaThList } from "react-icons/fa";
 import { FaFireAlt } from "react-icons/fa";
 import { FaRegCheckCircle } from "react-icons/fa";
@@ -318,24 +315,11 @@ const Testing = () => {
       const topic = `device/${priDeviceId}/cmd`;
       // const topic = `device/n_${priDeviceId}`;
       const payload = ` {
-<<<<<<< HEAD
-        "type": "config",
-        "deviceId": "n_123456",
-        "data": {
-          "host":"14.225.197.82",
-          "ip":"14.225.197.82",
-          "port":"61285",
-          "username":"eocBroker",
-          "password":"Vtc@2023"
-        }
-      }`;
-=======
           "type": "priority",
           "deviceId": "n_123456",
           "data": { "value": "[${selectedOption}]"},
         }`;
 
->>>>>>> b8b3774530dc1140838d28c7c74db3742068dbed
       // Publish the message
       client.publish(topic, payload, (err) => {
         // Handling the result of the publish
@@ -472,27 +456,24 @@ const Testing = () => {
                   <>
                     <div
                       className="config__icon"
-                      onClick={() => setWifiConfig(false)}>
+                      onClick={() => setWifiConfig(false)}
+                    >
                       <FaWifi className="icon" />
                     </div>
                     <div className="config__line_vertical"></div>
                     <div
                       className="config__icon active"
-<<<<<<< HEAD
                       onClick={() => setWifiConfig(true)}
                     >
-                      <FaKey className="icon" />
-=======
-                      onClick={() => setWifiConfig(true)}>
                       <FaThList className="icon" />
->>>>>>> b8b3774530dc1140838d28c7c74db3742068dbed
                     </div>
                   </>
                 ) : (
                   <>
                     <div
                       className="config__icon active"
-                      onClick={() => setWifiConfig(false)}>
+                      onClick={() => setWifiConfig(false)}
+                    >
                       <FaWifi className="icon" />
                     </div>
                     <div className="config__line_vertical"></div>
@@ -730,7 +711,8 @@ const Testing = () => {
                   ? "device test__alert"
                   : "device"
               }
-              key={index}>
+              key={index}
+            >
               {informationMessages[item.deviceInfoId] ? (
                 <div className="device__headline">
                   <p className="device__name">
@@ -1576,7 +1558,8 @@ const Testing = () => {
               )}
               <button
                 className="device_detele"
-                onClick={() => handleDeleteDevice(index)}>
+                onClick={() => handleDeleteDevice(index)}
+              >
                 x
               </button>
             </div>

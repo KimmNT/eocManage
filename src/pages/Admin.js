@@ -354,7 +354,8 @@ const Admin = () => {
       client.on("connect", () => {
         console.log("Connected to MQTT broker");
 
-        const topic = `device/${priDeviceId}/cmd`;
+        // const topic = `device/${priDeviceId}/cmd`;
+        const topic = `device/n_${priDeviceId}`;
         const payload = ` {
           "type": "priority",
           "deviceId": "n_123456",
@@ -498,13 +499,15 @@ const Admin = () => {
                   <>
                     <div
                       className="config__icon"
-                      onClick={() => setWifiConfig(false)}>
+                      onClick={() => setWifiConfig(false)}
+                    >
                       <FaWifi className="icon" />
                     </div>
                     <div className="config__line_vertical"></div>
                     <div
                       className="config__icon active"
-                      onClick={() => setWifiConfig(true)}>
+                      onClick={() => setWifiConfig(true)}
+                    >
                       <FaThList className="icon" />
                     </div>
                   </>
@@ -512,13 +515,15 @@ const Admin = () => {
                   <>
                     <div
                       className="config__icon active"
-                      onClick={() => setWifiConfig(false)}>
+                      onClick={() => setWifiConfig(false)}
+                    >
                       <FaWifi className="icon" />
                     </div>
                     <div className="config__line_vertical"></div>
                     <div
                       className="config__icon"
-                      onClick={() => setWifiConfig(true)}>
+                      onClick={() => setWifiConfig(true)}
+                    >
                       <FaThList className="icon" />
                     </div>
                   </>
@@ -702,6 +707,16 @@ const Admin = () => {
             </div>
           </div>
         </div>
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: 20,
+            fontWeight: "bold",
+            paddingBottom: 30,
+          }}
+        >
+          1. Open F12 <br /> 2. Click device ID to get "info"
+        </p>
         {emergency ? (
           <div className="fire">
             <FaFireAlt /> <p className="alert__id">{emergencyMessage}</p>
@@ -743,7 +758,8 @@ const Admin = () => {
                   ? "device test__alert"
                   : "device "
               }
-              key={index}>
+              key={index}
+            >
               <p className="device__name">{item}</p>
               <p className="device__name" style={{ marginTop: ".5rem" }}>
                 Count Restart: {countReset}
@@ -753,7 +769,8 @@ const Admin = () => {
                   display: "flex",
                   margin: ".5rem 0rem",
                   gap: ".5rem",
-                }}>
+                }}
+              >
                 <p className="device__name">Count LAN:{countLAN}</p>
                 <p className="device__name">count WIFI:{countWifi}</p>
                 <p className="device__name">count SIM:{countSIM}</p>
@@ -1012,7 +1029,8 @@ const Admin = () => {
               ) : (
                 <button
                   className="device_detele"
-                  onClick={() => handleDeleteDevice(index)}>
+                  onClick={() => handleDeleteDevice(index)}
+                >
                   x
                 </button>
               )}
