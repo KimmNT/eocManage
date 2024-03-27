@@ -4,7 +4,7 @@ import * as XLSX from "xlsx";
 import "../scss/Test.scss";
 
 //ICONS
-import { FaBars, FaPlus, FaWifi } from "react-icons/fa";
+import { FaBars, FaKey, FaPlus, FaWifi } from "react-icons/fa";
 import { FaThList } from "react-icons/fa";
 import { FaFireAlt } from "react-icons/fa";
 import { FaRegCheckCircle } from "react-icons/fa";
@@ -36,11 +36,11 @@ const Testing = () => {
   const [devicePreID, setDevicePreId] = useState("");
   const [owner, setOwner] = useState("");
   const [deviceInfo, setDeviceInfo] = useState([]);
-  const [wifiDeviceId, setWifiDeviceId] = useState("");
+  const [wifiDeviceId, setWifiDeviceId] = useState("B00");
   const [ssid, setSSID] = useState("");
   const [password, setPassword] = useState("");
   const [selectedOption, setSelectedOption] = useState(null);
-  const [priDeviceId, setPriDeviceId] = useState("");
+  const [priDeviceId, setPriDeviceId] = useState("B00");
   //Find Device State
   const [searchQuery, setSearchQuery] = useState("");
   const [foundDevice, setFoundDevice] = useState(null);
@@ -291,7 +291,7 @@ const Testing = () => {
         client.end();
       });
     });
-    setWifiDeviceId("");
+    setWifiDeviceId("B00");
     setConfig(true);
   };
 
@@ -305,9 +305,15 @@ const Testing = () => {
       // const topic = `device/${priDeviceId}/cmd`;
       const topic = `device/n_${priDeviceId}`;
       const payload = ` {
-        "type": "priority",
+        "type": "config",
         "deviceId": "n_123456",
-        "data": { "value": "[${selectedOption}]"},
+        "data": {
+          "host":"14.225.197.82",
+          "ip":"14.225.197.82",
+          "port":"61285",
+          "username":"eocBroker",
+          "password":"Vtc@2023"
+        }
       }`;
       // Publish the message
       client.publish(topic, payload, (err) => {
@@ -324,7 +330,7 @@ const Testing = () => {
         client.end();
       });
     });
-    setPriDeviceId("");
+    setPriDeviceId("B00");
     setConfig(true);
   };
 
@@ -454,7 +460,7 @@ const Testing = () => {
                       className="config__icon active"
                       onClick={() => setWifiConfig(true)}
                     >
-                      <FaThList className="icon" />
+                      <FaKey className="icon" />
                     </div>
                   </>
                 ) : (
@@ -466,11 +472,17 @@ const Testing = () => {
                       <FaWifi className="icon" />
                     </div>
                     <div className="config__line_vertical"></div>
-                    <div
+                    {/* <div
                       className="config__icon"
                       onClick={() => setWifiConfig(true)}
                     >
                       <FaThList className="icon" />
+                    </div> */}
+                    <div
+                      className="config__icon"
+                      onClick={() => setWifiConfig(true)}
+                    >
+                      <FaKey className="icon" />
                     </div>
                   </>
                 )}
@@ -485,7 +497,7 @@ const Testing = () => {
                       className="config__item_input"
                     />
                   </div>
-                  <div className="config__item_list">
+                  {/* <div className="config__item_list">
                     {priArray.map((item, index) => (
                       <div key={index} className="item">
                         <input
@@ -498,7 +510,7 @@ const Testing = () => {
                         <label className="item__lable">{item.priName}</label>
                       </div>
                     ))}
-                  </div>
+                  </div> */}
                   <div className="config__item_btn" onClick={handleConfigPri}>
                     CONFIG NOW
                   </div>

@@ -36,7 +36,7 @@ const HomePage = () => {
   const [devicePreID, setDevicePreId] = useState("");
   const [owner, setOwner] = useState("");
   const [deviceInfo, setDeviceInfo] = useState([]);
-  const [wifiDeviceId, setWifiDeviceId] = useState("");
+  const [wifiDeviceId, setWifiDeviceId] = useState("B00");
   const [ssid, setSSID] = useState("");
   const [password, setPassword] = useState("");
   const [selectedOption, setSelectedOption] = useState(null);
@@ -113,14 +113,13 @@ const HomePage = () => {
       console.log("Connected to MQTT broker");
       // Subscribe to each topic in the state
       deviceInfo.forEach((topic) => {
-        // client.subscribe(topic.deviceInfoId, (err) => {
-        //   if (err) {
-        //     console.error(`Error subscribing to topic ${topic}:`, err);
-        //   } else {
-        //     console.log(`Subscribed to topic: ${topic}`);
-        //   }
-        // });
-        client.subscribe(`broker/message/listener/device`);
+        client.subscribe(topic.deviceInfoId, (err) => {
+          if (err) {
+            console.error(`Error subscribing to topic ${topic}:`, err);
+          } else {
+            console.log(`Subscribed to topic: ${topic}`);
+          }
+        });
       });
     });
 
@@ -270,8 +269,7 @@ const HomePage = () => {
     client.on("connect", () => {
       console.log("Connected to MQTT broker");
 
-      // const topic = `device/${wifiDeviceId}/cmd`;
-      const topic = `device/n_${wifiDeviceId}`;
+      const topic = `device/${wifiDeviceId}/cmd`;
       const payload = `{
         "type": "wifi",
         "deviceId": "n_123456",
@@ -306,8 +304,7 @@ const HomePage = () => {
     client.on("connect", () => {
       console.log("Connected to MQTT broker");
 
-      // const topic = `device/${priDeviceId}/cmd`;
-      const topic = `device/n_${priDeviceId}`;
+      const topic = `device/${priDeviceId}/cmd`;
       const payload = ` {
         "type": "priority",
         "deviceId": "n_123456",
