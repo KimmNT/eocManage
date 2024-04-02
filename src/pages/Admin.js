@@ -4,7 +4,14 @@ import "../scss/AdminStyle.scss";
 import * as XLSX from "xlsx";
 
 //ICONS
-import { FaBars, FaInfo, FaPlus, FaWifi } from "react-icons/fa";
+import {
+  FaBars,
+  FaEthernet,
+  FaInfo,
+  FaPlus,
+  FaSimCard,
+  FaWifi,
+} from "react-icons/fa";
 import { FaThList } from "react-icons/fa";
 import { FaFireAlt } from "react-icons/fa";
 import { FaRegCheckCircle } from "react-icons/fa";
@@ -126,10 +133,8 @@ const Admin = () => {
 
         // Check the type and update the state accordingly
         if (receivedMessage.type === "info") {
-          setInformationMessages((prevMessages) => ({
-            ...prevMessages,
-            receivedMessage,
-          }));
+          console.log("yeahhu");
+          setInformationMessages(receivedMessage);
         }
         //FOR EMERGENCY TYPE
         if (receivedMessage.type === "emergency") {
@@ -300,13 +305,6 @@ const Admin = () => {
       return newTopic;
     });
   };
-  //HANDLE DELETE DEVICE WHEN FOUND
-  const handleDeteleFindDevice = (deviceId) => {
-    setDeviceInfo((preDevice) =>
-      preDevice.filter((device) => device.deviceInfoId !== deviceId)
-    );
-    setSearchQuery("");
-  };
 
   //HANDLE WIFI CONFIGURATION
   const handleConfigWifi = () => {
@@ -354,7 +352,8 @@ const Admin = () => {
       client.on("connect", () => {
         console.log("Connected to MQTT broker");
 
-        const topic = `device/${priDeviceId}/cmd`;
+        // const topic = `device/${priDeviceId}/cmd`;
+        const topic = `device/n_${priDeviceId}`;
         const payload = ` {
           "type": "priority",
           "deviceId": "n_123456",
@@ -475,10 +474,10 @@ const Admin = () => {
 
   return (
     <div className="admin_container">
-      <div className="count__deivce">
+      {/* <div className="count__deivce">
         <p className="count__number">{deviceInfo.length}</p>{" "}
         {deviceInfo.length > 1 ? <p>devices</p> : <p>device</p>}
-      </div>
+      </div> */}
       <div className="setting__container">
         <div className="setting__content">
           <div className="setting__icon">
@@ -700,8 +699,17 @@ const Admin = () => {
                 </div>
               </div>
             </div>
+            {/* <p
+              style={{
+                fontSize: 20,
+                fontWeight: "bold",
+              }}
+            >
+              1. Open F12 <br /> 2. Click device ID to get "info"
+            </p> */}
           </div>
         </div>
+
         {emergency ? (
           <div className="fire">
             <FaFireAlt /> <p className="alert__id">{emergencyMessage}</p>
@@ -758,255 +766,6 @@ const Admin = () => {
                 <p className="device__name">count WIFI:{countWifi}</p>
                 <p className="device__name">count SIM:{countSIM}</p>
               </div>
-              {informationMessages[item] ? (
-                <div className="device__info">
-                  {/* VERSION */}
-                  <div className="info__version">
-                    <p className="info__name">Version </p>
-                    <p className="info__value">
-                      {informationMessages[item].data.FWver}
-                    </p>
-                  </div>
-                  <div className="line"></div>
-                  {/* CONNECTION TYPE - PRIORITY */}
-                  <div className="info__connection">
-                    <p className="info__name">Connection type</p>
-                    <div className="info__conpri">
-                      {JSON.stringify(informationMessages[item].data.CONpri) ===
-                      JSON.stringify([1, 2, 3]) ? (
-                        <>
-                          {informationMessages[item].data.CONtyp === 1 ? (
-                            <div className="conpri__list">
-                              <p className="info__value active">SIM</p>
-                              <p className="info__value ">LAN</p>
-                              <p className="info__value ">WiFi</p>
-                            </div>
-                          ) : informationMessages[item].data.CONtyp === 2 ? (
-                            <div className="conpri__list">
-                              <p className="info__value ">SIM</p>
-                              <p className="info__value active">LAN</p>
-                              <p className="info__value ">WiFi</p>
-                            </div>
-                          ) : (
-                            <div className="conpri__list">
-                              <p className="info__value ">SIM</p>
-                              <p className="info__value ">LAN</p>
-                              <p className="info__value active">WiFi</p>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                      {JSON.stringify(informationMessages[item].data.CONpri) ===
-                      JSON.stringify([1, 3, 2]) ? (
-                        <>
-                          {informationMessages[item].data.CONtyp === 1 ? (
-                            <div className="conpri__list">
-                              <p className="info__value active">SIM</p>
-                              <p className="info__value ">WiFi</p>
-                              <p className="info__value ">LAN</p>
-                            </div>
-                          ) : informationMessages[item].data.CONtyp === 2 ? (
-                            <div className="conpri__list">
-                              <p className="info__value ">SIM</p>
-                              <p className="info__value ">WiFi</p>
-                              <p className="info__value active">LAN</p>
-                            </div>
-                          ) : (
-                            <div className="conpri__list">
-                              <p className="info__value ">SIM</p>
-                              <p className="info__value active">WiFi</p>
-                              <p className="info__value ">LAN</p>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                      {JSON.stringify(informationMessages[item].data.CONpri) ===
-                      JSON.stringify([2, 1, 3]) ? (
-                        <>
-                          {informationMessages[item].data.CONtyp === 2 ? (
-                            <div className="conpri__list">
-                              <p className="info__value active">LAN</p>
-                              <p className="info__value ">SIM</p>
-                              <p className="info__value ">WiFi</p>
-                            </div>
-                          ) : informationMessages[item].data.CONtyp === 1 ? (
-                            <div className="conpri__list">
-                              <p className="info__value ">LAN</p>
-                              <p className="info__value active">SIM</p>
-                              <p className="info__value ">WiFi</p>
-                            </div>
-                          ) : (
-                            <div className="conpri__list">
-                              <p className="info__value ">LAN</p>
-                              <p className="info__value ">SIM</p>
-                              <p className="info__value active">WiFi</p>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                      {JSON.stringify(informationMessages[item].data.CONpri) ===
-                      JSON.stringify([2, 3, 1]) ? (
-                        <>
-                          {informationMessages[item].data.CONtyp === 1 ? (
-                            <div className="conpri__list">
-                              <p className="info__value ">LAN</p>
-                              <p className="info__value ">WiFi</p>
-                              <p className="info__value active">SIM</p>
-                            </div>
-                          ) : informationMessages[item].data.CONtyp === 2 ? (
-                            <div className="conpri__list">
-                              <p className="info__value active">LAN</p>
-                              <p className="info__value ">WiFi</p>
-                              <p className="info__value ">SIM</p>
-                            </div>
-                          ) : (
-                            <div className="conpri__list">
-                              <p className="info__value ">LAN</p>
-                              <p className="info__value active">WiFi</p>
-                              <p className="info__value ">SIM</p>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                      {JSON.stringify(informationMessages[item].data.CONpri) ===
-                      JSON.stringify([3, 1, 2]) ? (
-                        <>
-                          {informationMessages[item].data.CONtyp === 1 ? (
-                            <div className="conpri__list">
-                              <p className="info__value ">WiFi</p>
-                              <p className="info__value active">SIM</p>
-                              <p className="info__value ">LAN</p>
-                            </div>
-                          ) : informationMessages[item].data.CONtyp === 2 ? (
-                            <div className="conpri__list">
-                              <p className="info__value ">WiFi</p>
-                              <p className="info__value ">SIM</p>
-                              <p className="info__value active">LAN</p>
-                            </div>
-                          ) : (
-                            <div className="conpri__list">
-                              <p className="info__value active">WiFi</p>
-                              <p className="info__value ">SIM</p>
-                              <p className="info__value ">LAN</p>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                      {JSON.stringify(informationMessages[item].data.CONpri) ===
-                      JSON.stringify([3, 2, 1]) ? (
-                        <>
-                          {informationMessages[item].data.CONtyp === 1 ? (
-                            <div className="conpri__list">
-                              <p className="info__value ">WiFi</p>
-                              <p className="info__value ">LAN</p>
-                              <p className="info__value active">SIM</p>
-                            </div>
-                          ) : informationMessages[item].data.CONtyp === 2 ? (
-                            <div className="conpri__list">
-                              <p className="info__value ">WiFi</p>
-                              <p className="info__value active">LAN</p>
-                              <p className="info__value ">SIM</p>
-                            </div>
-                          ) : (
-                            <div className="conpri__list">
-                              <p className="info__value active">WiFi</p>
-                              <p className="info__value ">LAN</p>
-                              <p className="info__value ">SIM</p>
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                  </div>
-                  <div className="line"></div>
-                  {/* WiFi */}
-                  <div className="info__group">
-                    <div className="info__version">
-                      <p className="info__name">WiFi name: </p>
-                      <p className="info__value">
-                        {informationMessages[item].data.WIF.ssid}
-                      </p>
-                    </div>
-                    <div className="info__version">
-                      <p className="info__name">Password: </p>
-                      <p className="info__value  small__text">
-                        {informationMessages[item].data.WIF.password}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="line"></div>
-                  {/* CONNECTION MODE */}
-                  <div className="info__version">
-                    <p className="info__name">Connection Mode: </p>
-                    {informationMessages[item].data.BAT.percent > 0 &&
-                    informationMessages[item].data.BAT.percent <= 25 ? (
-                      <div className="info__value">
-                        <p className="bat low">
-                          <FaBatteryQuarter />
-                        </p>
-                        <span className="bat__per">
-                          {informationMessages[item].data.BAT.percent}%
-                        </span>
-                      </div>
-                    ) : informationMessages[item].data.BAT.percent > 25 &&
-                      informationMessages[item].data.BAT.percent <= 50 ? (
-                      <div className="info__value">
-                        <p className="bat half__full">
-                          <FaBatteryHalf />
-                        </p>
-                        <span className="bat__per">
-                          {informationMessages[item].data.BAT.percent}%
-                        </span>
-                      </div>
-                    ) : informationMessages[item].data.BAT.percent > 50 &&
-                      informationMessages[item].data.BAT.percent <= 75 ? (
-                      <div className="info__value">
-                        <p className="bat quar__full">
-                          <FaBatteryThreeQuarters />
-                        </p>
-                        <span className="bat__per">
-                          {informationMessages[item].data.BAT.percent}%
-                        </span>
-                      </div>
-                    ) : informationMessages[item].data.BAT.percent > 75 &&
-                      informationMessages[item].data.BAT.percent <= 100 ? (
-                      <div className="info__value">
-                        <p className="bat full">
-                          <FaBatteryFull />
-                        </p>
-                        <span className="bat__per">
-                          {informationMessages[item].data.BAT.percent}%
-                        </span>
-                      </div>
-                    ) : (
-                      <p className="info__value">AC</p>
-                    )}
-                  </div>
-                  {/* SD CARD */}
-                  <div className="info__version">
-                    <p className="info__name">SD Card </p>
-                    {isSD ? (
-                      <FaCheck className="info__value checked" />
-                    ) : (
-                      <FaTimes className="info__value not__checked" />
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <></>
-              )}
               {emergency || test ? (
                 <></>
               ) : (
@@ -1018,9 +777,92 @@ const Admin = () => {
               )}
             </div>
           ))}
-          <div></div>
         </div>
-        <div></div>
+        {informationMessages.deviceId ? (
+          <div className="deivce__info">
+            <div className="deivce__info_box">
+              <p className="deivce__info_text">
+                {informationMessages.deviceId}
+              </p>
+              <p className="deivce__info_text">
+                ver:{informationMessages.data.FW_version}
+              </p>
+            </div>
+            <div className="deivce__info_box">
+              <p className="deivce__info_text">
+                Priority: {informationMessages.data.conn_priority}
+              </p>
+              <p className="deivce__info_text">
+                Connected:
+                {informationMessages.data.conn_type === 1 ? (
+                  <>SIM</>
+                ) : informationMessages.data.conn_type === 2 ? (
+                  <>LAN</>
+                ) : (
+                  <>WiFi</>
+                )}
+              </p>
+            </div>
+            <div className="deivce__info_box">
+              <p className="deivce__info_text">
+                <FaEthernet />:
+                {informationMessages.data.LAN_state === 1 ? (
+                  <FaCheck />
+                ) : (
+                  <FaTimes />
+                )}
+              </p>
+              <p className="deivce__info_text">
+                <FaSimCard />:
+                {informationMessages.data.sim[0].status === 1 ? (
+                  <FaCheck />
+                ) : (
+                  <FaTimes />
+                )}
+                {/* {[informationMessages.data.sim[0].status]} */}
+              </p>
+              <p className="deivce__info_text">
+                <FaWifi />:
+                {informationMessages.data.wifi.status === 1 ? (
+                  <FaCheck />
+                ) : (
+                  <FaTimes />
+                )}
+              </p>
+              <div className="deivce__info_box more__left">
+                {informationMessages.data.wifi.ssid_name !== "" ? (
+                  <span className="deivce__info_text">
+                    "{informationMessages.data.wifi.ssid_name}"
+                  </span>
+                ) : (
+                  <span className="deivce__info_text">empty</span>
+                )}
+
+                {informationMessages.data.wifi.password !== "" ? (
+                  <span className="deivce__info_text">
+                    "{informationMessages.data.wifi.password}"
+                  </span>
+                ) : (
+                  <span className="deivce__info_text">empty</span>
+                )}
+              </div>
+            </div>
+            <div className="deivce__info_box">
+              {informationMessages.data.charge_type === 0 ? (
+                <p className="deivce__info_text">AC</p>
+              ) : (
+                <p className="deivce__info_text">
+                  BAT:
+                  <span className="device__percent">
+                    {informationMessages.data.battery.percentage}%
+                  </span>
+                </p>
+              )}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
