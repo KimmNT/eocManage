@@ -6,6 +6,7 @@ import "../scss/Test.scss";
 //ICONS
 import {
   FaBars,
+  FaKey,
   FaNetworkWired,
   FaPlug,
   FaPlus,
@@ -47,11 +48,11 @@ const Testing = () => {
   const [devicePreID, setDevicePreId] = useState("");
   const [owner, setOwner] = useState("");
   const [deviceInfo, setDeviceInfo] = useState([]);
-  const [wifiDeviceId, setWifiDeviceId] = useState("");
+  const [wifiDeviceId, setWifiDeviceId] = useState("B00");
   const [ssid, setSSID] = useState("");
   const [password, setPassword] = useState("");
   const [selectedOption, setSelectedOption] = useState(null);
-  const [priDeviceId, setPriDeviceId] = useState("");
+  const [priDeviceId, setPriDeviceId] = useState("B00");
   //Find Device State
   const [searchQuery, setSearchQuery] = useState("");
   const [foundDevice, setFoundDevice] = useState(null);
@@ -300,7 +301,7 @@ const Testing = () => {
         client.end();
       });
     });
-    setWifiDeviceId("");
+    setWifiDeviceId("B00");
     setConfig(true);
   };
 
@@ -334,7 +335,7 @@ const Testing = () => {
         client.end();
       });
     });
-    setPriDeviceId("");
+    setPriDeviceId("B00");
     setConfig(true);
   };
 
@@ -455,13 +456,15 @@ const Testing = () => {
                   <>
                     <div
                       className="config__icon"
-                      onClick={() => setWifiConfig(false)}>
+                      onClick={() => setWifiConfig(false)}
+                    >
                       <FaWifi className="icon" />
                     </div>
                     <div className="config__line_vertical"></div>
                     <div
                       className="config__icon active"
-                      onClick={() => setWifiConfig(true)}>
+                      onClick={() => setWifiConfig(true)}
+                    >
                       <FaThList className="icon" />
                     </div>
                   </>
@@ -469,14 +472,21 @@ const Testing = () => {
                   <>
                     <div
                       className="config__icon active"
-                      onClick={() => setWifiConfig(false)}>
+                      onClick={() => setWifiConfig(false)}
+                    >
                       <FaWifi className="icon" />
                     </div>
                     <div className="config__line_vertical"></div>
-                    <div
+                    {/* <div
                       className="config__icon"
                       onClick={() => setWifiConfig(true)}>
                       <FaThList className="icon" />
+                    </div> */}
+                    <div
+                      className="config__icon"
+                      onClick={() => setWifiConfig(true)}
+                    >
+                      <FaKey className="icon" />
                     </div>
                   </>
                 )}
@@ -491,7 +501,7 @@ const Testing = () => {
                       className="config__item_input"
                     />
                   </div>
-                  <div className="config__item_list">
+                  {/* <div className="config__item_list">
                     {priArray.map((item, index) => (
                       <div key={index} className="item">
                         <input
@@ -504,7 +514,7 @@ const Testing = () => {
                         <label className="item__lable">{item.priName}</label>
                       </div>
                     ))}
-                  </div>
+                  </div> */}
                   <div className="config__item_btn" onClick={handleConfigPri}>
                     CONFIG NOW
                   </div>
@@ -701,7 +711,8 @@ const Testing = () => {
                   ? "device test__alert"
                   : "device"
               }
-              key={index}>
+              key={index}
+            >
               {informationMessages[item.deviceInfoId] ? (
                 <div className="device__headline">
                   <p className="device__name">
@@ -1547,7 +1558,8 @@ const Testing = () => {
               )}
               <button
                 className="device_detele"
-                onClick={() => handleDeleteDevice(index)}>
+                onClick={() => handleDeleteDevice(index)}
+              >
                 x
               </button>
             </div>

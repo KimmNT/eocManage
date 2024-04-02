@@ -36,7 +36,7 @@ const HomePage = () => {
   const [devicePreID, setDevicePreId] = useState("");
   const [owner, setOwner] = useState("");
   const [deviceInfo, setDeviceInfo] = useState([]);
-  const [wifiDeviceId, setWifiDeviceId] = useState("");
+  const [wifiDeviceId, setWifiDeviceId] = useState("B00");
   const [ssid, setSSID] = useState("");
   const [password, setPassword] = useState("");
   const [selectedOption, setSelectedOption] = useState(null);
@@ -448,13 +448,15 @@ const HomePage = () => {
                   <>
                     <div
                       className="config__icon"
-                      onClick={() => setWifiConfig(false)}>
+                      onClick={() => setWifiConfig(false)}
+                    >
                       <FaWifi className="icon" />
                     </div>
                     <div className="config__line_vertical"></div>
                     <div
                       className="config__icon active"
-                      onClick={() => setWifiConfig(true)}>
+                      onClick={() => setWifiConfig(true)}
+                    >
                       <FaThList className="icon" />
                     </div>
                   </>
@@ -462,13 +464,15 @@ const HomePage = () => {
                   <>
                     <div
                       className="config__icon active"
-                      onClick={() => setWifiConfig(false)}>
+                      onClick={() => setWifiConfig(false)}
+                    >
                       <FaWifi className="icon" />
                     </div>
                     <div className="config__line_vertical"></div>
                     <div
                       className="config__icon"
-                      onClick={() => setWifiConfig(true)}>
+                      onClick={() => setWifiConfig(true)}
+                    >
                       <FaThList className="icon" />
                     </div>
                   </>
@@ -693,7 +697,8 @@ const HomePage = () => {
                       informationMessages[foundDevice.deviceInfoId].id
                   ? "device test__alert"
                   : "device"
-              }>
+              }
+            >
               <p className="device__name">
                 {foundDevice.deviceInfoOwner} <br />
                 {foundDevice.deviceInfoId.substring(7, 12)}
@@ -1442,7 +1447,8 @@ const HomePage = () => {
               ) : (
                 <button
                   className="device_detele"
-                  onClick={() => handleDeteleFindDevice(foundDevice)}>
+                  onClick={() => handleDeteleFindDevice(foundDevice)}
+                >
                   x
                 </button>
               )}
@@ -1465,10 +1471,12 @@ const HomePage = () => {
                     ? "device test__alert"
                     : "device"
                 }
-                key={index}>
+                key={index}
+              >
                 <div
                   // onClick={() => handleReceivedInfo(item.deviceInfoId)}
-                  className="device__name">
+                  className="device__name"
+                >
                   {item.deviceInfoOwner} <br />
                   {item.deviceInfoId.substring(7, 12)}
                 </div>
@@ -2207,7 +2215,8 @@ const HomePage = () => {
                 ) : (
                   <button
                     className="device_detele"
-                    onClick={() => handleDeleteDevice(index)}>
+                    onClick={() => handleDeleteDevice(index)}
+                  >
                     x
                   </button>
                 )}
