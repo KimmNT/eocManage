@@ -851,8 +851,7 @@ const Admin = () => {
                   ? "device test__alert"
                   : "device "
               }
-              key={index}
-            >
+              key={index}>
               <p className="device__name">{item}</p>
               <p className="device__name" style={{ marginTop: ".5rem" }}>
                 Count Restart: {countReset}
@@ -862,8 +861,7 @@ const Admin = () => {
                   display: "flex",
                   margin: ".5rem 0rem",
                   gap: ".5rem",
-                }}
-              >
+                }}>
                 <p className="device__name">Count LAN:{countLAN}</p>
                 <p className="device__name">count WIFI:{countWifi}</p>
                 <p className="device__name">count SIM:{countSIM}</p>
@@ -873,8 +871,7 @@ const Admin = () => {
               ) : (
                 <button
                   className="device_detele"
-                  onClick={() => handleDeleteDevice(index)}
-                >
+                  onClick={() => handleDeleteDevice(index)}>
                   x
                 </button>
               )}
@@ -944,6 +941,63 @@ const Admin = () => {
                   ) : (
                     <span className="deivce__info_text">empty</span>
                   )}
+            <div className="deivce__info_box">
+              <p className="deivce__info_text">
+                {informationMessages.deviceId}
+              </p>
+              <p className="deivce__info_text">
+                ver:{informationMessages.data.FW_version}
+              </p>
+            </div>
+            <div className="deivce__info_box">
+              <p className="deivce__info_text">
+                Priority: {informationMessages.data.conn_priority}
+              </p>
+              <p className="deivce__info_text">
+                Connected:
+                {informationMessages.data.conn_type === 1 ? (
+                  <>SIM</>
+                ) : informationMessages.data.conn_type === 2 ? (
+                  <>LAN</>
+                ) : (
+                  <>WiFi</>
+                )}
+              </p>
+            </div>
+            <div className="deivce__info_box">
+              <p className="deivce__info_text">
+                <FaEthernet />:
+                {informationMessages.data.LAN_state === 1 ? (
+                  <FaCheck />
+                ) : (
+                  <FaTimes />
+                )}
+              </p>
+              <p className="deivce__info_text">
+                <FaSimCard />:
+                {informationMessages.data.sim[0].status === 1 ? (
+                  <FaCheck />
+                ) : (
+                  <FaTimes />
+                )}
+                {/* {[informationMessages.data.sim[0].status]} */}
+              </p>
+              <p className="deivce__info_text">
+                <FaWifi />:
+                {informationMessages.data.wifi.status === 1 ? (
+                  <FaCheck />
+                ) : (
+                  <FaTimes />
+                )}
+              </p>
+              <div className="deivce__info_box more__left">
+                {informationMessages.data.wifi.ssid_name !== "" ? (
+                  <span className="deivce__info_text">
+                    "{informationMessages.data.wifi.ssid_name}"
+                  </span>
+                ) : (
+                  <span className="deivce__info_text">empty</span>
+                )}
 
                   {informationMessages.data.wifi.password !== "" ? (
                     <span className="deivce__info_text">
