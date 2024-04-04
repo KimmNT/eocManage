@@ -8,6 +8,8 @@ import {
   FaBars,
   FaEthernet,
   FaInfo,
+  FaKey,
+  FaPlug,
   FaPlus,
   FaSimCard,
   FaWifi,
@@ -63,7 +65,9 @@ const Admin = () => {
   //Check browser width
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   //Check config
-  const [wifiConfig, setWifiConfig] = useState(false);
+  const [wifiConfig, setWifiConfig] = useState(0);
+  //Change server
+  const [deviceIdServer, setDeviceIdServer] = useState("");
 
   const priArray = [
     { priName: "SIM-LAN-WiFi", pri: [1, 2, 3] },
@@ -472,6 +476,48 @@ const Admin = () => {
     });
   };
 
+  //HANDLE CHANGE SERVER
+  const handleConfigServer = () => {
+    if (deviceIdServer !== "") {
+      const client = mqtt.connect(brokerUrl, brokerConfig);
+      client.on("connect", () => {
+        console.log("Connected to MQTT broker");
+
+        // const topic = `device/${priDeviceId}/cmd`;
+        const topic = `device/n_${priDeviceId}`;
+        const payload = ` {
+          "type": "config",
+          "deviceId": "n_123456",
+          "data": {
+            "host":"14.225.197.82",
+            "ip":"14.225.197.82",
+            "port":"61285",
+            "username":"eocBroker",
+            "password":"Vtc@2023"
+          },
+        }`;
+
+        // Publish the message
+        client.publish(topic, payload, (err) => {
+          // Handling the result of the publish
+          if (err) {
+            console.error(`Error publishing message to topic ${topic}:`, err);
+          } else {
+            console.log(
+              `Published message to topic: ${topic} ${JSON.stringify(payload)}`
+            );
+          }
+
+          // Disconnect from the MQTT broker
+          client.end();
+        });
+      });
+      setDeviceIdServer("");
+    } else {
+      alert("Haven't enter device's id");
+    }
+  };
+
   return (
     <div className="admin_container">
       {/* <div className="count__deivce">
@@ -493,41 +539,80 @@ const Admin = () => {
             )}
             <div className="config__content">
               <div className="config__nav">
-                {wifiConfig ? (
+                {wifiConfig === 1 ? (
                   <>
                     <div
                       className="config__icon"
-                      onClick={() => setWifiConfig(false)}
+                      onClick={() => setWifiConfig(0)}
                     >
                       <FaWifi className="icon" />
                     </div>
                     <div className="config__line_vertical"></div>
                     <div
                       className="config__icon active"
-                      onClick={() => setWifiConfig(true)}
+                      onClick={() => setWifiConfig(1)}
                     >
                       <FaThList className="icon" />
+                    </div>
+                    <div className="config__line_vertical"></div>
+                    <div
+                      className="config__icon"
+                      onClick={() => setWifiConfig(2)}
+                    >
+                      <FaKey className="icon" />
+                    </div>
+                  </>
+                ) : wifiConfig === 0 ? (
+                  <>
+                    <div
+                      className="config__icon active"
+                      onClick={() => setWifiConfig(0)}
+                    >
+                      <FaWifi className="icon" />
+                    </div>
+                    <div className="config__line_vertical"></div>
+                    <div
+                      className="config__icon "
+                      onClick={() => setWifiConfig(1)}
+                    >
+                      <FaThList className="icon" />
+                    </div>
+                    <div className="config__line_vertical"></div>
+                    <div
+                      className="config__icon"
+                      onClick={() => setWifiConfig(2)}
+                    >
+                      <FaKey className="icon" />
+                    </div>
+                  </>
+                ) : wifiConfig === 2 ? (
+                  <>
+                    <div
+                      className="config__icon"
+                      onClick={() => setWifiConfig(0)}
+                    >
+                      <FaWifi className="icon" />
+                    </div>
+                    <div className="config__line_vertical"></div>
+                    <div
+                      className="config__icon "
+                      onClick={() => setWifiConfig(1)}
+                    >
+                      <FaThList className="icon" />
+                    </div>
+                    <div className="config__line_vertical"></div>
+                    <div
+                      className="config__icon active"
+                      onClick={() => setWifiConfig(2)}
+                    >
+                      <FaKey className="icon" />
                     </div>
                   </>
                 ) : (
-                  <>
-                    <div
-                      className="config__icon active"
-                      onClick={() => setWifiConfig(false)}
-                    >
-                      <FaWifi className="icon" />
-                    </div>
-                    <div className="config__line_vertical"></div>
-                    <div
-                      className="config__icon"
-                      onClick={() => setWifiConfig(true)}
-                    >
-                      <FaThList className="icon" />
-                    </div>
-                  </>
+                  <></>
                 )}
               </div>
-              {wifiConfig ? (
+              {wifiConfig === 1 ? (
                 <div className="config__item">
                   <div className="config__item_content">
                     <input
@@ -555,7 +640,7 @@ const Admin = () => {
                     CONFIG NOW
                   </div>
                 </div>
-              ) : (
+              ) : wifiConfig === 0 ? (
                 <div className="config__item">
                   <div className="config__item_content">
                     <input
@@ -581,6 +666,25 @@ const Admin = () => {
                     CONFIG NOW
                   </div>
                 </div>
+              ) : wifiConfig === 2 ? (
+                <div className="config__item">
+                  <div className="config__item_content">
+                    <input
+                      placeholder="enter device's id"
+                      value={deviceIdServer}
+                      onChange={(e) => setDeviceIdServer(e.target.value)}
+                      className="config__item_input"
+                    />
+                  </div>
+                  <div
+                    className="config__item_btn"
+                    onClick={handleConfigServer}
+                  >
+                    CHANGE SERVER
+                  </div>
+                </div>
+              ) : (
+                <></>
               )}
             </div>
           </div>
@@ -703,14 +807,6 @@ const Admin = () => {
                 </div>
               </div>
             </div>
-            {/* <p
-              style={{
-                fontSize: 20,
-                fontWeight: "bold",
-              }}
-            >
-              1. Open F12 <br /> 2. Click device ID to get "info"
-            </p> */}
           </div>
         </div>
 
@@ -787,83 +883,89 @@ const Admin = () => {
         </div>
         {informationMessages.deviceId ? (
           <div className="deivce__info">
-            <div className="deivce__info_box">
-              <p className="deivce__info_text">
-                {informationMessages.deviceId}
-              </p>
-              <p className="deivce__info_text">
-                ver:{informationMessages.data.FW_version}
-              </p>
-            </div>
-            <div className="deivce__info_box">
-              <p className="deivce__info_text">
-                Priority: {informationMessages.data.conn_priority}
-              </p>
-              <p className="deivce__info_text">
-                Connected:
-                {informationMessages.data.conn_type === 1 ? (
-                  <>SIM</>
-                ) : informationMessages.data.conn_type === 2 ? (
-                  <>LAN</>
-                ) : (
-                  <>WiFi</>
-                )}
-              </p>
-            </div>
-            <div className="deivce__info_box">
-              <p className="deivce__info_text">
-                <FaEthernet />:
-                {informationMessages.data.LAN_state === 1 ? (
-                  <FaCheck />
-                ) : (
-                  <FaTimes />
-                )}
-              </p>
-              <p className="deivce__info_text">
-                <FaSimCard />:
-                {informationMessages.data.sim.state === 1 ? (
-                  <FaCheck />
-                ) : (
-                  <FaTimes />
-                )}
-              </p>
-              <p className="deivce__info_text">
-                <FaWifi />:
-                {informationMessages.data.wifi.status === 1 ? (
-                  <FaCheck />
-                ) : (
-                  <FaTimes />
-                )}
-              </p>
-              <div className="deivce__info_box more__left">
-                {informationMessages.data.wifi.ssid_name !== "" ? (
-                  <span className="deivce__info_text">
-                    "{informationMessages.data.wifi.ssid_name}"
-                  </span>
-                ) : (
-                  <span className="deivce__info_text">empty</span>
-                )}
-
-                {informationMessages.data.wifi.password !== "" ? (
-                  <span className="deivce__info_text">
-                    "{informationMessages.data.wifi.password}"
-                  </span>
-                ) : (
-                  <span className="deivce__info_text">empty</span>
-                )}
+            <div className="boxes">
+              <div className="deivce__info_box highlight__box">
+                <p className="deivce__info_text highlight__text">
+                  {informationMessages.deviceId}
+                </p>
+              </div>
+              <div className="deivce__info_box">
+                <p className="deivce__info_text">
+                  ver:{informationMessages.data.FW_version}
+                </p>
+              </div>
+              <div className="deivce__info_box">
+                <p className="deivce__info_text">
+                  Priority: {informationMessages.data.conn_priority}
+                </p>
+                <p className="deivce__info_text">
+                  Connected:
+                  {informationMessages.data.conn_type === 1 ? (
+                    <FaSimCard />
+                  ) : informationMessages.data.conn_type === 2 ? (
+                    <FaEthernet />
+                  ) : (
+                    <FaWifi />
+                  )}
+                </p>
               </div>
             </div>
-            <div className="deivce__info_box">
-              {informationMessages.data.charge_type === 0 ? (
-                <p className="deivce__info_text">AC</p>
-              ) : (
+            <div className="boxes">
+              <div className="deivce__info_box">
                 <p className="deivce__info_text">
-                  BAT:
-                  <span className="device__percent">
-                    {informationMessages.data.battery.percentage}%
-                  </span>
+                  <FaSimCard />:
+                  {informationMessages.data.sim.state === 1 ? (
+                    <FaCheck />
+                  ) : (
+                    <FaTimes />
+                  )}
                 </p>
-              )}
+                <p className="deivce__info_text">
+                  <FaEthernet />:
+                  {informationMessages.data.LAN_state === 1 ? (
+                    <FaCheck />
+                  ) : (
+                    <FaTimes />
+                  )}
+                </p>
+                <p className="deivce__info_text">
+                  <FaWifi />:
+                  {informationMessages.data.wifi.status === 1 ? (
+                    <FaCheck />
+                  ) : (
+                    <FaTimes />
+                  )}
+                </p>
+                <div className="deivce__info_box more__left">
+                  {informationMessages.data.wifi.ssid_name !== "" ? (
+                    <span className="deivce__info_text">
+                      "{informationMessages.data.wifi.ssid_name}"
+                    </span>
+                  ) : (
+                    <span className="deivce__info_text">empty</span>
+                  )}
+
+                  {informationMessages.data.wifi.password !== "" ? (
+                    <span className="deivce__info_text">
+                      "{informationMessages.data.wifi.password}"
+                    </span>
+                  ) : (
+                    <span className="deivce__info_text">empty</span>
+                  )}
+                </div>
+              </div>
+              <div className="deivce__info_box">
+                {informationMessages.data.charge_type === 0 ? (
+                  <FaPlug className="deivce__info_text" />
+                ) : (
+                  <p className="deivce__info_text">
+                    BAT:
+                    <span className="device__percent">
+                      {informationMessages.data.battery.percentage}%
+                    </span>
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         ) : (
