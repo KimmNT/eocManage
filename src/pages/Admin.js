@@ -484,7 +484,7 @@ const Admin = () => {
         console.log("Connected to MQTT broker");
 
         // const topic = `device/${priDeviceId}/cmd`;
-        const topic = `device/n_${priDeviceId}`;
+        const topic = `device/n_${deviceIdServer}`;
         const payload = ` {
           "type": "config",
           "deviceId": "n_123456",
