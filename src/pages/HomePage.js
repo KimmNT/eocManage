@@ -1483,15 +1483,15 @@ const HomePage = () => {
                 {informationMessages[item.deviceInfoId] ? (
                   <div className="device__info">
                     {/* VERSION */}
-                    <div className="info__version">
+                    {/* <div className="info__version">
                       <p className="info__name">Version </p>
                       <p className="info__value">
                         {informationMessages[item.deviceInfoId].data.FWver}
                       </p>
                     </div>
-                    <div className="line"></div>
+                    <div className="line"></div> */}
                     {/* CONNECTION TYPE - PRIORITY */}
-                    <div className="info__connection">
+                    {/* <div className="info__connection">
                       <p className="info__name">Connection type</p>
                       <div className="info__conpri">
                         {JSON.stringify(
@@ -2102,9 +2102,9 @@ const HomePage = () => {
                         )}
                       </div>
                     </div>
-                    <div className="line"></div>
+                    <div className="line"></div> */}
                     {/* WiFi */}
-                    <div className="info__group">
+                    {/* <div className="info__group">
                       <div className="info__version">
                         <p className="info__name">WiFi name </p>
                         <p className="info__value">
@@ -2121,9 +2121,9 @@ const HomePage = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="line"></div>
+                    <div className="line"></div> */}
                     {/* CONNECTION MODE */}
-                    <div className="info__version">
+                    {/* <div className="info__version">
                       <p className="info__name">Connection Mode </p>
                       {informationMessages[item.deviceInfoId].data.BAT
                         .percent === 25 ? (
@@ -2185,9 +2185,9 @@ const HomePage = () => {
                         <p className="info__value">AC</p>
                       )}
                     </div>
-                    <div className="line"></div>
+                    <div className="line"></div> */}
                     {/* SD CARD */}
-                    <div className="info__version">
+                    {/* <div className="info__version">
                       <p className="info__name">SD Card </p>
                       {startMessage[item.deviceInfoId] ? (
                         <>
@@ -2200,15 +2200,16 @@ const HomePage = () => {
                       ) : (
                         <></>
                       )}
-                    </div>
+                    </div> */}
                   </div>
                 ) : (
-                  <div className="welcome">
-                    <div className="welcome__content">
-                      <p className="welcome__text">Connecting to device</p>
-                      <p className="welcome__text">Please wait a moment</p>
-                    </div>
-                  </div>
+                  <></>
+                  // <div className="welcome">
+                  //   <div className="welcome__content">
+                  //     <p className="welcome__text">Connecting to device</p>
+                  //     <p className="welcome__text">Please wait a moment</p>
+                  //   </div>
+                  // </div>
                 )}
                 {emergency || test ? (
                   <></>
