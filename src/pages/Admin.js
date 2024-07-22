@@ -486,9 +486,10 @@ const Admin = () => {
         // const topic = `device/${priDeviceId}/cmd`;
         const topic = `device/n_${deviceIdServer}`;
         const payload = ` {
-          "type": "config",
+          "type": "identification",
           "deviceId": "n_123456",
-          "data": {
+          ",
+          "mqttclient":{
             "host":"14.225.197.82",
             "ip":"14.225.197.82",
             "port":"61285",
@@ -496,7 +497,6 @@ const Admin = () => {
             "password":"Vtc@2023"
           },
         }`;
-
         // Publish the message
         client.publish(topic, payload, (err) => {
           // Handling the result of the publish
