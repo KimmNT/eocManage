@@ -259,7 +259,7 @@ body {
     bottom: 2rem;
     left: 0;
     z-index: 5;
-    background-color: $primary;
+    background-color: $light;
     padding: 1.3rem;
     display: flex;
     justify-content: center;
@@ -269,6 +269,8 @@ body {
     border-bottom-right-radius: 1rem;
     box-shadow: $boxShadow;
     flex-wrap: wrap;
+    border-color: $primary;
+    border-style: solid;
     .boxes{
       display: flex;
       gap: 5rem;
@@ -279,14 +281,14 @@ body {
       align-items: center;
       gap: 2rem;
       padding: .5rem 1rem;
-      border: .2rem solid $light;
+      border: .2rem solid $primary;
       // background-color: $light;
       // flex-direction: column;
       &.highlight__box{
         background-color: $light;
       }
         .deivce__info_text{
-          color: $light;
+          color: $primary;
           font-size: 2rem;
           display: flex;
           align-items: center;
@@ -664,7 +666,7 @@ body {
         @media (max-width: $tabletMax) {
           width: 80%;
         }
-        .device__name {
+        .device__name_title {
           background-color: $secondary;
           width: 100%;
           font-size: 1.5rem;
@@ -673,6 +675,17 @@ body {
           padding: 1rem;
           border-radius: 1rem;
           font-weight: 600;
+        }
+        .device__name {
+          width: 100%;
+          font-size: 1.5rem;
+          color: $secondary;
+          text-align: center;
+          padding: 1rem;
+          border-radius: 1rem;
+          font-weight: 600;
+          border: 1px solid $secondary;
+          border-radius: 1rem;
         }
         .device__headline {
           display: flex;

@@ -7,7 +7,6 @@ import * as XLSX from "xlsx";
 import {
   FaBars,
   FaEthernet,
-  FaInfo,
   FaKey,
   FaPlug,
   FaPlus,
@@ -21,10 +20,6 @@ import { FaBell } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
 import { FaFileImport } from "react-icons/fa";
-import { FaBatteryFull } from "react-icons/fa";
-import { FaBatteryThreeQuarters } from "react-icons/fa";
-import { FaBatteryHalf } from "react-icons/fa";
-import { FaBatteryQuarter } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa";
 import { FaTimes } from "react-icons/fa";
 
@@ -36,6 +31,7 @@ const Admin = () => {
   const [topics, setTopics] = useState([]);
   const [keepAliveMessage, setKeeepAliveMesssage] = useState({});
   const [isSD, setIsSD] = useState({});
+  const [deviceOwner, setDeviceOwner] = useState("");
   //Alert State
   const [emergency, setEmergency] = useState(false);
   const [test, setTest] = useState(false);
@@ -116,9 +112,9 @@ const Admin = () => {
   useEffect(() => {
     const client = mqtt.connect(brokerUrl, brokerConfig);
     client.on("connect", () => {
-      console.log("Connected to MQTT broker");
+      // console.log("Connected to MQTT broker");
       // Subscribe to each topic in the state
-      topics.forEach((topic) => {
+      deviceInfo.forEach((topic) => {
         client.subscribe(`broker/message/listener/device`, (err) => {
           if (err) {
             console.error(`Error subscribing to topic ${topic}:`, err);
@@ -142,7 +138,7 @@ const Admin = () => {
         }
         //FOR EMERGENCY TYPE
         if (receivedMessage.type === "emergency") {
-          setEmergencyMessage(receivedMessage.deviceId);
+          setEmergencyMessage(handleConvertIdToOwner(receivedMessage.deviceId));
           setEmergency(true);
           const timeoutId = setTimeout(() => {
             setEmergency(false);
@@ -248,7 +244,7 @@ const Admin = () => {
       });
       client.end(); // Disconnect from the MQTT broker
     };
-  }, [topics, brokerUrl]); // Re-run effect when the topics array changes
+  }, [topics, brokerUrl, deviceInfo]); // Re-run effect when the topics array changes
 
   //HANDLE TAKE DEVICE'ID INPUT
   const handleDeviceInput = (event) => {
@@ -408,7 +404,7 @@ const Admin = () => {
       // Assuming row[0] and row[1] are the values from the two columns
       const rowDataObject = {
         deviceInfoId: `server/${row[0]}/data`,
-        deviceInfoOwner: row[1] === "" ? "no owner" : row[1], // Ensure the value is converted to a string
+        deviceInfoOwner: row[1] === "" ? "no owner" : row[1], // Ensure the value is converted to a string\
       };
       return rowDataObject;
     });
@@ -451,6 +447,7 @@ const Admin = () => {
 
   //HANDLE GET INFO
   const handleGetInfo = (deviceId) => {
+    console.log(deviceId);
     const client = mqtt.connect(brokerUrl, brokerConfig);
     client.on("connect", () => {
       console.log("Connected to MQTT broker");
@@ -516,6 +513,21 @@ const Admin = () => {
     } else {
       alert("Haven't enter device's id");
     }
+  };
+
+  const handleConvertIdToOwner = (deviceID) => {
+    // Format the deviceID to match the deviceInfoId structure
+    const deviceIdFormatted = `server/${deviceID.substring(2, 10)}/data`;
+
+    // Find the owner based on the formatted deviceID
+    const owner = deviceInfo.find(
+      (device) => device.deviceInfoId === deviceIdFormatted
+    );
+
+    // Return the owner or handle the case where it's not found
+    return owner
+      ? owner.deviceInfoOwner
+      : `Owner not found for device ID: ${deviceIdFormatted}`;
   };
 
   return (
@@ -837,9 +849,9 @@ const Admin = () => {
       )}
       <div className="content">
         <div className="device__list">
-          {topics.map((item, index) => (
+          {deviceInfo?.map((item, index) => (
             <div
-              onClick={() => handleGetInfo(item)}
+              onClick={() => handleGetInfo(item.deviceInfoId)}
               className={
                 emergency &&
                 informationMessages[item] &&
@@ -853,7 +865,7 @@ const Admin = () => {
               }
               key={index}
             >
-              <p className="device__name">{item}</p>
+              <p className="device__name_title">{item.deviceInfoOwner}</p>
               <p className="device__name" style={{ marginTop: ".5rem" }}>
                 Count Restart: {countReset}
               </p>
@@ -886,7 +898,8 @@ const Admin = () => {
             <div className="boxes">
               <div className="deivce__info_box highlight__box">
                 <p className="deivce__info_text highlight__text">
-                  {informationMessages.deviceId}
+                  {/* {informationMessages.deviceId} */}
+                  {handleConvertIdToOwner(informationMessages.deviceId)}
                 </p>
               </div>
               <div className="deivce__info_box">
